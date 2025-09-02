@@ -73,24 +73,15 @@ export function Dashboard() {
 
   return (
     <div className="space-y-8">
-      {/* Hero Section - Mobile First */}
-      <div className="text-center py-8 px-4">
-        <h1 className="text-3xl md:text-4xl font-light text-foreground mb-3">
-          Bienvenue sur ImoTrack
-        </h1>
-        <p className="text-base text-muted-foreground max-w-md mx-auto font-light">
-          Suivez vos projets immobiliers avec élégance et précision
-        </p>
-      </div>
 
       {/* Stats Overview - Modern Apple Style */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
         {stats.map((stat) => (
-          <Card key={stat.name} className="relative p-4 md:p-6 border-0 bg-card/50 backdrop-blur-sm hover:bg-card/80 transition-all duration-300">
+          <Card key={stat.name} className="p-4 md:p-6 bg-card hover:bg-card/80 transition-colors duration-200">
             <div className="space-y-3">
               {/* Icon with subtle background */}
-              <div className="w-10 h-10 bg-accent/10 rounded-full flex items-center justify-center">
-                <stat.icon className="h-5 w-5 text-accent" strokeWidth={1.5} />
+              <div className="w-10 h-10 bg-muted rounded-lg flex items-center justify-center">
+                <stat.icon className="h-5 w-5 text-muted-foreground" strokeWidth={1.5} />
               </div>
               
               {/* Main metric */}
