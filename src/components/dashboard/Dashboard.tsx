@@ -83,24 +83,36 @@ export function Dashboard() {
         </p>
       </div>
 
-      {/* Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* Stats Overview - Modern Apple Style */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
         {stats.map((stat) => (
-          <Card key={stat.name} className="p-6 hover:shadow-soft transition-shadow">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">
-                  {stat.name}
-                </p>
-                <p className="text-2xl font-bold text-primary">{stat.value}</p>
+          <Card key={stat.name} className="relative p-4 md:p-6 border-0 bg-card/50 backdrop-blur-sm hover:bg-card/80 transition-all duration-300">
+            <div className="space-y-3">
+              {/* Icon with subtle background */}
+              <div className="w-10 h-10 bg-accent/10 rounded-full flex items-center justify-center">
+                <stat.icon className="h-5 w-5 text-accent" strokeWidth={1.5} />
               </div>
-              <div className="flex flex-col items-end">
-                <div className="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center mb-2">
-                  <stat.icon className="h-6 w-6 text-accent" />
+              
+              {/* Main metric */}
+              <div className="space-y-1">
+                <div className="text-2xl md:text-3xl font-light text-foreground tracking-tight">
+                  {stat.value}
                 </div>
-                <Badge variant="secondary" className="text-xs">
+                <div className="text-xs md:text-sm text-muted-foreground font-light">
+                  {stat.name}
+                </div>
+              </div>
+              
+              {/* Change indicator */}
+              <div className="flex items-center">
+                <div className={cn(
+                  "text-xs font-medium px-2 py-1 rounded-full",
+                  stat.change.startsWith('+') 
+                    ? "text-success bg-success/10" 
+                    : "text-muted-foreground bg-muted/50"
+                )}>
                   {stat.change}
-                </Badge>
+                </div>
               </div>
             </div>
           </Card>
