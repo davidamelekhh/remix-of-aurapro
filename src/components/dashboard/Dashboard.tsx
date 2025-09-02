@@ -73,24 +73,14 @@ export function Dashboard() {
 
   return (
     <div className="space-y-8">
-      {/* Hero Section */}
-      <div className="relative overflow-hidden rounded-2xl">
-        <div 
-          className="h-64 bg-cover bg-center relative"
-          style={{ backgroundImage: `url(${heroBuilding})` }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/80 to-primary/40" />
-          <div className="relative h-full flex items-center justify-center text-center text-white">
-            <div className="max-w-2xl mx-auto px-6">
-              <h1 className="text-4xl font-bold mb-4">
-                Bienvenue sur ImoTrack
-              </h1>
-              <p className="text-lg opacity-90">
-                Suivez vos projets immobiliers avec élégance et précision
-              </p>
-            </div>
-          </div>
-        </div>
+      {/* Hero Section - Mobile First */}
+      <div className="text-center py-8 px-4">
+        <h1 className="text-3xl md:text-4xl font-light text-foreground mb-3">
+          Bienvenue sur ImoTrack
+        </h1>
+        <p className="text-base text-muted-foreground max-w-md mx-auto font-light">
+          Suivez vos projets immobiliers avec élégance et précision
+        </p>
       </div>
 
       {/* Stats Overview */}

@@ -8,33 +8,33 @@ Luxury-inspired colors, gradients, and styles. All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Core Brand Colors */
-    --background: 0 0% 98%;
-    --foreground: 210 15% 15%;
+    /* Core Brand Colors - Apple-style minimal */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 7%;
     
     /* Card System */
     --card: 0 0% 100%;
-    --card-foreground: 210 15% 15%;
+    --card-foreground: 0 0% 7%;
     
     /* Interactive Elements */
     --popover: 0 0% 100%;
-    --popover-foreground: 210 15% 15%;
+    --popover-foreground: 0 0% 7%;
     
-    /* Primary Brand - Charcoal */
-    --primary: 210 15% 15%;
-    --primary-foreground: 0 0% 98%;
+    /* Primary Brand - True Black */
+    --primary: 0 0% 7%;
+    --primary-foreground: 0 0% 100%;
     
-    /* Secondary - Soft Gray */
-    --secondary: 210 10% 95%;
-    --secondary-foreground: 210 15% 25%;
+    /* Secondary - Ultra Light Gray */
+    --secondary: 0 0% 97%;
+    --secondary-foreground: 0 0% 15%;
     
     /* Muted Tones */
-    --muted: 210 10% 96%;
-    --muted-foreground: 210 10% 45%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 50%;
     
-    /* Gold Accent */
-    --accent: 45 85% 55%;
-    --accent-foreground: 210 15% 15%;
+    /* Accent - Subtle Blue */
+    --accent: 210 100% 50%;
+    --accent-foreground: 0 0% 100%;
     
     /* Status Colors */
     --destructive: 0 75% 60%;
@@ -44,10 +44,10 @@ Luxury-inspired colors, gradients, and styles. All colors MUST be HSL.
     --warning: 35 85% 55%;
     --warning-foreground: 210 15% 15%;
     
-    /* Borders & Inputs */
-    --border: 210 15% 88%;
-    --input: 210 15% 92%;
-    --ring: 45 85% 55%;
+    /* Borders & Inputs - Subtle */
+    --border: 0 0% 92%;
+    --input: 0 0% 96%;
+    --ring: 210 100% 50%;
 
     --radius: 0.75rem;
     
