@@ -1,15 +1,15 @@
-import { Navigation } from '@/components/layout/Navigation';
-import { Dashboard } from '@/components/dashboard/Dashboard';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Index = () => {
-  return (
-    <div className="min-h-screen bg-background">
-      <Navigation />
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-6">
-        <Dashboard />
-      </main>
-    </div>
-  );
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Redirect client to their project
+    navigate('/project/1');
+  }, [navigate]);
+
+  return null;
 };
 
 export default Index;
