@@ -74,39 +74,44 @@ export function Dashboard() {
   return (
     <div className="space-y-6 pb-8">
 
-      {/* Stats Overview - Compact Mobile Layout */}
-      <div className="grid grid-cols-2 gap-3 md:gap-4">
-        {stats.map((stat) => (
-          <Card key={stat.name} className="p-4 md:p-6 group hover:shadow-glass">
-            <div className="space-y-2 md:space-y-3">
-              {/* Icon - compact */}
-              <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center group-hover:bg-foreground transition-colors duration-300">
-                <stat.icon className="h-4 w-4 md:h-5 md:w-5 text-foreground group-hover:text-background" strokeWidth={1.5} />
-              </div>
-              
-              {/* Metric - compact for mobile */}
+      {/* Stats Overview - Horizontal Minimalist Design */}
+      <Card className="p-4 md:p-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-border/50">
+          {stats.map((stat, index) => (
+            <div 
+              key={stat.name} 
+              className={cn(
+                "px-4 md:px-6 py-2",
+                index === 0 && "pl-0",
+                index === stats.length - 1 && "pr-0"
+              )}
+            >
               <div className="space-y-1">
-                <div className="text-2xl md:text-3xl font-bold text-foreground tracking-tight">
-                  {stat.value}
+                <div className="flex items-center gap-2 mb-2">
+                  <stat.icon className="h-4 w-4 text-muted-foreground" strokeWidth={1.5} />
+                  <span className="text-xs text-muted-foreground font-light">
+                    {stat.name}
+                  </span>
                 </div>
-                <div className="text-xs text-muted-foreground font-light">
-                  {stat.name}
+                
+                <div className="flex items-baseline gap-2">
+                  <div className="text-2xl md:text-3xl font-bold text-foreground tracking-tight">
+                    {stat.value}
+                  </div>
+                  <div className={cn(
+                    "text-xs font-medium",
+                    stat.change.startsWith('+') 
+                      ? "text-foreground/60" 
+                      : "text-muted-foreground"
+                  )}>
+                    {stat.change}
+                  </div>
                 </div>
-              </div>
-              
-              {/* Change - minimal pill */}
-              <div className={cn(
-                "inline-flex text-xs font-medium px-2.5 py-1 rounded-pill",
-                stat.change.startsWith('+') 
-                  ? "bg-foreground/5 text-foreground" 
-                  : "bg-muted text-muted-foreground"
-              )}>
-                {stat.change}
               </div>
             </div>
-          </Card>
-        ))}
-      </div>
+          ))}
+        </div>
+      </Card>
 
       {/* Filters - Compact mobile layout */}
       <div className="flex flex-wrap gap-2">
