@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { ProNavigation } from '@/components/layout/ProNavigation';
 import projectVilla from '@/assets/project-villa.jpg';
 
 // Mock data
@@ -47,6 +48,8 @@ export default function ProProjectDetail() {
 
   return (
     <div className="min-h-screen bg-background">
+      <ProNavigation />
+      
       {/* Header */}
       <div className="border-b border-border bg-card">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">

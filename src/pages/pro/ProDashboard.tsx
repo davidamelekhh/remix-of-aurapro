@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
+import { ProNavigation } from '@/components/layout/ProNavigation';
 import heroBuilding from '@/assets/hero-building.jpg';
 import projectVilla from '@/assets/project-villa.jpg';
 import projectApartment from '@/assets/project-apartment.jpg';
@@ -27,6 +28,8 @@ const projects = [
 export default function ProDashboard() {
   return (
     <div className="min-h-screen bg-background">
+      <ProNavigation />
+      
       {/* Header */}
       <div className="border-b border-border bg-card">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
