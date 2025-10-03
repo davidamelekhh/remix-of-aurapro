@@ -72,31 +72,31 @@ export function Dashboard() {
   };
 
   return (
-    <div className="space-y-12 pb-12">
+    <div className="space-y-6 pb-8">
 
-      {/* Stats Overview - Ultra Minimal Apple Style */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Stats Overview - Compact Mobile Layout */}
+      <div className="grid grid-cols-2 gap-3 md:gap-4">
         {stats.map((stat) => (
-          <Card key={stat.name} className="p-6 md:p-8 group hover:shadow-glass">
-            <div className="space-y-4">
-              {/* Icon - monochrome, thin line */}
-              <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center group-hover:bg-foreground transition-colors duration-300">
-                <stat.icon className="h-5 w-5 text-foreground group-hover:text-background" strokeWidth={1.5} />
+          <Card key={stat.name} className="p-4 md:p-6 group hover:shadow-glass">
+            <div className="space-y-2 md:space-y-3">
+              {/* Icon - compact */}
+              <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center group-hover:bg-foreground transition-colors duration-300">
+                <stat.icon className="h-4 w-4 md:h-5 md:w-5 text-foreground group-hover:text-background" strokeWidth={1.5} />
               </div>
               
-              {/* Metric - bold title, light supporting text */}
-              <div className="space-y-2">
-                <div className="text-3xl md:text-4xl font-bold text-foreground tracking-tight">
+              {/* Metric - compact for mobile */}
+              <div className="space-y-1">
+                <div className="text-2xl md:text-3xl font-bold text-foreground tracking-tight">
                   {stat.value}
                 </div>
-                <div className="text-sm text-muted-foreground font-light">
+                <div className="text-xs text-muted-foreground font-light">
                   {stat.name}
                 </div>
               </div>
               
-              {/* Change - subtle pill indicator */}
+              {/* Change - minimal pill */}
               <div className={cn(
-                "inline-flex text-xs font-medium px-3 py-1.5 rounded-pill",
+                "inline-flex text-xs font-medium px-2.5 py-1 rounded-pill",
                 stat.change.startsWith('+') 
                   ? "bg-foreground/5 text-foreground" 
                   : "bg-muted text-muted-foreground"
@@ -108,7 +108,7 @@ export function Dashboard() {
         ))}
       </div>
 
-      {/* Filters - Pill shaped buttons */}
+      {/* Filters - Compact mobile layout */}
       <div className="flex flex-wrap gap-2">
         {filters.map((filter) => (
           <Button
@@ -118,13 +118,13 @@ export function Dashboard() {
             onClick={() => setActiveFilter(filter.id)}
           >
             <filter.icon className="h-4 w-4 mr-2" strokeWidth={1.5} />
-            {filter.label}
+            <span className="text-sm">{filter.label}</span>
           </Button>
         ))}
       </div>
 
-      {/* Projects Grid - Generous spacing */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {/* Projects Grid - Optimized spacing */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         {filteredProjects.map((project) => (
           <ProjectCard
             key={project.id}

@@ -57,16 +57,16 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
         </div>
 
         {/* Project Info */}
-        <div className="p-6 space-y-6">
+        <div className="p-5 md:p-6 space-y-4 md:space-y-5">
           {/* Title & Action */}
-          <div className="flex items-start justify-between gap-4">
-            <h3 className="text-xl font-bold text-foreground leading-tight group-hover:text-foreground/80 transition-colors">
+          <div className="flex items-start justify-between gap-3">
+            <h3 className="text-lg md:text-xl font-bold text-foreground leading-tight group-hover:text-foreground/80 transition-colors">
               {project.name}
             </h3>
             
-            <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <div className="w-8 h-8 rounded-full bg-foreground flex items-center justify-center">
-                <ChevronRight className="h-4 w-4 text-background" strokeWidth={2} />
+            <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex-shrink-0">
+              <div className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-foreground flex items-center justify-center">
+                <ChevronRight className="h-3.5 w-3.5 md:h-4 md:w-4 text-background" strokeWidth={2} />
               </div>
             </div>
           </div>

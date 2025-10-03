@@ -35,8 +35,8 @@ Luxury-inspired colors, gradients, and styles. All colors MUST be HSL.
     --muted: 0 0% 90%;                /* #E5E5E5 */
     --muted-foreground: 0 0% 45%;     /* #737373 */
     
-    /* Accent - Minimal Blue (for interactions) */
-    --accent: 211 100% 50%;           /* Subtle blue accent */
+    /* Accent - Neutral Gray (no blue) */
+    --accent: 0 0% 15%;               /* Dark gray for subtle accents */
     --accent-foreground: 0 0% 100%;
     
     /* Status Colors - Muted */
@@ -50,7 +50,7 @@ Luxury-inspired colors, gradients, and styles. All colors MUST be HSL.
     /* Borders & Inputs - Ultra Subtle */
     --border: 0 0% 90%;               /* #E5E5E5 */
     --input: 0 0% 96%;
-    --ring: 211 100% 50%;
+    --ring: 0 0% 20%;
 
     --radius: 1.5rem;                 /* 24px - Apple style rounded */
     
