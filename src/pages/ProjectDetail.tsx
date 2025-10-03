@@ -91,17 +91,13 @@ export default function ProjectDetail() {
           </Badge>
         </div>
         
-        {/* Progress Bar avec % à droite */}
+        {/* Progress Bar avec % au-dessus à droite */}
         <div className="mt-6">
-          <div className="flex items-center justify-between mb-2">
+          <div className="flex items-end justify-between mb-2">
             <span className="text-sm text-muted-foreground font-light">Avancement du projet</span>
+            <span className="text-2xl font-bold text-foreground">75%</span>
           </div>
-          <div className="relative">
-            <Progress value={75} className="h-2" />
-            <div className="absolute -top-1 right-0 transform translate-x-full ml-3">
-              <span className="text-2xl font-bold text-foreground">75%</span>
-            </div>
-          </div>
+          <Progress value={75} className="h-2" />
         </div>
       </div>
 

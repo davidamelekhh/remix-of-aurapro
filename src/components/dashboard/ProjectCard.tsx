@@ -64,7 +64,7 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
               {project.name}
             </h3>
             
-            <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex-shrink-0">
+            <div className="flex-shrink-0">
               <div className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-foreground flex items-center justify-center">
                 <ChevronRight className="h-3.5 w-3.5 md:h-4 md:w-4 text-background" strokeWidth={2} />
               </div>
