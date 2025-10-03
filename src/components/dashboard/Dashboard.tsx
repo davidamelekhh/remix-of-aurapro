@@ -74,45 +74,6 @@ export function Dashboard() {
   return (
     <div className="space-y-6 pb-8">
 
-      {/* Stats Overview - Horizontal Minimalist Design */}
-      <Card className="p-4 md:p-6">
-        <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-border/50">
-          {stats.map((stat, index) => (
-            <div 
-              key={stat.name} 
-              className={cn(
-                "px-4 md:px-6 py-2",
-                index === 0 && "pl-0",
-                index === stats.length - 1 && "pr-0"
-              )}
-            >
-              <div className="space-y-1">
-                <div className="flex items-center gap-2 mb-2">
-                  <stat.icon className="h-4 w-4 text-muted-foreground" strokeWidth={1.5} />
-                  <span className="text-xs text-muted-foreground font-light">
-                    {stat.name}
-                  </span>
-                </div>
-                
-                <div className="flex items-baseline gap-2">
-                  <div className="text-2xl md:text-3xl font-bold text-foreground tracking-tight">
-                    {stat.value}
-                  </div>
-                  <div className={cn(
-                    "text-xs font-medium",
-                    stat.change.startsWith('+') 
-                      ? "text-foreground/60" 
-                      : "text-muted-foreground"
-                  )}>
-                    {stat.change}
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </Card>
-
       {/* Filters - Compact mobile layout */}
       <div className="flex flex-wrap gap-2">
         {filters.map((filter) => (
