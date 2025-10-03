@@ -86,7 +86,7 @@ export default function ProjectDetail() {
             <p className="text-muted-foreground">Casablanca, Ain Diab • Client: Mohammed Ben Ahmed</p>
           </div>
           
-          <Badge className="bg-foreground/10 text-foreground border-foreground/20 self-start lg:self-center">
+          <Badge className="bg-background text-foreground border-border self-start lg:self-center">
             En cours
           </Badge>
         </div>

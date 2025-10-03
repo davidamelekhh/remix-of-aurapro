@@ -23,17 +23,17 @@ const statusConfig = {
   'in-progress': {
     label: 'En cours',
     labelAr: 'قيد التنفيذ',
-    className: 'bg-foreground/10 text-foreground border-foreground/20',
+    className: 'bg-background text-foreground border-border',
   },
   'completed': {
     label: 'Terminé',
     labelAr: 'مكتمل',
-    className: 'bg-foreground/10 text-foreground border-foreground/20',
+    className: 'bg-background text-foreground border-border',
   },
   'delayed': {
     label: 'En retard',
     labelAr: 'متأخر',
-    className: 'bg-muted text-muted-foreground border-muted',
+    className: 'bg-background text-foreground border-border',
   },
 };
 
