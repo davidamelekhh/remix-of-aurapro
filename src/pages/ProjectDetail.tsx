@@ -6,36 +6,42 @@ import { Progress } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import { Link } from 'react-router-dom';
+import { cn } from '@/lib/utils';
 import projectVilla from '@/assets/project-villa.jpg';
 
-const milestones = [
-  { id: 1, name: 'Fondations', nameAr: 'الأساسات', completed: true, date: '15 Jan 2024' },
-  { id: 2, name: 'Structure', nameAr: 'الهيكل', completed: true, date: '28 Feb 2024' },
-  { id: 3, name: 'Finitions', nameAr: 'التشطيبات', completed: false, date: '15 Mar 2024' },
-  { id: 4, name: 'Livraison', nameAr: 'التسليم', completed: false, date: '30 Mar 2024' },
-];
-
-const timelineEvents = [
-  {
-    id: 1,
-    title: 'Début des travaux de fondation',
+// Fusionner étapes et chronologie
+const projectTimeline = [
+  { 
+    id: 1, 
+    name: 'Fondations', 
+    completed: true, 
     date: '15 Jan 2024',
     type: 'milestone',
-    completed: true,
+    description: 'Début des travaux de fondation'
   },
-  {
-    id: 2,
-    title: 'Inspection qualité structure',
-    date: '25 Feb 2024',
-    type: 'inspection',
-    completed: true,
-  },
-  {
-    id: 3,
-    title: 'Début des finitions',
-    date: '1 Mar 2024',
+  { 
+    id: 2, 
+    name: 'Structure', 
+    completed: true, 
+    date: '28 Feb 2024',
     type: 'milestone',
-    completed: false,
+    description: 'Inspection qualité structure réalisée avec succès'
+  },
+  { 
+    id: 3, 
+    name: 'Finitions', 
+    completed: false, 
+    date: '15 Mar 2024',
+    type: 'milestone',
+    description: 'Début des travaux de finitions prévus'
+  },
+  { 
+    id: 4, 
+    name: 'Livraison', 
+    completed: false, 
+    date: '30 Mar 2024',
+    type: 'milestone',
+    description: 'Livraison finale du projet'
   },
 ];
 
@@ -69,27 +75,34 @@ export default function ProjectDetail() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Header */}
       <div className="mb-8">
-        <Link to="/" className="inline-flex items-center text-muted-foreground hover:text-primary mb-4">
+        <Link to="/" className="inline-flex items-center text-muted-foreground hover:text-foreground mb-4 transition-colors">
           <ArrowLeft className="h-4 w-4 mr-2" />
           Retour au tableau de bord
         </Link>
         
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
-          <div className="mb-4 lg:mb-0">
-            <h1 className="text-3xl font-bold text-primary mb-2">Résidence Al Andalus</h1>
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold text-foreground mb-2">Résidence Al Andalus</h1>
             <p className="text-muted-foreground">Casablanca, Ain Diab • Client: Mohammed Ben Ahmed</p>
           </div>
           
-          <div className="flex items-center space-x-4">
-            <Badge className="bg-blue-50 text-blue-700 border-blue-200">En cours</Badge>
-            <div className="text-right">
-              <p className="text-2xl font-bold text-accent">75%</p>
-              <p className="text-sm text-muted-foreground">Avancement</p>
+          <Badge className="bg-foreground/10 text-foreground border-foreground/20 self-start lg:self-center">
+            En cours
+          </Badge>
+        </div>
+        
+        {/* Progress Bar avec % à droite */}
+        <div className="mt-6">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-sm text-muted-foreground font-light">Avancement du projet</span>
+          </div>
+          <div className="relative">
+            <Progress value={75} className="h-2" />
+            <div className="absolute -top-1 right-0 transform translate-x-full ml-3">
+              <span className="text-2xl font-bold text-foreground">75%</span>
             </div>
           </div>
         </div>
-        
-        <Progress value={75} className="mt-4 h-3" />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -104,57 +117,55 @@ export default function ProjectDetail() {
             />
           </Card>
 
-          {/* Milestones */}
+          {/* Timeline fusionnée avec étapes */}
           <Card className="p-6">
-            <h2 className="text-xl font-semibold text-primary mb-6 flex items-center">
-              <CheckCircle className="h-5 w-5 mr-2 text-accent" />
-              Étapes du projet
+            <h2 className="text-xl font-bold text-foreground mb-6 flex items-center">
+              <Calendar className="h-5 w-5 mr-2 text-foreground" strokeWidth={1.5} />
+              Progression du projet
             </h2>
             
-            <div className="space-y-4">
-              {milestones.map((milestone) => (
-                <div key={milestone.id} className="flex items-center space-x-4 p-4 rounded-lg border border-border hover:bg-secondary/50 transition-colors">
-                  <div className="flex-shrink-0">
-                    {milestone.completed ? (
-                      <CheckCircle className="h-6 w-6 text-success" />
-                    ) : (
-                      <Circle className="h-6 w-6 text-muted-foreground" />
+            <div className="space-y-1">
+              {projectTimeline.map((event, index) => (
+                <div key={event.id} className="flex items-start gap-4">
+                  {/* Timeline visual */}
+                  <div className="flex flex-col items-center pt-1">
+                    <div className={cn(
+                      "w-4 h-4 rounded-full border-2 transition-colors",
+                      event.completed 
+                        ? "bg-foreground border-foreground" 
+                        : "bg-background border-muted"
+                    )}>
+                      {event.completed && (
+                        <CheckCircle className="w-3 h-3 text-background absolute" strokeWidth={3} />
+                      )}
+                    </div>
+                    {index < projectTimeline.length - 1 && (
+                      <div className={cn(
+                        "w-0.5 h-20 mt-1 transition-colors",
+                        event.completed ? "bg-foreground/20" : "bg-muted"
+                      )} />
                     )}
                   </div>
-                  <div className="flex-1">
-                    <h3 className={`font-medium ${milestone.completed ? 'text-primary' : 'text-muted-foreground'}`}>
-                      {milestone.name}
-                    </h3>
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    {milestone.date}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Card>
-
-          {/* Timeline */}
-          <Card className="p-6">
-            <h2 className="text-xl font-semibold text-primary mb-6 flex items-center">
-              <Calendar className="h-5 w-5 mr-2 text-accent" />
-              Chronologie
-            </h2>
-            
-            <div className="space-y-6">
-              {timelineEvents.map((event, index) => (
-                <div key={event.id} className="flex items-start space-x-4">
-                  <div className="flex flex-col items-center">
-                    <div className={`w-3 h-3 rounded-full ${event.completed ? 'bg-success' : 'bg-muted-foreground'}`} />
-                    {index < timelineEvents.length - 1 && (
-                      <div className="w-0.5 h-12 bg-border mt-2" />
-                    )}
-                  </div>
-                  <div className="flex-1 pb-8">
-                    <h3 className={`font-medium ${event.completed ? 'text-primary' : 'text-muted-foreground'}`}>
-                      {event.title}
-                    </h3>
-                    <p className="text-sm text-muted-foreground mt-1">{event.date}</p>
+                  
+                  {/* Content */}
+                  <div className="flex-1 pb-6 pt-0.5">
+                    <div className="flex items-start justify-between mb-1">
+                      <h3 className={cn(
+                        "font-semibold text-base",
+                        event.completed ? "text-foreground" : "text-muted-foreground"
+                      )}>
+                        {event.name}
+                      </h3>
+                      <span className="text-xs text-muted-foreground font-light ml-4 flex-shrink-0">
+                        {event.date}
+                      </span>
+                    </div>
+                    <p className={cn(
+                      "text-sm font-light",
+                      event.completed ? "text-muted-foreground" : "text-muted-foreground/60"
+                    )}>
+                      {event.description}
+                    </p>
                   </div>
                 </div>
               ))}
@@ -166,19 +177,19 @@ export default function ProjectDetail() {
         <div className="space-y-6">
           {/* Messages */}
           <Card className="p-6">
-            <h2 className="text-lg font-semibold text-primary mb-4 flex items-center">
-              <MessageCircle className="h-5 w-5 mr-2 text-accent" />
+            <h2 className="text-lg font-bold text-foreground mb-4 flex items-center">
+              <MessageCircle className="h-5 w-5 mr-2 text-foreground" strokeWidth={1.5} />
               Messages
             </h2>
             
             <div className="space-y-4 mb-4">
               {messages.map((message) => (
-                <div key={message.id} className="p-3 rounded-lg bg-secondary/50 border border-border">
+                <div key={message.id} className="p-3 rounded-lg bg-secondary border border-border/50">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-primary">{message.sender}</span>
+                    <span className="text-sm font-medium text-foreground">{message.sender}</span>
                     <span className="text-xs text-muted-foreground">{message.time}</span>
                   </div>
-                  <p className="text-sm text-foreground">{message.message}</p>
+                  <p className="text-sm text-muted-foreground font-light">{message.message}</p>
                 </div>
               ))}
             </div>
@@ -196,7 +207,7 @@ export default function ProjectDetail() {
                   <Upload className="h-4 w-4 mr-2" />
                   Fichier
                 </Button>
-                <Button size="sm" className="bg-accent hover:bg-accent/90">
+                <Button size="sm" className="bg-foreground text-background hover:bg-foreground/90">
                   Envoyer
                 </Button>
               </div>
@@ -205,17 +216,17 @@ export default function ProjectDetail() {
 
           {/* Documents */}
           <Card className="p-6">
-            <h2 className="text-lg font-semibold text-primary mb-4 flex items-center">
-              <FileText className="h-5 w-5 mr-2 text-accent" />
+            <h2 className="text-lg font-bold text-foreground mb-4 flex items-center">
+              <FileText className="h-5 w-5 mr-2 text-foreground" strokeWidth={1.5} />
               Documents
             </h2>
             
             <div className="space-y-3">
               {documents.map((doc) => (
-                <div key={doc.id} className="flex items-center justify-between p-3 rounded-lg border border-border hover:bg-secondary/50 transition-colors">
+                <div key={doc.id} className="flex items-center justify-between p-3 rounded-lg border border-border/50 hover:bg-secondary transition-colors">
                   <div className="flex-1">
-                    <h3 className="text-sm font-medium text-primary">{doc.name}</h3>
-                    <p className="text-xs text-muted-foreground">{doc.date}</p>
+                    <h3 className="text-sm font-medium text-foreground">{doc.name}</h3>
+                    <p className="text-xs text-muted-foreground font-light">{doc.date}</p>
                   </div>
                   <Button variant="ghost" size="sm">
                     <Download className="h-4 w-4" />
