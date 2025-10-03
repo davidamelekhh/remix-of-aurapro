@@ -41,63 +41,61 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
   const status = statusConfig[project.status];
 
   return (
-    <Card className="overflow-hidden hover:shadow-luxury transition-all duration-300 cursor-pointer group border border-border/50 hover:border-accent/30">
+    <Card className="overflow-hidden hover:shadow-glass transition-all duration-500 cursor-pointer group">
       <div onClick={onClick} className="p-0">
         {/* Project Image */}
-        <div className="relative h-48 overflow-hidden">
+        <div className="relative h-56 overflow-hidden">
           <img
             src={project.image}
             alt={project.name}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-700"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-          <Badge className={cn('absolute top-3 right-3', status.className)}>
+          <div className="absolute inset-0 bg-gradient-to-t from-foreground/10 to-transparent" />
+          <Badge className={cn('absolute top-4 right-4 rounded-pill shadow-sm', status.className)}>
             {status.label}
           </Badge>
         </div>
 
         {/* Project Info */}
-        <div className="p-6">
-          <div className="flex items-start justify-between mb-4">
-            <div className="flex-1">
-              <h3 className="text-lg font-semibold text-primary mb-2 group-hover:text-accent transition-colors">
-                {project.name}
-              </h3>
-              
-              <div className="space-y-2 text-sm text-muted-foreground">
-                <div className="flex items-center">
-                  <MapPin className="h-4 w-4 mr-2 text-accent" />
-                  {project.location}
-                </div>
-                <div className="flex items-center">
-                  <User className="h-4 w-4 mr-2 text-accent" />
-                  {project.client}
-                </div>
-                <div className="flex items-center">
-                  <Calendar className="h-4 w-4 mr-2 text-accent" />
-                  Échéance: {project.dueDate}
-                </div>
+        <div className="p-6 space-y-6">
+          {/* Title & Action */}
+          <div className="flex items-start justify-between gap-4">
+            <h3 className="text-xl font-bold text-foreground leading-tight group-hover:text-foreground/80 transition-colors">
+              {project.name}
+            </h3>
+            
+            <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="w-8 h-8 rounded-full bg-foreground flex items-center justify-center">
+                <ChevronRight className="h-4 w-4 text-background" strokeWidth={2} />
               </div>
             </div>
-
-            <Button
-              variant="ghost"
-              size="sm"
-              className="opacity-0 group-hover:opacity-100 transition-opacity text-accent hover:text-accent"
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
+          </div>
+          
+          {/* Details - Light text */}
+          <div className="space-y-3 text-sm font-light text-muted-foreground">
+            <div className="flex items-center gap-2">
+              <MapPin className="h-4 w-4 text-foreground/60" strokeWidth={1.5} />
+              {project.location}
+            </div>
+            <div className="flex items-center gap-2">
+              <User className="h-4 w-4 text-foreground/60" strokeWidth={1.5} />
+              {project.client}
+            </div>
+            <div className="flex items-center gap-2">
+              <Calendar className="h-4 w-4 text-foreground/60" strokeWidth={1.5} />
+              {project.dueDate}
+            </div>
           </div>
 
           {/* Progress Section */}
-          <div className="space-y-2">
+          <div className="space-y-3 pt-2">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-primary">Avancement</span>
-              <span className="text-sm font-bold text-accent">{project.progress}%</span>
+              <span className="text-sm font-medium text-foreground">Avancement</span>
+              <span className="text-lg font-bold text-foreground">{project.progress}%</span>
             </div>
             <Progress 
               value={project.progress} 
-              className="h-2 bg-secondary"
+              className="h-1.5 bg-secondary"
             />
           </div>
         </div>

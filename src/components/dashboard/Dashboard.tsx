@@ -72,45 +72,43 @@ export function Dashboard() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-12 pb-12">
 
-      {/* Stats Overview - Modern Apple Style */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+      {/* Stats Overview - Ultra Minimal Apple Style */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((stat) => (
-          <Card key={stat.name} className="p-4 md:p-6 bg-card hover:bg-card/80 transition-colors duration-200">
-            <div className="space-y-3">
-              {/* Icon with subtle background */}
-              <div className="w-10 h-10 bg-muted rounded-lg flex items-center justify-center">
-                <stat.icon className="h-5 w-5 text-muted-foreground" strokeWidth={1.5} />
+          <Card key={stat.name} className="p-6 md:p-8 group hover:shadow-glass">
+            <div className="space-y-4">
+              {/* Icon - monochrome, thin line */}
+              <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center group-hover:bg-foreground transition-colors duration-300">
+                <stat.icon className="h-5 w-5 text-foreground group-hover:text-background" strokeWidth={1.5} />
               </div>
               
-              {/* Main metric */}
-              <div className="space-y-1">
-                <div className="text-2xl md:text-3xl font-light text-foreground tracking-tight">
+              {/* Metric - bold title, light supporting text */}
+              <div className="space-y-2">
+                <div className="text-3xl md:text-4xl font-bold text-foreground tracking-tight">
                   {stat.value}
                 </div>
-                <div className="text-xs md:text-sm text-muted-foreground font-light">
+                <div className="text-sm text-muted-foreground font-light">
                   {stat.name}
                 </div>
               </div>
               
-              {/* Change indicator */}
-              <div className="flex items-center">
-                <div className={cn(
-                  "text-xs font-medium px-2 py-1 rounded-full",
-                  stat.change.startsWith('+') 
-                    ? "text-success bg-success/10" 
-                    : "text-muted-foreground bg-muted/50"
-                )}>
-                  {stat.change}
-                </div>
+              {/* Change - subtle pill indicator */}
+              <div className={cn(
+                "inline-flex text-xs font-medium px-3 py-1.5 rounded-pill",
+                stat.change.startsWith('+') 
+                  ? "bg-foreground/5 text-foreground" 
+                  : "bg-muted text-muted-foreground"
+              )}>
+                {stat.change}
               </div>
             </div>
           </Card>
         ))}
       </div>
 
-      {/* Filters */}
+      {/* Filters - Pill shaped buttons */}
       <div className="flex flex-wrap gap-2">
         {filters.map((filter) => (
           <Button
@@ -118,19 +116,15 @@ export function Dashboard() {
             variant={activeFilter === filter.id ? "default" : "outline"}
             size="sm"
             onClick={() => setActiveFilter(filter.id)}
-            className={cn(
-              "transition-all duration-200",
-              activeFilter === filter.id && "bg-accent text-accent-foreground hover:bg-accent/90"
-            )}
           >
-            <filter.icon className="h-4 w-4 mr-2" />
+            <filter.icon className="h-4 w-4 mr-2" strokeWidth={1.5} />
             {filter.label}
           </Button>
         ))}
       </div>
 
-      {/* Projects Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Projects Grid - Generous spacing */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {filteredProjects.map((project) => (
           <ProjectCard
             key={project.id}
@@ -141,12 +135,14 @@ export function Dashboard() {
       </div>
 
       {filteredProjects.length === 0 && (
-        <div className="text-center py-12">
-          <Building2 className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-primary mb-2">
+        <div className="text-center py-20">
+          <div className="w-16 h-16 rounded-full bg-secondary flex items-center justify-center mx-auto mb-6">
+            <Building2 className="h-8 w-8 text-muted-foreground" strokeWidth={1.5} />
+          </div>
+          <h3 className="text-xl font-bold text-foreground mb-2">
             Aucun projet trouvé
           </h3>
-          <p className="text-muted-foreground">
+          <p className="text-sm text-muted-foreground font-light">
             Aucun projet ne correspond aux filtres sélectionnés.
           </p>
         </div>
