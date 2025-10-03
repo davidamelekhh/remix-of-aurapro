@@ -6,14 +6,17 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
+import heroBuilding from '@/assets/hero-building.jpg';
+import projectVilla from '@/assets/project-villa.jpg';
+import projectApartment from '@/assets/project-apartment.jpg';
 
 const projects = [
-  { id: 1, name: 'Résidence Les Jardins', location: 'Casablanca', progress: 75, status: 'En cours', clients: 12, phase: 'Finitions', startDate: '2024-01-15', endDate: '2024-12-30' },
-  { id: 2, name: 'Villa Moderne Atlas', location: 'Marrakech', progress: 45, status: 'En cours', clients: 1, phase: 'Structure', startDate: '2024-03-01', endDate: '2025-02-28' },
-  { id: 3, name: 'Complexe Marina Bay', location: 'Tanger', progress: 90, status: 'En cours', clients: 24, phase: 'Livraison', startDate: '2023-06-01', endDate: '2024-11-30' },
-  { id: 4, name: 'Appartements Ocean View', location: 'Agadir', progress: 30, status: 'En cours', clients: 8, phase: 'Fondations', startDate: '2024-05-01', endDate: '2025-06-30' },
-  { id: 5, name: 'Résidence Palm Garden', location: 'Rabat', progress: 15, status: 'Retard', clients: 6, phase: 'Terrassement', startDate: '2024-02-01', endDate: '2025-01-31' },
-  { id: 6, name: 'Tour Sky Heights', location: 'Casablanca', progress: 60, status: 'En cours', clients: 18, phase: 'Étages supérieurs', startDate: '2023-09-01', endDate: '2025-03-31' },
+  { id: 1, name: 'Résidence Les Jardins', location: 'Casablanca', progress: 75, status: 'En cours', clients: 12, phase: 'Finitions', startDate: '2024-01-15', endDate: '2024-12-30', image: projectVilla },
+  { id: 2, name: 'Villa Moderne Atlas', location: 'Marrakech', progress: 45, status: 'En cours', clients: 1, phase: 'Structure', startDate: '2024-03-01', endDate: '2025-02-28', image: heroBuilding },
+  { id: 3, name: 'Complexe Marina Bay', location: 'Tanger', progress: 90, status: 'En cours', clients: 24, phase: 'Livraison', startDate: '2023-06-01', endDate: '2024-11-30', image: projectApartment },
+  { id: 4, name: 'Appartements Ocean View', location: 'Agadir', progress: 30, status: 'En cours', clients: 8, phase: 'Fondations', startDate: '2024-05-01', endDate: '2025-06-30', image: projectVilla },
+  { id: 5, name: 'Résidence Palm Garden', location: 'Rabat', progress: 15, status: 'Retard', clients: 6, phase: 'Terrassement', startDate: '2024-02-01', endDate: '2025-01-31', image: heroBuilding },
+  { id: 6, name: 'Tour Sky Heights', location: 'Casablanca', progress: 60, status: 'En cours', clients: 18, phase: 'Étages supérieurs', startDate: '2023-09-01', endDate: '2025-03-31', image: projectApartment },
 ];
 
 export default function ProProjects() {
@@ -66,13 +69,25 @@ export default function ProProjects() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredProjects.map((project) => (
             <Link key={project.id} to={`/pro/project/${project.id}`}>
-              <Card className="hover:shadow-lg transition-all cursor-pointer h-full">
+              <Card className="hover:shadow-lg transition-all cursor-pointer h-full overflow-hidden">
+                {/* Image */}
+                <div className="relative h-48 overflow-hidden">
+                  <img
+                    src={project.image}
+                    alt={project.name}
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                  />
+                  <Badge 
+                    variant={project.status === 'Retard' ? 'destructive' : 'default'}
+                    className="absolute top-4 right-4"
+                  >
+                    {project.status}
+                  </Badge>
+                </div>
+
                 <CardHeader>
                   <div className="flex justify-between items-start">
                     <Building2 className="h-8 w-8 text-primary" />
-                    <Badge variant={project.status === 'Retard' ? 'destructive' : 'default'}>
-                      {project.status}
-                    </Badge>
                   </div>
                   <CardTitle className="mt-4">{project.name}</CardTitle>
                   <p className="text-sm text-muted-foreground">{project.location}</p>

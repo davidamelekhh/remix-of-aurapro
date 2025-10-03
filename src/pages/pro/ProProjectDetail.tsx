@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import projectVilla from '@/assets/project-villa.jpg';
 
 // Mock data
 const projectData = {
@@ -22,6 +23,7 @@ const projectData = {
   description: 'Résidence moderne avec espaces verts et équipements haut de gamme.',
   budget: '45 000 000 MAD',
   surface: '12 000 m²',
+  image: projectVilla,
 };
 
 const milestones = [
@@ -130,6 +132,17 @@ export default function ProProjectDetail() {
 
           {/* Overview Tab */}
           <TabsContent value="overview" className="space-y-6">
+            {/* Project Image */}
+            <Card className="overflow-hidden">
+              <div className="h-80 relative">
+                <img
+                  src={projectData.image}
+                  alt={projectData.name}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </Card>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Card>
                 <CardHeader>

@@ -4,6 +4,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
+import heroBuilding from '@/assets/hero-building.jpg';
+import projectVilla from '@/assets/project-villa.jpg';
+import projectApartment from '@/assets/project-apartment.jpg';
 
 // Mock data
 const stats = [
@@ -14,11 +17,11 @@ const stats = [
 ];
 
 const projects = [
-  { id: 1, name: 'Résidence Les Jardins', location: 'Casablanca', progress: 75, status: 'En cours', clients: 12, phase: 'Finitions' },
-  { id: 2, name: 'Villa Moderne Atlas', location: 'Marrakech', progress: 45, status: 'En cours', clients: 1, phase: 'Structure' },
-  { id: 3, name: 'Complexe Marina Bay', location: 'Tanger', progress: 90, status: 'En cours', clients: 24, phase: 'Livraison' },
-  { id: 4, name: 'Appartements Ocean View', location: 'Agadir', progress: 30, status: 'En cours', clients: 8, phase: 'Fondations' },
-  { id: 5, name: 'Résidence Palm Garden', location: 'Rabat', progress: 15, status: 'Retard', clients: 6, phase: 'Terrassement' },
+  { id: 1, name: 'Résidence Les Jardins', location: 'Casablanca', progress: 75, status: 'En cours', clients: 12, phase: 'Finitions', image: projectVilla },
+  { id: 2, name: 'Villa Moderne Atlas', location: 'Marrakech', progress: 45, status: 'En cours', clients: 1, phase: 'Structure', image: heroBuilding },
+  { id: 3, name: 'Complexe Marina Bay', location: 'Tanger', progress: 90, status: 'En cours', clients: 24, phase: 'Livraison', image: projectApartment },
+  { id: 4, name: 'Appartements Ocean View', location: 'Agadir', progress: 30, status: 'En cours', clients: 8, phase: 'Fondations', image: projectVilla },
+  { id: 5, name: 'Résidence Palm Garden', location: 'Rabat', progress: 15, status: 'Retard', clients: 6, phase: 'Terrassement', image: heroBuilding },
 ];
 
 export default function ProDashboard() {
@@ -81,33 +84,47 @@ export default function ProDashboard() {
             <div className="space-y-4">
               {projects.map((project) => (
                 <Link key={project.id} to={`/pro/project/${project.id}`}>
-                  <div className="border border-border rounded-lg p-4 hover:bg-secondary/50 transition-all cursor-pointer">
-                    <div className="flex items-start justify-between mb-3">
-                      <div>
-                        <h3 className="font-semibold text-lg">{project.name}</h3>
-                        <p className="text-sm text-muted-foreground">{project.location}</p>
+                  <div className="border border-border rounded-lg overflow-hidden hover:bg-secondary/50 transition-all cursor-pointer group">
+                    <div className="flex gap-4">
+                      {/* Image */}
+                      <div className="w-32 h-32 flex-shrink-0 relative overflow-hidden">
+                        <img
+                          src={project.image}
+                          alt={project.name}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
                       </div>
-                      <Badge variant={project.status === 'Retard' ? 'destructive' : 'default'}>
-                        {project.status}
-                      </Badge>
-                    </div>
-                    
-                    <div className="grid grid-cols-3 gap-4 mb-3 text-sm">
-                      <div>
-                        <span className="text-muted-foreground">Phase: </span>
-                        <span className="font-medium">{project.phase}</span>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground">Clients: </span>
-                        <span className="font-medium">{project.clients}</span>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground">Progression: </span>
-                        <span className="font-medium">{project.progress}%</span>
-                      </div>
-                    </div>
 
-                    <Progress value={project.progress} className="h-2" />
+                      {/* Content */}
+                      <div className="flex-1 p-4">
+                        <div className="flex items-start justify-between mb-3">
+                          <div>
+                            <h3 className="font-semibold text-lg">{project.name}</h3>
+                            <p className="text-sm text-muted-foreground">{project.location}</p>
+                          </div>
+                          <Badge variant={project.status === 'Retard' ? 'destructive' : 'default'}>
+                            {project.status}
+                          </Badge>
+                        </div>
+                        
+                        <div className="grid grid-cols-3 gap-4 mb-3 text-sm">
+                          <div>
+                            <span className="text-muted-foreground">Phase: </span>
+                            <span className="font-medium">{project.phase}</span>
+                          </div>
+                          <div>
+                            <span className="text-muted-foreground">Clients: </span>
+                            <span className="font-medium">{project.clients}</span>
+                          </div>
+                          <div>
+                            <span className="text-muted-foreground">Progression: </span>
+                            <span className="font-medium">{project.progress}%</span>
+                          </div>
+                        </div>
+
+                        <Progress value={project.progress} className="h-2" />
+                      </div>
+                    </div>
                   </div>
                 </Link>
               ))}
