@@ -74,19 +74,22 @@ export function Dashboard() {
   return (
     <div className="space-y-6 pb-8">
 
-      {/* Filters - Compact mobile layout */}
-      <div className="flex flex-wrap gap-2">
-        {filters.map((filter) => (
-          <Button
-            key={filter.id}
-            variant={activeFilter === filter.id ? "default" : "outline"}
-            size="sm"
-            onClick={() => setActiveFilter(filter.id)}
-          >
-            <filter.icon className="h-4 w-4 mr-2" strokeWidth={1.5} />
-            <span className="text-sm">{filter.label}</span>
-          </Button>
-        ))}
+      {/* Filters - Horizontal scrollable */}
+      <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
+        <div className="flex gap-2 min-w-max">
+          {filters.map((filter) => (
+            <Button
+              key={filter.id}
+              variant={activeFilter === filter.id ? "default" : "outline"}
+              size="sm"
+              onClick={() => setActiveFilter(filter.id)}
+              className="flex-shrink-0"
+            >
+              <filter.icon className="h-4 w-4 mr-2" strokeWidth={1.5} />
+              <span className="text-sm whitespace-nowrap">{filter.label}</span>
+            </Button>
+          ))}
+        </div>
       </div>
 
       {/* Projects Grid - Optimized spacing */}
