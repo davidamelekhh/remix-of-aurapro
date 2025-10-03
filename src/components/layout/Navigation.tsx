@@ -1,15 +1,11 @@
 import { useState } from 'react';
-import { Home, Building2, MessageSquare, FileText, Settings, Menu, X } from 'lucide-react';
+import { Home, Building2, Menu, X } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 const navigation = [
-  { name: 'Tableau de bord', nameAr: 'لوحة القيادة', href: '/', icon: Home },
-  { name: 'Projets', nameAr: 'المشاريع', href: '/projects', icon: Building2 },
-  { name: 'Messages', nameAr: 'الرسائل', href: '/messages', icon: MessageSquare },
-  { name: 'Documents', nameAr: 'الوثائق', href: '/documents', icon: FileText },
-  { name: 'Paramètres', nameAr: 'الإعدادات', href: '/settings', icon: Settings },
+  { name: 'Mes biens', nameAr: 'ممتلكاتي', href: '/', icon: Home },
 ];
 
 export function Navigation() {
