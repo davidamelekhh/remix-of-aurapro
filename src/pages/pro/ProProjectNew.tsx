@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Building2, ArrowLeft } from 'lucide-react';
+import { Building2, ArrowLeft, Upload, X } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -31,6 +31,8 @@ export default function ProProjectNew() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>('');
   const [formData, setFormData] = useState({
     name: '',
     location: '',
@@ -38,10 +40,34 @@ export default function ProProjectNew() {
     phase: '',
     status: 'En cours',
     progress: 0,
-    image_url: '',
     start_date: '',
     end_date: '',
   });
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (!file.type.startsWith('image/')) {
+        toast({
+          title: 'Erreur',
+          description: 'Veuillez sélectionner une image',
+          variant: 'destructive',
+        });
+        return;
+      }
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removeImage = () => {
+    setImageFile(null);
+    setImagePreview('');
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,6 +84,26 @@ export default function ProProjectNew() {
         return;
       }
 
+      let imageUrl = '';
+
+      // Upload image if one was selected
+      if (imageFile) {
+        const fileExt = imageFile.name.split('.').pop();
+        const fileName = `${user.id}/${Date.now()}.${fileExt}`;
+        
+        const { error: uploadError } = await supabase.storage
+          .from('project-images')
+          .upload(fileName, imageFile);
+
+        if (uploadError) throw uploadError;
+
+        const { data: { publicUrl } } = supabase.storage
+          .from('project-images')
+          .getPublicUrl(fileName);
+
+        imageUrl = publicUrl;
+      }
+
       const { data, error } = await supabase
         .from('projects')
         .insert([
@@ -65,6 +111,7 @@ export default function ProProjectNew() {
             ...formData,
             owner_id: user.id,
             progress: Number(formData.progress),
+            image_url: imageUrl,
           },
         ])
         .select()
@@ -240,19 +287,47 @@ export default function ProProjectNew() {
                 </div>
               </div>
 
-              {/* URL de l'image */}
+              {/* Image upload */}
               <div className="space-y-2">
-                <Label htmlFor="image_url">URL de l'image du projet</Label>
-                <Input
-                  id="image_url"
-                  type="url"
-                  value={formData.image_url}
-                  onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                  placeholder="https://exemple.com/image.jpg"
-                />
-                <p className="text-sm text-muted-foreground">
-                  Optionnel : ajoutez l'URL d'une image pour illustrer votre projet
-                </p>
+                <Label htmlFor="image">Image du projet</Label>
+                {imagePreview ? (
+                  <div className="relative">
+                    <img
+                      src={imagePreview}
+                      alt="Aperçu"
+                      className="w-full h-48 object-cover rounded-lg"
+                    />
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      size="icon"
+                      className="absolute top-2 right-2"
+                      onClick={removeImage}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="border-2 border-dashed border-border rounded-lg p-6 text-center">
+                    <Upload className="h-12 w-12 text-muted-foreground mx-auto mb-2" />
+                    <Label
+                      htmlFor="image"
+                      className="cursor-pointer text-primary hover:underline"
+                    >
+                      Cliquez pour sélectionner une image
+                    </Label>
+                    <Input
+                      id="image"
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handleImageChange}
+                    />
+                    <p className="text-sm text-muted-foreground mt-2">
+                      PNG, JPG, WEBP jusqu'à 10MB
+                    </p>
+                  </div>
+                )}
               </div>
 
               {/* Boutons */}

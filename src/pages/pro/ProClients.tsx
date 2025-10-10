@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { UserPlus, Search, Mail, Phone } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -90,10 +91,12 @@ export default function ProClients() {
               <h1 className="text-3xl font-bold text-foreground">Gestion des clients</h1>
               <p className="text-muted-foreground mt-1">Gérez vos clients et leurs accès projets</p>
             </div>
-            <Button size="lg">
-              <UserPlus className="mr-2 h-4 w-4" />
-              Nouveau client
-            </Button>
+            <Link to="/pro/clients/new">
+              <Button size="lg">
+                <UserPlus className="mr-2 h-4 w-4" />
+                Nouveau client
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
@@ -144,10 +147,12 @@ export default function ProClients() {
                 <p className="text-muted-foreground mb-6">
                   {searchTerm ? 'Aucun client ne correspond à votre recherche' : 'Commencez par ajouter votre premier client'}
                 </p>
-                <Button>
-                  <UserPlus className="mr-2 h-4 w-4" />
-                  Ajouter un client
-                </Button>
+                <Link to="/pro/clients/new">
+                  <Button>
+                    <UserPlus className="mr-2 h-4 w-4" />
+                    Ajouter un client
+                  </Button>
+                </Link>
               </div>
             ) : (
               <Table>

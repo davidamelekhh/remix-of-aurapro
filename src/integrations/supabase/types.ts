@@ -89,14 +89,17 @@ export type Database = {
         Row: {
           client_id: string
           project_id: string
+          unit_id: string | null
         }
         Insert: {
           client_id: string
           project_id: string
+          unit_id?: string | null
         }
         Update: {
           client_id?: string
           project_id?: string
+          unit_id?: string | null
         }
         Relationships: [
           {
@@ -111,6 +114,13 @@ export type Database = {
             columns: ["project_id"]
             isOneToOne: false
             referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "project_clients_unit_id_fkey"
+            columns: ["unit_id"]
+            isOneToOne: false
+            referencedRelation: "property_units"
             referencedColumns: ["id"]
           },
         ]
@@ -167,6 +177,56 @@ export type Database = {
             columns: ["owner_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      property_units: {
+        Row: {
+          created_at: string
+          description: string | null
+          floor: string | null
+          id: string
+          price: number | null
+          project_id: string
+          status: string
+          surface_area: number | null
+          unit_number: string
+          unit_type: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          floor?: string | null
+          id?: string
+          price?: number | null
+          project_id: string
+          status?: string
+          surface_area?: number | null
+          unit_number: string
+          unit_type: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          floor?: string | null
+          id?: string
+          price?: number | null
+          project_id?: string
+          status?: string
+          surface_area?: number | null
+          unit_number?: string
+          unit_type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "property_units_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
             referencedColumns: ["id"]
           },
         ]
