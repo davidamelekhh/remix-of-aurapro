@@ -1,10 +1,12 @@
-import { useState } from 'react';
-import { UserPlus, Search, Mail, Phone, Building2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { UserPlus, Search, Mail, Phone } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { ProNavigation } from '@/components/layout/ProNavigation';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 import {
   Table,
   TableBody,
@@ -14,21 +16,67 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
-const clients = [
-  { id: 1, name: 'Ahmed Benali', email: 'ahmed.benali@email.com', phone: '+212 6 12 34 56 78', projects: ['Résidence Les Jardins'], status: 'Actif', joinDate: '2024-01-15' },
-  { id: 2, name: 'Fatima Zahra', email: 'fatima.z@email.com', phone: '+212 6 98 76 54 32', projects: ['Villa Moderne Atlas'], status: 'Actif', joinDate: '2024-02-20' },
-  { id: 3, name: 'Mohamed Alaoui', email: 'm.alaoui@email.com', phone: '+212 6 11 22 33 44', projects: ['Complexe Marina Bay', 'Résidence Les Jardins'], status: 'Actif', joinDate: '2023-11-10' },
-  { id: 4, name: 'Samira El Fassi', email: 'samira.ef@email.com', phone: '+212 6 55 66 77 88', projects: ['Appartements Ocean View'], status: 'Actif', joinDate: '2024-03-05' },
-  { id: 5, name: 'Youssef Tazi', email: 'y.tazi@email.com', phone: '+212 6 99 88 77 66', projects: ['Résidence Palm Garden'], status: 'En attente', joinDate: '2024-04-12' },
-];
+type Client = {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  status: string;
+  join_date: string;
+};
 
 export default function ProClients() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [clients, setClients] = useState<Client[]>([]);
+  const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    fetchClients();
+  }, []);
+
+  const fetchClients = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { data, error } = await supabase
+        .from('clients')
+        .select('*')
+        .eq('owner_id', user.id)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setClients(data || []);
+    } catch (error: any) {
+      toast({
+        title: 'Erreur',
+        description: error.message,
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const filteredClients = clients.filter(client =>
     client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     client.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <ProNavigation />
+        <div className="flex items-center justify-center h-96">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+            <p className="mt-4 text-muted-foreground">Chargement...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -89,60 +137,63 @@ export default function ProClients() {
         {/* Clients Table */}
         <Card>
           <CardContent className="p-0">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Client</TableHead>
-                  <TableHead>Contact</TableHead>
-                  <TableHead>Projets</TableHead>
-                  <TableHead>Statut</TableHead>
-                  <TableHead>Date d'inscription</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredClients.map((client) => (
-                  <TableRow key={client.id}>
-                    <TableCell className="font-medium">{client.name}</TableCell>
-                    <TableCell>
-                      <div className="space-y-1">
-                        <div className="flex items-center text-sm text-muted-foreground">
-                          <Mail className="h-3 w-3 mr-2" />
-                          {client.email}
-                        </div>
-                        <div className="flex items-center text-sm text-muted-foreground">
-                          <Phone className="h-3 w-3 mr-2" />
-                          {client.phone}
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="space-y-1">
-                        {client.projects.map((project, idx) => (
-                          <div key={idx} className="flex items-center text-sm">
-                            <Building2 className="h-3 w-3 mr-2 text-primary" />
-                            {project}
-                          </div>
-                        ))}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant={client.status === 'Actif' ? 'default' : 'secondary'}>
-                        {client.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-sm text-muted-foreground">
-                      {new Date(client.joinDate).toLocaleDateString('fr-FR')}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <Button variant="ghost" size="sm">
-                        Gérer
-                      </Button>
-                    </TableCell>
+            {filteredClients.length === 0 ? (
+              <div className="text-center py-12">
+                <UserPlus className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                <h3 className="text-lg font-semibold mb-2">Aucun client</h3>
+                <p className="text-muted-foreground mb-6">
+                  {searchTerm ? 'Aucun client ne correspond à votre recherche' : 'Commencez par ajouter votre premier client'}
+                </p>
+                <Button>
+                  <UserPlus className="mr-2 h-4 w-4" />
+                  Ajouter un client
+                </Button>
+              </div>
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Client</TableHead>
+                    <TableHead>Contact</TableHead>
+                    <TableHead>Statut</TableHead>
+                    <TableHead>Date d'inscription</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {filteredClients.map((client) => (
+                    <TableRow key={client.id}>
+                      <TableCell className="font-medium">{client.name}</TableCell>
+                      <TableCell>
+                        <div className="space-y-1">
+                          <div className="flex items-center text-sm text-muted-foreground">
+                            <Mail className="h-3 w-3 mr-2" />
+                            {client.email}
+                          </div>
+                          <div className="flex items-center text-sm text-muted-foreground">
+                            <Phone className="h-3 w-3 mr-2" />
+                            {client.phone}
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant={client.status === 'Actif' ? 'default' : 'secondary'}>
+                          {client.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-sm text-muted-foreground">
+                        {new Date(client.join_date).toLocaleDateString('fr-FR')}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Button variant="ghost" size="sm">
+                          Gérer
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
           </CardContent>
         </Card>
       </div>

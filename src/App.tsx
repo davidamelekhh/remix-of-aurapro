@@ -5,11 +5,13 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import ProjectDetail from "./pages/ProjectDetail";
+import Auth from "./pages/Auth";
 import ProDashboard from "./pages/pro/ProDashboard";
 import ProProjects from "./pages/pro/ProProjects";
 import ProClients from "./pages/pro/ProClients";
 import ProProjectDetail from "./pages/pro/ProProjectDetail";
 import NotFound from "./pages/NotFound";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -24,11 +26,14 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/project/:id" element={<ProjectDetail />} />
           
-          {/* Pro Routes */}
-          <Route path="/pro/dashboard" element={<ProDashboard />} />
-          <Route path="/pro/projects" element={<ProProjects />} />
-          <Route path="/pro/clients" element={<ProClients />} />
-          <Route path="/pro/project/:id" element={<ProProjectDetail />} />
+          {/* Auth Route */}
+          <Route path="/auth" element={<Auth />} />
+          
+          {/* Pro Routes - Protected */}
+          <Route path="/pro/dashboard" element={<ProtectedRoute><ProDashboard /></ProtectedRoute>} />
+          <Route path="/pro/projects" element={<ProtectedRoute><ProProjects /></ProtectedRoute>} />
+          <Route path="/pro/clients" element={<ProtectedRoute><ProClients /></ProtectedRoute>} />
+          <Route path="/pro/project/:id" element={<ProtectedRoute><ProProjectDetail /></ProtectedRoute>} />
           
           <Route path="*" element={<NotFound />} />
         </Routes>

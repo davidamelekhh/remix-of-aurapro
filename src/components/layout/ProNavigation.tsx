@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Building2, LayoutDashboard, FolderKanban, Users, Menu, X } from 'lucide-react';
+import { Building2, LayoutDashboard, FolderKanban, Users, Menu, X, LogOut } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/hooks/useAuth';
 
 const navigation = [
   { name: 'Dashboard', href: '/pro/dashboard', icon: LayoutDashboard },
@@ -13,6 +14,7 @@ const navigation = [
 export function ProNavigation() {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const { signOut } = useAuth();
 
   return (
     <nav className="bg-card border-b border-border">
@@ -53,6 +55,15 @@ export function ProNavigation() {
           {/* User section */}
           <div className="flex items-center space-x-4">
             <div className="hidden md:block text-sm text-muted-foreground">Mode Promoteur</div>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={signOut}
+              className="hidden md:flex items-center gap-2"
+            >
+              <LogOut className="h-4 w-4" />
+              Déconnexion
+            </Button>
             
             {/* Mobile menu button */}
             <div className="md:hidden">
@@ -90,6 +101,14 @@ export function ProNavigation() {
                   </Link>
                 );
               })}
+              <Button 
+                variant="ghost" 
+                onClick={signOut}
+                className="w-full justify-start"
+              >
+                <LogOut className="mr-2 h-5 w-5" />
+                Déconnexion
+              </Button>
             </div>
           </div>
         )}
