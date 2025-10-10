@@ -19,10 +19,14 @@ export function useUserRole() {
           .from('user_roles')
           .select('role')
           .eq('user_id', user.id)
-          .single();
+          .maybeSingle();
 
-        if (error) throw error;
-        setRole(data?.role || null);
+        if (error) {
+          console.error('Error fetching user role:', error);
+          setRole(null);
+        } else {
+          setRole(data?.role || null);
+        }
       } catch (error) {
         console.error('Error fetching user role:', error);
         setRole(null);
