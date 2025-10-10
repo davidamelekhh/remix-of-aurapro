@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -7,10 +7,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Building } from 'lucide-react';
+import { useUserRole } from '@/hooks/useUserRole';
 
 export default function Auth() {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { role, loading: roleLoading } = useUserRole();
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -21,24 +23,49 @@ export default function Auth() {
     phone: ''
   });
 
+  // Redirect if already logged in
+  useEffect(() => {
+    if (!roleLoading && role) {
+      if (role === 'pro') {
+        navigate('/pro/dashboard');
+      } else if (role === 'client') {
+        navigate('/client/dashboard');
+      }
+    }
+  }, [role, roleLoading, navigate]);
+
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
       if (isLogin) {
-        const { error } = await supabase.auth.signInWithPassword({
+        const { data: authData, error } = await supabase.auth.signInWithPassword({
           email: formData.email,
           password: formData.password,
         });
 
         if (error) throw error;
+        if (!authData.user) throw new Error('Erreur de connexion');
+
+        // Fetch user role to redirect appropriately
+        const { data: roleData } = await supabase
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', authData.user.id)
+          .single();
 
         toast({
           title: 'Connexion réussie',
           description: 'Bienvenue !',
         });
-        navigate('/pro/dashboard');
+
+        // Redirect based on role
+        if (roleData?.role === 'pro') {
+          navigate('/pro/dashboard');
+        } else {
+          navigate('/client/dashboard');
+        }
       } else {
         const { error } = await supabase.auth.signUp({
           email: formData.email,

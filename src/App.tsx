@@ -12,6 +12,7 @@ import ProProjectNew from "./pages/pro/ProProjectNew";
 import ProClients from "./pages/pro/ProClients";
 import ProClientNew from "./pages/pro/ProClientNew";
 import ProProjectDetail from "./pages/pro/ProProjectDetail";
+import ClientDashboard from "./pages/client/ClientDashboard";
 import NotFound from "./pages/NotFound";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 
@@ -30,6 +31,9 @@ const App = () => (
           
           {/* Auth Route */}
           <Route path="/auth" element={<Auth />} />
+          
+          {/* Client Routes - Protected */}
+          <Route path="/client/dashboard" element={<ProtectedRoute><ClientDashboard /></ProtectedRoute>} />
           
           {/* Pro Routes - Protected */}
           <Route path="/pro/dashboard" element={<ProtectedRoute><ProDashboard /></ProtectedRoute>} />
