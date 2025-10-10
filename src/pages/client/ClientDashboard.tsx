@@ -6,6 +6,16 @@ import { Navigation } from '@/components/layout/Navigation';
 import { ProjectCard } from '@/components/dashboard/ProjectCard';
 import { Building2 } from 'lucide-react';
 
+type PropertyUnit = {
+  id: string;
+  unit_number: string;
+  unit_type: string;
+  surface_area: number | null;
+  price: number | null;
+  status: string;
+  floor: string | null;
+};
+
 type Project = {
   id: string;
   name: string;
@@ -15,6 +25,7 @@ type Project = {
   status: string;
   progress: number;
   image_url: string | null;
+  assigned_unit?: PropertyUnit;
 };
 
 export default function ClientDashboard() {
@@ -40,11 +51,11 @@ export default function ClientDashboard() {
 
       if (!profile?.email) return;
 
-      // Find client ID based on email
+      // Find client ID based on email (case insensitive)
       const { data: clientData } = await supabase
         .from('clients')
         .select('id')
-        .eq('email', profile.email)
+        .ilike('email', profile.email)
         .single();
 
       if (!clientData) {
@@ -52,10 +63,22 @@ export default function ClientDashboard() {
         return;
       }
 
-      // Get project IDs assigned to this client
+      // Get project assignments with unit details
       const { data: projectClients } = await supabase
         .from('project_clients')
-        .select('project_id')
+        .select(`
+          project_id,
+          unit_id,
+          property_units (
+            id,
+            unit_number,
+            unit_type,
+            surface_area,
+            price,
+            status,
+            floor
+          )
+        `)
         .eq('client_id', clientData.id);
 
       if (!projectClients || projectClients.length === 0) {
@@ -63,7 +86,7 @@ export default function ClientDashboard() {
         return;
       }
 
-      const projectIds = projectClients.map(pc => pc.project_id);
+      const projectIds = [...new Set(projectClients.map(pc => pc.project_id))];
 
       // Get projects
       const { data, error } = await supabase
@@ -72,7 +95,17 @@ export default function ClientDashboard() {
         .in('id', projectIds);
 
       if (error) throw error;
-      setProjects(data || []);
+
+      // Map projects with their assigned units
+      const projectsWithUnits = (data || []).map(project => {
+        const assignment = projectClients.find(pc => pc.project_id === project.id);
+        return {
+          ...project,
+          assigned_unit: assignment?.property_units as PropertyUnit | undefined,
+        };
+      });
+
+      setProjects(projectsWithUnits);
     } catch (error: any) {
       toast({
         title: 'Erreur',
@@ -136,6 +169,35 @@ export default function ClientDashboard() {
                 <CardContent className="p-6">
                   <h3 className="text-xl font-semibold mb-2">{project.name}</h3>
                   <p className="text-muted-foreground mb-4">{project.location}</p>
+                  
+                  {project.assigned_unit && (
+                    <div className="mb-4 p-3 bg-secondary/50 rounded-lg">
+                      <h4 className="font-medium text-sm mb-2">Votre bien</h4>
+                      <div className="space-y-1 text-sm">
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Lot:</span>
+                          <span className="font-medium">{project.assigned_unit.unit_number}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Type:</span>
+                          <span className="font-medium">{project.assigned_unit.unit_type}</span>
+                        </div>
+                        {project.assigned_unit.surface_area && (
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Surface:</span>
+                            <span className="font-medium">{project.assigned_unit.surface_area} m²</span>
+                          </div>
+                        )}
+                        {project.assigned_unit.floor && (
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Étage:</span>
+                            <span className="font-medium">{project.assigned_unit.floor}</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
                       <span>Phase:</span>
