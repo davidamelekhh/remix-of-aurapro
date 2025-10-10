@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Building2, LayoutDashboard, FolderKanban, Users, Menu, X, LogOut } from 'lucide-react';
+import { Building2, LayoutDashboard, FolderKanban, Users, Menu, X, LogOut, Settings } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -9,6 +9,7 @@ const navigation = [
   { name: 'Dashboard', href: '/pro/dashboard', icon: LayoutDashboard },
   { name: 'Projets', href: '/pro/projects', icon: FolderKanban },
   { name: 'Clients', href: '/pro/clients', icon: Users },
+  { name: 'Paramètres', href: '/pro/settings', icon: Settings },
 ];
 
 export function ProNavigation() {

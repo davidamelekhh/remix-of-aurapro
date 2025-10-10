@@ -12,6 +12,7 @@ import ProProjectNew from "./pages/pro/ProProjectNew";
 import ProClients from "./pages/pro/ProClients";
 import ProClientNew from "./pages/pro/ProClientNew";
 import ProProjectDetail from "./pages/pro/ProProjectDetail";
+import ProSettings from "./pages/pro/ProSettings";
 import ClientDashboard from "./pages/client/ClientDashboard";
 import NotFound from "./pages/NotFound";
 import { ProtectedRoute } from "./components/ProtectedRoute";
@@ -42,6 +43,7 @@ const App = () => (
           <Route path="/pro/clients" element={<ProtectedRoute><ProClients /></ProtectedRoute>} />
           <Route path="/pro/clients/new" element={<ProtectedRoute><ProClientNew /></ProtectedRoute>} />
           <Route path="/pro/project/:id" element={<ProtectedRoute><ProProjectDetail /></ProtectedRoute>} />
+          <Route path="/pro/settings" element={<ProtectedRoute><ProSettings /></ProtectedRoute>} />
           
           <Route path="*" element={<NotFound />} />
         </Routes>
