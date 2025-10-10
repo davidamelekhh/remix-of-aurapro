@@ -104,7 +104,7 @@ export default function ProProjectNew() {
         imageUrl = publicUrl;
       }
 
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('projects')
         .insert([
           {
@@ -113,9 +113,7 @@ export default function ProProjectNew() {
             progress: Number(formData.progress),
             image_url: imageUrl,
           },
-        ])
-        .select('id')
-        .single();
+        ]);
 
       if (error) throw error;
 
@@ -124,11 +122,7 @@ export default function ProProjectNew() {
         description: 'Le projet a été créé avec succès',
       });
 
-      if (data?.id) {
-        navigate(`/pro/project/${data.id}`);
-      } else {
-        navigate('/pro/projects');
-      }
+      navigate('/pro/projects');
     } catch (error: any) {
       toast({
         title: 'Erreur',
