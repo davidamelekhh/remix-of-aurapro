@@ -29,38 +29,94 @@ export default function ProClientNew() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Vous devez être connecté');
 
-      // Create auth account for client
-      const { data: authData, error: authError } = await supabase.auth.signUp({
-        email: formData.email,
-        password: formData.password,
-        options: {
-          emailRedirectTo: `${window.location.origin}/client/dashboard`,
-          data: {
-            full_name: formData.name,
-          }
-        }
-      });
-
-      if (authError) throw authError;
-      if (!authData.user) throw new Error('Erreur lors de la création du compte');
-
-      // Create client record
-      const { error: clientError } = await supabase
+      // Check if email already exists in clients table
+      const { data: existingClient } = await supabase
         .from('clients')
-        .insert({
-          name: formData.name,
+        .select('email')
+        .eq('email', formData.email)
+        .single();
+
+      if (existingClient) {
+        toast({
+          title: 'Email déjà utilisé',
+          description: 'Un client avec cet email existe déjà',
+          variant: 'destructive',
+        });
+        setLoading(false);
+        return;
+      }
+
+      // Check if user with this email already exists in profiles
+      const { data: existingProfile } = await supabase
+        .from('profiles')
+        .select('email')
+        .eq('email', formData.email)
+        .maybeSingle();
+
+      // If profile exists, don't create auth account, just create client record
+      if (existingProfile) {
+        const { error: clientError } = await supabase
+          .from('clients')
+          .insert({
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone,
+            owner_id: user.id,
+            status: 'Actif'
+          });
+
+        if (clientError) throw clientError;
+
+        toast({
+          title: 'Client ajouté',
+          description: 'Le client a été ajouté avec succès (utilisateur existant)',
+        });
+      } else {
+        // Create new auth account for client
+        const { data: authData, error: authError } = await supabase.auth.signUp({
           email: formData.email,
-          phone: formData.phone,
-          owner_id: user.id,
-          status: 'Actif'
+          password: formData.password,
+          options: {
+            emailRedirectTo: `${window.location.origin}/client/dashboard`,
+            data: {
+              full_name: formData.name,
+            }
+          }
         });
 
-      if (clientError) throw clientError;
+        if (authError) {
+          if (authError.message.includes('already registered')) {
+            toast({
+              title: 'Email déjà enregistré',
+              description: 'Un compte avec cet email existe déjà dans le système',
+              variant: 'destructive',
+            });
+            setLoading(false);
+            return;
+          }
+          throw authError;
+        }
+        
+        if (!authData.user) throw new Error('Erreur lors de la création du compte');
 
-      toast({
-        title: 'Client créé',
-        description: `Le compte client a été créé avec succès. Email: ${formData.email}`,
-      });
+        // Create client record
+        const { error: clientError } = await supabase
+          .from('clients')
+          .insert({
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone,
+            owner_id: user.id,
+            status: 'Actif'
+          });
+
+        if (clientError) throw clientError;
+
+        toast({
+          title: 'Client créé',
+          description: `Compte créé avec succès. Email: ${formData.email}`,
+        });
+      }
 
       navigate('/pro/clients');
     } catch (error: any) {
