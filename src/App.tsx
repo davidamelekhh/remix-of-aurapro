@@ -8,6 +8,7 @@ import ProjectDetail from "./pages/ProjectDetail";
 import Auth from "./pages/Auth";
 import ProDashboard from "./pages/pro/ProDashboard";
 import ProProjects from "./pages/pro/ProProjects";
+import ProProjectNew from "./pages/pro/ProProjectNew";
 import ProClients from "./pages/pro/ProClients";
 import ProProjectDetail from "./pages/pro/ProProjectDetail";
 import NotFound from "./pages/NotFound";
@@ -32,6 +33,7 @@ const App = () => (
           {/* Pro Routes - Protected */}
           <Route path="/pro/dashboard" element={<ProtectedRoute><ProDashboard /></ProtectedRoute>} />
           <Route path="/pro/projects" element={<ProtectedRoute><ProProjects /></ProtectedRoute>} />
+          <Route path="/pro/projects/new" element={<ProtectedRoute><ProProjectNew /></ProtectedRoute>} />
           <Route path="/pro/clients" element={<ProtectedRoute><ProClients /></ProtectedRoute>} />
           <Route path="/pro/project/:id" element={<ProtectedRoute><ProProjectDetail /></ProtectedRoute>} />
           
