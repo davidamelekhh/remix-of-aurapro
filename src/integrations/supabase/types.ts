@@ -224,6 +224,7 @@ export type Database = {
           created_by: string
           description: string | null
           id: string
+          media_urls: string[] | null
           progress_percentage: number | null
           project_id: string
           title: string
@@ -235,6 +236,7 @@ export type Database = {
           created_by: string
           description?: string | null
           id?: string
+          media_urls?: string[] | null
           progress_percentage?: number | null
           project_id: string
           title: string
@@ -246,6 +248,7 @@ export type Database = {
           created_by?: string
           description?: string | null
           id?: string
+          media_urls?: string[] | null
           progress_percentage?: number | null
           project_id?: string
           title?: string

@@ -75,6 +75,7 @@ type ProjectUpdate = {
   update_type: string;
   progress_percentage: number | null;
   created_at: string;
+  media_urls: string[] | null;
 };
 
 type ProjectDocument = {
@@ -111,14 +112,19 @@ export default function ProProjectDetail() {
   const [loading, setLoading] = useState(true);
   const [showUnitDialog, setShowUnitDialog] = useState(false);
   const [showAssignDialog, setShowAssignDialog] = useState(false);
-  const [showUpdateDialog, setShowUpdateDialog] = useState(false);
+  const [showMilestoneDialog, setShowMilestoneDialog] = useState(false);
   const [showEditProjectDialog, setShowEditProjectDialog] = useState(false);
   const [selectedUnitId, setSelectedUnitId] = useState<string>('');
   const [selectedClientId, setSelectedClientId] = useState<string>('');
+  const [selectedMilestoneId, setSelectedMilestoneId] = useState<string>('');
   const [uploadingDoc, setUploadingDoc] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [uploadingMedia, setUploadingMedia] = useState(false);
   const [newMessage, setNewMessage] = useState('');
-  const [selectedMilestone, setSelectedMilestone] = useState<string>('');
+  const [milestoneForm, setMilestoneForm] = useState({
+    description: '',
+    mediaFiles: [] as File[],
+  });
   const [projectForm, setProjectForm] = useState({
     name: '',
     location: '',
@@ -439,40 +445,54 @@ export default function ProProjectDetail() {
     return assignments.filter(a => a.unit_id === unitId);
   };
 
-  const handleAddMilestone = async () => {
-    if (!selectedMilestone) {
-      toast({
-        title: 'Erreur',
-        description: 'Veuillez sélectionner une étape',
-        variant: 'destructive',
-      });
-      return;
-    }
+  const handleCompleteMilestone = async () => {
+    if (!selectedMilestoneId) return;
 
+    setUploadingMedia(true);
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      const milestone = projectMilestones.find(m => m.id === selectedMilestone);
+      const milestone = projectMilestones.find(m => m.id === selectedMilestoneId);
       if (!milestone) return;
 
-      // Ajouter la mise à jour
+      // Upload media files
+      const mediaUrls: string[] = [];
+      for (const file of milestoneForm.mediaFiles) {
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${id}/milestones/${selectedMilestoneId}-${Date.now()}.${fileExt}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from('project-images')
+          .upload(fileName, file);
+
+        if (uploadError) throw uploadError;
+
+        const { data: { publicUrl } } = supabase.storage
+          .from('project-images')
+          .getPublicUrl(fileName);
+
+        mediaUrls.push(publicUrl);
+      }
+
+      // Create milestone update
       const { error: updateError } = await supabase
         .from('project_updates')
         .insert([
           {
             project_id: id,
             title: milestone.label,
-            description: `Étape "${milestone.label}" complétée`,
+            description: milestoneForm.description || `Étape "${milestone.label}" complétée`,
             update_type: 'milestone',
             progress_percentage: milestone.progress,
             created_by: user.id,
+            media_urls: mediaUrls.length > 0 ? mediaUrls : null,
           },
         ]);
 
       if (updateError) throw updateError;
 
-      // Mettre à jour la progression du projet
+      // Update project progress
       const { error: projectError } = await supabase
         .from('projects')
         .update({ progress: milestone.progress })
@@ -485,8 +505,9 @@ export default function ProProjectDetail() {
         description: `L'étape "${milestone.label}" a été marquée comme terminée`,
       });
 
-      setShowUpdateDialog(false);
-      setSelectedMilestone('');
+      setShowMilestoneDialog(false);
+      setSelectedMilestoneId('');
+      setMilestoneForm({ description: '', mediaFiles: [] });
       fetchProjectData();
     } catch (error: any) {
       toast({
@@ -494,6 +515,8 @@ export default function ProProjectDetail() {
         description: error.message,
         variant: 'destructive',
       });
+    } finally {
+      setUploadingMedia(false);
     }
   };
 
@@ -1178,11 +1201,10 @@ export default function ProProjectDetail() {
           </TabsContent>
 
           <TabsContent value="updates" className="space-y-6">
-            {/* Calendrier des étapes */}
             <Card>
               <CardHeader>
                 <CardTitle>Calendrier du projet</CardTitle>
-                <CardDescription>Étapes clés de construction</CardDescription>
+                <CardDescription>Suivez et complétez les étapes de construction</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
@@ -1195,29 +1217,64 @@ export default function ProProjectDetail() {
                     return (
                       <div key={milestone.id} className="flex items-start gap-4">
                         <div className="flex flex-col items-center">
-                          <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                            isCompleted ? 'bg-success text-success-foreground' : 'bg-muted text-muted-foreground'
-                          }`}>
-                            {isCompleted ? <Check className="h-4 w-4" /> : <span className="text-xs">{index + 1}</span>}
-                          </div>
+                          <button
+                            onClick={() => {
+                              if (!isCompleted) {
+                                setSelectedMilestoneId(milestone.id);
+                                setShowMilestoneDialog(true);
+                              }
+                            }}
+                            disabled={isCompleted}
+                            className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
+                              isCompleted 
+                                ? 'bg-success text-success-foreground cursor-default' 
+                                : 'bg-muted text-muted-foreground hover:bg-primary hover:text-primary-foreground cursor-pointer'
+                            }`}
+                          >
+                            {isCompleted ? <Check className="h-5 w-5" /> : <Plus className="h-5 w-5" />}
+                          </button>
                           {index < projectMilestones.length - 1 && (
-                            <div className={`w-0.5 h-12 ${isCompleted ? 'bg-success' : 'bg-border'}`} />
+                            <div className={`w-0.5 h-16 ${isCompleted ? 'bg-success' : 'bg-border'}`} />
                           )}
                         </div>
                         <div className="flex-1 pb-8">
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <p className={`font-medium ${isCompleted ? 'text-foreground' : 'text-muted-foreground'}`}>
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1">
+                              <p className={`font-medium text-lg ${isCompleted ? 'text-foreground' : 'text-muted-foreground'}`}>
                                 {milestone.label}
                               </p>
                               {milestoneUpdate && (
-                                <p className="text-sm text-muted-foreground mt-1">
-                                  <Clock className="h-3 w-3 inline mr-1" />
-                                  {new Date(milestoneUpdate.created_at).toLocaleDateString('fr-FR')}
-                                </p>
+                                <>
+                                  <p className="text-sm text-muted-foreground mt-1">
+                                    <Clock className="h-3 w-3 inline mr-1" />
+                                    {new Date(milestoneUpdate.created_at).toLocaleDateString('fr-FR', { 
+                                      day: 'numeric', 
+                                      month: 'long', 
+                                      year: 'numeric' 
+                                    })}
+                                  </p>
+                                  {milestoneUpdate.description && (
+                                    <p className="text-sm mt-2 text-foreground">{milestoneUpdate.description}</p>
+                                  )}
+                                  {milestoneUpdate.media_urls && milestoneUpdate.media_urls.length > 0 && (
+                                    <div className="grid grid-cols-3 gap-2 mt-3">
+                                      {milestoneUpdate.media_urls.map((url, idx) => (
+                                        <div key={idx} className="relative aspect-video rounded-lg overflow-hidden bg-muted">
+                                          {url.match(/\.(mp4|webm|ogg)$/i) ? (
+                                            <video src={url} controls className="w-full h-full object-cover" />
+                                          ) : (
+                                            <img src={url} alt="" className="w-full h-full object-cover" />
+                                          )}
+                                        </div>
+                                      ))}
+                                    </div>
+                                  )}
+                                </>
                               )}
                             </div>
-                            <span className="text-sm text-muted-foreground">{milestone.progress}%</span>
+                            <Badge variant={isCompleted ? 'default' : 'outline'}>
+                              {milestone.progress}%
+                            </Badge>
                           </div>
                         </div>
                       </div>
@@ -1227,75 +1284,83 @@ export default function ProProjectDetail() {
               </CardContent>
             </Card>
 
+            {/* Dialog pour compléter une étape */}
+            <Dialog open={showMilestoneDialog} onOpenChange={setShowMilestoneDialog}>
+              <DialogContent className="max-w-2xl">
+                <DialogHeader>
+                  <DialogTitle>
+                    Compléter l'étape : {projectMilestones.find(m => m.id === selectedMilestoneId)?.label}
+                  </DialogTitle>
+                  <DialogDescription>
+                    Ajoutez des photos, vidéos et un commentaire pour documenter cette étape
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="milestone_description">Commentaire</Label>
+                    <Textarea
+                      id="milestone_description"
+                      value={milestoneForm.description}
+                      onChange={(e) => setMilestoneForm({ ...milestoneForm, description: e.target.value })}
+                      placeholder="Décrivez l'avancement de cette étape..."
+                      rows={4}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="milestone_media">Photos et vidéos</Label>
+                    <Input
+                      id="milestone_media"
+                      type="file"
+                      accept="image/*,video/*"
+                      multiple
+                      onChange={(e) => {
+                        const files = Array.from(e.target.files || []);
+                        setMilestoneForm({ ...milestoneForm, mediaFiles: files });
+                      }}
+                    />
+                    {milestoneForm.mediaFiles.length > 0 && (
+                      <p className="text-sm text-muted-foreground">
+                        {milestoneForm.mediaFiles.length} fichier(s) sélectionné(s)
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="flex gap-4 pt-4">
+                    <Button 
+                      onClick={handleCompleteMilestone} 
+                      className="flex-1"
+                      disabled={uploadingMedia}
+                    >
+                      {uploadingMedia ? 'Enregistrement...' : 'Valider l\'étape'}
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => {
+                        setShowMilestoneDialog(false);
+                        setSelectedMilestoneId('');
+                        setMilestoneForm({ description: '', mediaFiles: [] });
+                      }}
+                      disabled={uploadingMedia}
+                    >
+                      Annuler
+                    </Button>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
+
             <Card>
               <CardHeader>
-                <div className="flex justify-between items-center">
-                  <div>
-                    <CardTitle>Marquer une étape comme terminée</CardTitle>
-                    <CardDescription>Complétez les étapes au fur et à mesure</CardDescription>
-                  </div>
-                  <Dialog open={showUpdateDialog} onOpenChange={setShowUpdateDialog}>
-                    <DialogTrigger asChild>
-                      <Button>
-                        <Plus className="mr-2 h-4 w-4" />
-                        Compléter une étape
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                      <DialogHeader>
-                        <DialogTitle>Compléter une étape</DialogTitle>
-                        <DialogDescription>
-                          Sélectionnez l'étape qui vient d'être terminée
-                        </DialogDescription>
-                      </DialogHeader>
-                      <div className="space-y-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="milestone_select">Étape terminée *</Label>
-                          <Select value={selectedMilestone} onValueChange={setSelectedMilestone}>
-                            <SelectTrigger id="milestone_select">
-                              <SelectValue placeholder="Sélectionnez une étape" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {projectMilestones
-                                .filter(m => project.progress < m.progress)
-                                .map((milestone) => (
-                                  <SelectItem key={milestone.id} value={milestone.id}>
-                                    {milestone.label} ({milestone.progress}%)
-                                  </SelectItem>
-                                ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
-
-                        <div className="flex gap-4 pt-4">
-                          <Button onClick={handleAddMilestone} className="flex-1">
-                            Valider
-                          </Button>
-                          <Button
-                            type="button"
-                            variant="outline"
-                            onClick={() => {
-                              setShowUpdateDialog(false);
-                              setSelectedMilestone('');
-                            }}
-                          >
-                            Annuler
-                          </Button>
-                        </div>
-                      </div>
-                    </DialogContent>
-                  </Dialog>
-                </div>
+                <CardTitle>Historique des mises à jour</CardTitle>
+                <CardDescription>Toutes les étapes complétées et mises à jour</CardDescription>
               </CardHeader>
               <CardContent>
                 {updates.length === 0 ? (
                   <div className="text-center py-12">
                     <Clock className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                    <p className="text-muted-foreground">Aucune mise à jour</p>
-                    <Button className="mt-4" onClick={() => setShowUpdateDialog(true)}>
-                      <Plus className="mr-2 h-4 w-4" />
-                      Première mise à jour
-                    </Button>
+                    <p className="text-muted-foreground">Aucune mise à jour pour le moment</p>
                   </div>
                 ) : (
                   <div className="space-y-4">
