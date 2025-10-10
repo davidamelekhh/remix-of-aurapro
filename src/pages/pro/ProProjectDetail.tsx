@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, Users, Calendar, MapPin, Edit, Trash2, Plus, Home } from 'lucide-react';
+import { ArrowLeft, Users, Calendar, MapPin, Edit, Trash2, Plus, Home, UserPlus } from 'lucide-react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -62,6 +62,12 @@ type Client = {
   status: string;
 };
 
+type UnitAssignment = {
+  client_id: string;
+  unit_id: string;
+  client?: Client;
+};
+
 export default function ProProjectDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -69,8 +75,12 @@ export default function ProProjectDetail() {
   const [project, setProject] = useState<Project | null>(null);
   const [units, setUnits] = useState<PropertyUnit[]>([]);
   const [clients, setClients] = useState<Client[]>([]);
+  const [assignments, setAssignments] = useState<UnitAssignment[]>([]);
   const [loading, setLoading] = useState(true);
   const [showUnitDialog, setShowUnitDialog] = useState(false);
+  const [showAssignDialog, setShowAssignDialog] = useState(false);
+  const [selectedUnitId, setSelectedUnitId] = useState<string>('');
+  const [selectedClientId, setSelectedClientId] = useState<string>('');
   const [unitForm, setUnitForm] = useState({
     unit_number: '',
     unit_type: '',
@@ -121,6 +131,26 @@ export default function ProProjectDetail() {
 
       if (clientsError) throw clientsError;
       setClients(clientsData || []);
+
+      // Fetch unit assignments
+      const { data: assignmentsData, error: assignmentsError } = await supabase
+        .from('project_clients')
+        .select(`
+          client_id,
+          unit_id,
+          clients (
+            id,
+            name,
+            email,
+            phone,
+            status
+          )
+        `)
+        .eq('project_id', id)
+        .not('unit_id', 'is', null);
+
+      if (assignmentsError) throw assignmentsError;
+      setAssignments(assignmentsData || []);
 
     } catch (error: any) {
       toast({
@@ -199,6 +229,97 @@ export default function ProProjectDetail() {
         variant: 'destructive',
       });
     }
+  };
+
+  const handleAssignClient = async () => {
+    if (!selectedClientId || !selectedUnitId) {
+      toast({
+        title: 'Erreur',
+        description: 'Veuillez sélectionner un client',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    try {
+      // Check if assignment already exists
+      const { data: existing } = await supabase
+        .from('project_clients')
+        .select('*')
+        .eq('project_id', id)
+        .eq('client_id', selectedClientId)
+        .eq('unit_id', selectedUnitId)
+        .single();
+
+      if (existing) {
+        toast({
+          title: 'Erreur',
+          description: 'Ce client est déjà assigné à ce lot',
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      const { error } = await supabase
+        .from('project_clients')
+        .insert([
+          {
+            project_id: id,
+            client_id: selectedClientId,
+            unit_id: selectedUnitId,
+          },
+        ]);
+
+      if (error) throw error;
+
+      toast({
+        title: 'Client assigné',
+        description: 'Le client a été assigné au lot avec succès',
+      });
+
+      setShowAssignDialog(false);
+      setSelectedClientId('');
+      setSelectedUnitId('');
+      fetchProjectData();
+    } catch (error: any) {
+      toast({
+        title: 'Erreur',
+        description: error.message,
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const handleUnassignClient = async (clientId: string, unitId: string) => {
+    if (!confirm('Êtes-vous sûr de vouloir désassigner ce client ?')) return;
+
+    try {
+      const { error } = await supabase
+        .from('project_clients')
+        .delete()
+        .eq('project_id', id)
+        .eq('client_id', clientId)
+        .eq('unit_id', unitId);
+
+      if (error) throw error;
+
+      toast({
+        title: 'Client désassigné',
+        description: 'Le client a été désassigné du lot',
+      });
+
+      fetchProjectData();
+    } catch (error: any) {
+      toast({
+        title: 'Erreur',
+        description: error.message,
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const getUnitAssignments = (unitId: string) => {
+    return assignments.filter(a => a.unit_id === unitId);
   };
 
   if (loading) {
@@ -470,33 +591,67 @@ export default function ProProjectDetail() {
                         <TableHead>Prix</TableHead>
                         <TableHead>Étage</TableHead>
                         <TableHead>Statut</TableHead>
+                        <TableHead>Client assigné</TableHead>
                         <TableHead className="text-right">Actions</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {units.map((unit) => (
-                        <TableRow key={unit.id}>
-                          <TableCell className="font-medium">{unit.unit_number}</TableCell>
-                          <TableCell>{unit.unit_type}</TableCell>
-                          <TableCell>{unit.surface_area ? `${unit.surface_area} m²` : '-'}</TableCell>
-                          <TableCell>{unit.price ? `${unit.price.toLocaleString()} MAD` : '-'}</TableCell>
-                          <TableCell>{unit.floor || '-'}</TableCell>
-                          <TableCell>
-                            <Badge variant={unit.status === 'Vendu' ? 'default' : unit.status === 'Réservé' ? 'secondary' : 'outline'}>
-                              {unit.status}
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => handleDeleteUnit(unit.id)}
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      ))}
+                      {units.map((unit) => {
+                        const unitAssignments = getUnitAssignments(unit.id);
+                        return (
+                          <TableRow key={unit.id}>
+                            <TableCell className="font-medium">{unit.unit_number}</TableCell>
+                            <TableCell>{unit.unit_type}</TableCell>
+                            <TableCell>{unit.surface_area ? `${unit.surface_area} m²` : '-'}</TableCell>
+                            <TableCell>{unit.price ? `${unit.price.toLocaleString()} MAD` : '-'}</TableCell>
+                            <TableCell>{unit.floor || '-'}</TableCell>
+                            <TableCell>
+                              <Badge variant={unit.status === 'Vendu' ? 'default' : unit.status === 'Réservé' ? 'secondary' : 'outline'}>
+                                {unit.status}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>
+                              {unitAssignments.length > 0 ? (
+                                <div className="space-y-1">
+                                  {unitAssignments.map((assignment) => (
+                                    <div key={assignment.client_id} className="flex items-center justify-between gap-2">
+                                      <span className="text-sm">{(assignment.client as any)?.name}</span>
+                                      <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() => handleUnassignClient(assignment.client_id, assignment.unit_id)}
+                                      >
+                                        <Trash2 className="h-3 w-3" />
+                                      </Button>
+                                    </div>
+                                  ))}
+                                </div>
+                              ) : (
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => {
+                                    setSelectedUnitId(unit.id);
+                                    setShowAssignDialog(true);
+                                  }}
+                                >
+                                  <UserPlus className="h-4 w-4 mr-2" />
+                                  Assigner
+                                </Button>
+                              )}
+                            </TableCell>
+                            <TableCell className="text-right">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleDeleteUnit(unit.id)}
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
                     </TableBody>
                   </Table>
                 )}
@@ -504,6 +659,70 @@ export default function ProProjectDetail() {
             </Card>
           </TabsContent>
         </Tabs>
+
+        {/* Assign Client Dialog */}
+        <Dialog open={showAssignDialog} onOpenChange={setShowAssignDialog}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Assigner un client</DialogTitle>
+              <DialogDescription>
+                Sélectionnez un client à assigner à ce lot
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label htmlFor="client">Client *</Label>
+                {clients.length === 0 ? (
+                  <div className="text-center py-4">
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Vous n'avez pas encore de clients
+                    </p>
+                    <Link to="/pro/clients/new">
+                      <Button variant="outline" size="sm">
+                        <UserPlus className="mr-2 h-4 w-4" />
+                        Créer un client
+                      </Button>
+                    </Link>
+                  </div>
+                ) : (
+                  <Select
+                    value={selectedClientId}
+                    onValueChange={setSelectedClientId}
+                  >
+                    <SelectTrigger id="client">
+                      <SelectValue placeholder="Sélectionnez un client" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {clients.map((client) => (
+                        <SelectItem key={client.id} value={client.id}>
+                          {client.name} - {client.email}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              </div>
+            </div>
+            <div className="flex gap-4">
+              <Button 
+                onClick={handleAssignClient} 
+                className="flex-1"
+                disabled={!selectedClientId || clients.length === 0}
+              >
+                Assigner
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setShowAssignDialog(false);
+                  setSelectedClientId('');
+                }}
+              >
+                Annuler
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
