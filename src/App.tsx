@@ -3,9 +3,9 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
-import ProjectDetail from "./pages/ProjectDetail";
-import Auth from "./pages/Auth";
+import Portal from "./pages/Portal";
+import ProAuth from "./pages/auth/ProAuth";
+import ClientAuth from "./pages/auth/ClientAuth";
 import ProDashboard from "./pages/pro/ProDashboard";
 import ProProjects from "./pages/pro/ProProjects";
 import ProProjectNew from "./pages/pro/ProProjectNew";
@@ -25,12 +25,12 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          {/* Client Routes */}
-          <Route path="/" element={<Index />} />
-          <Route path="/project/:id" element={<ProjectDetail />} />
+          {/* Portal Route */}
+          <Route path="/" element={<Portal />} />
           
-          {/* Auth Route */}
-          <Route path="/auth" element={<Auth />} />
+          {/* Auth Routes */}
+          <Route path="/auth/promoteur" element={<ProAuth />} />
+          <Route path="/auth/client" element={<ClientAuth />} />
           
           {/* Client Routes - Protected */}
           <Route path="/client/dashboard" element={<ProtectedRoute><ClientDashboard /></ProtectedRoute>} />

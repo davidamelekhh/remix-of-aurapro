@@ -29,12 +29,12 @@ export default function ProClientNew() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Vous devez être connecté');
 
-      // Check if email already exists in clients table
+      // Check if email already exists
       const { data: existingClient } = await supabase
         .from('clients')
         .select('email')
         .eq('email', formData.email)
-        .single();
+        .maybeSingle();
 
       if (existingClient) {
         toast({
@@ -46,77 +46,50 @@ export default function ProClientNew() {
         return;
       }
 
-      // Check if user with this email already exists in profiles
-      const { data: existingProfile } = await supabase
-        .from('profiles')
-        .select('email')
-        .eq('email', formData.email)
-        .maybeSingle();
-
-      // If profile exists, don't create auth account, just create client record
-      if (existingProfile) {
-        const { error: clientError } = await supabase
-          .from('clients')
-          .insert({
-            name: formData.name,
-            email: formData.email,
-            phone: formData.phone,
-            owner_id: user.id,
-            status: 'Actif'
-          });
-
-        if (clientError) throw clientError;
-
-        toast({
-          title: 'Client ajouté',
-          description: 'Le client a été ajouté avec succès (utilisateur existant)',
-        });
-      } else {
-        // Create new auth account for client
-        const { data: authData, error: authError } = await supabase.auth.signUp({
-          email: formData.email,
-          password: formData.password,
-          options: {
-            emailRedirectTo: `${window.location.origin}/client/dashboard`,
-            data: {
-              full_name: formData.name,
-            }
+      // Create auth account for client
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/client/dashboard`,
+          data: {
+            full_name: formData.name,
           }
-        });
-
-        if (authError) {
-          if (authError.message.includes('already registered')) {
-            toast({
-              title: 'Email déjà enregistré',
-              description: 'Un compte avec cet email existe déjà dans le système',
-              variant: 'destructive',
-            });
-            setLoading(false);
-            return;
-          }
-          throw authError;
         }
-        
-        if (!authData.user) throw new Error('Erreur lors de la création du compte');
+      });
 
-        // Create client record
-        const { error: clientError } = await supabase
-          .from('clients')
-          .insert({
-            name: formData.name,
-            email: formData.email,
-            phone: formData.phone,
-            owner_id: user.id,
-            status: 'Actif'
+      if (authError) {
+        if (authError.message.includes('already registered')) {
+          toast({
+            title: 'Email déjà enregistré',
+            description: 'Un compte avec cet email existe déjà',
+            variant: 'destructive',
           });
-
-        if (clientError) throw clientError;
-
-        toast({
-          title: 'Client créé',
-          description: `Compte créé avec succès. Email: ${formData.email}`,
-        });
+          setLoading(false);
+          return;
+        }
+        throw authError;
       }
+      
+      if (!authData.user) throw new Error('Erreur lors de la création du compte');
+
+      // Create client record
+      const { error: clientError } = await supabase
+        .from('clients')
+        .insert({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          owner_id: user.id,
+          status: 'Actif'
+        });
+
+      if (clientError) throw clientError;
+
+      toast({
+        title: 'Client créé',
+        description: `Compte créé. Email: ${formData.email}, Mot de passe: ${formData.password}`,
+      });
 
       navigate('/pro/clients');
     } catch (error: any) {
