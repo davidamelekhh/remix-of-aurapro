@@ -1351,50 +1351,6 @@ export default function ProProjectDetail() {
               </DialogContent>
             </Dialog>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Historique des mises à jour</CardTitle>
-                <CardDescription>Toutes les étapes complétées et mises à jour</CardDescription>
-              </CardHeader>
-              <CardContent>
-                {updates.length === 0 ? (
-                  <div className="text-center py-12">
-                    <Clock className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                    <p className="text-muted-foreground">Aucune mise à jour pour le moment</p>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    {updates.map((update) => (
-                      <div key={update.id} className="border-l-4 border-primary pl-4 py-2">
-                        <div className="flex justify-between items-start mb-2">
-                          <h3 className="font-semibold">{update.title}</h3>
-                          <Badge variant={update.update_type === 'delay' ? 'destructive' : 'default'}>
-                            {update.update_type}
-                          </Badge>
-                        </div>
-                        {update.description && (
-                          <p className="text-sm text-muted-foreground mb-2">{update.description}</p>
-                        )}
-                        {update.progress_percentage !== null && (
-                          <div className="mb-2">
-                            <Progress value={update.progress_percentage} className="h-2" />
-                          </div>
-                        )}
-                        <p className="text-xs text-muted-foreground">
-                          {new Date(update.created_at).toLocaleDateString('fr-FR', {
-                            day: 'numeric',
-                            month: 'long',
-                            year: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit',
-                          })}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
           </TabsContent>
 
           <TabsContent value="documents" className="space-y-6">
