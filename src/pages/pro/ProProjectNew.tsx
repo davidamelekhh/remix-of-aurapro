@@ -114,7 +114,7 @@ export default function ProProjectNew() {
             image_url: imageUrl,
           },
         ])
-        .select()
+        .select('id')
         .single();
 
       if (error) throw error;
@@ -124,7 +124,11 @@ export default function ProProjectNew() {
         description: 'Le projet a été créé avec succès',
       });
 
-      navigate(`/pro/project/${data.id}`);
+      if (data?.id) {
+        navigate(`/pro/project/${data.id}`);
+      } else {
+        navigate('/pro/projects');
+      }
     } catch (error: any) {
       toast({
         title: 'Erreur',
