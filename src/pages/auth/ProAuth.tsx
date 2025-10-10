@@ -24,16 +24,23 @@ export default function ProAuth() {
     phone: ''
   });
 
-  // Redirect if already logged in
+  // Redirect or logout based on role
   useEffect(() => {
     if (!roleLoading && role) {
       if (role === 'pro') {
         navigate('/pro/dashboard');
       } else if (role === 'client') {
-        navigate('/client/dashboard');
+        // Disconnect client if trying to access pro space
+        supabase.auth.signOut().then(() => {
+          toast({
+            title: 'Déconnexion requise',
+            description: 'Vous étiez connecté comme client. Connectez-vous avec un compte promoteur.',
+            variant: 'destructive',
+          });
+        });
       }
     }
-  }, [role, roleLoading, navigate]);
+  }, [role, roleLoading, navigate, toast]);
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
