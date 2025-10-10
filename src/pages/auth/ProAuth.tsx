@@ -139,12 +139,14 @@ export default function ProAuth() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="companyName">Nom de l'entreprise</Label>
+                    <Label htmlFor="companyName">Nom de l'entreprise *</Label>
                     <Input
                       id="companyName"
                       type="text"
+                      required
                       value={formData.companyName}
                       onChange={(e) => setFormData({ ...formData, companyName: e.target.value })}
+                      placeholder="Votre société"
                     />
                   </div>
                   <div className="space-y-2">
