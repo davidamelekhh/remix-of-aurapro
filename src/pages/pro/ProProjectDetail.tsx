@@ -220,13 +220,13 @@ export default function ProProjectDetail() {
       if (clientsError) throw clientsError;
       setClients(clientsData || []);
 
-      // Fetch unit assignments
+      // Fetch unit assignments with client details
       const { data: assignmentsData, error: assignmentsError } = await supabase
         .from('project_clients')
         .select(`
           client_id,
           unit_id,
-          clients (
+          clients!inner (
             id,
             name,
             email,
@@ -238,7 +238,15 @@ export default function ProProjectDetail() {
         .not('unit_id', 'is', null);
 
       if (assignmentsError) throw assignmentsError;
-      setAssignments(assignmentsData || []);
+      
+      // Transform the data to match our type
+      const transformedAssignments = (assignmentsData || []).map((item: any) => ({
+        client_id: item.client_id,
+        unit_id: item.unit_id,
+        client: item.clients
+      }));
+      
+      setAssignments(transformedAssignments);
 
       // Fetch project updates
       const { data: updatesData, error: updatesError } = await supabase
@@ -1156,7 +1164,7 @@ export default function ProProjectDetail() {
                                 <div className="space-y-1">
                                   {unitAssignments.map((assignment) => (
                                     <div key={assignment.client_id} className="flex items-center justify-between gap-2">
-                                      <span className="text-sm">{(assignment.client as any)?.name}</span>
+                                      <span className="text-sm">{assignment.client?.name || 'Client inconnu'}</span>
                                       <Button
                                         variant="ghost"
                                         size="sm"
