@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, Users, Calendar, MapPin, Edit, Trash2, Plus, Home, UserPlus, FileText, MessageSquare, Upload, Download, Send, Clock } from 'lucide-react';
+import { ArrowLeft, Users, Calendar, MapPin, Edit, Trash2, Plus, Home, UserPlus, FileText, MessageSquare, Upload, Download, Send, Clock, Check, X } from 'lucide-react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -112,15 +112,22 @@ export default function ProProjectDetail() {
   const [showUnitDialog, setShowUnitDialog] = useState(false);
   const [showAssignDialog, setShowAssignDialog] = useState(false);
   const [showUpdateDialog, setShowUpdateDialog] = useState(false);
+  const [showEditProjectDialog, setShowEditProjectDialog] = useState(false);
   const [selectedUnitId, setSelectedUnitId] = useState<string>('');
   const [selectedClientId, setSelectedClientId] = useState<string>('');
   const [uploadingDoc, setUploadingDoc] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [newMessage, setNewMessage] = useState('');
-  const [updateForm, setUpdateForm] = useState({
-    title: '',
+  const [selectedMilestone, setSelectedMilestone] = useState<string>('');
+  const [projectForm, setProjectForm] = useState({
+    name: '',
+    location: '',
     description: '',
-    update_type: 'general',
-    progress_percentage: '',
+    phase: '',
+    status: '',
+    start_date: '',
+    end_date: '',
+    progress: '',
   });
   const [unitForm, setUnitForm] = useState({
     unit_number: '',
@@ -131,6 +138,19 @@ export default function ProProjectDetail() {
     floor: '',
     description: '',
   });
+
+  // Étapes prédéfinies du projet
+  const projectMilestones = [
+    { id: 'foundation', label: 'Fondations', progress: 10 },
+    { id: 'structure', label: 'Structure', progress: 25 },
+    { id: 'walls', label: 'Murs et cloisons', progress: 40 },
+    { id: 'roof', label: 'Toiture', progress: 55 },
+    { id: 'plumbing', label: 'Plomberie', progress: 65 },
+    { id: 'electricity', label: 'Électricité', progress: 75 },
+    { id: 'finishes', label: 'Finitions', progress: 85 },
+    { id: 'exterior', label: 'Aménagements extérieurs', progress: 95 },
+    { id: 'delivery', label: 'Livraison', progress: 100 },
+  ];
 
   useEffect(() => {
     if (id) {
@@ -419,38 +439,54 @@ export default function ProProjectDetail() {
     return assignments.filter(a => a.unit_id === unitId);
   };
 
-  const handleAddUpdate = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleAddMilestone = async () => {
+    if (!selectedMilestone) {
+      toast({
+        title: 'Erreur',
+        description: 'Veuillez sélectionner une étape',
+        variant: 'destructive',
+      });
+      return;
+    }
 
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      const { error } = await supabase
+      const milestone = projectMilestones.find(m => m.id === selectedMilestone);
+      if (!milestone) return;
+
+      // Ajouter la mise à jour
+      const { error: updateError } = await supabase
         .from('project_updates')
         .insert([
           {
             project_id: id,
-            ...updateForm,
-            progress_percentage: updateForm.progress_percentage ? Number(updateForm.progress_percentage) : null,
+            title: milestone.label,
+            description: `Étape "${milestone.label}" complétée`,
+            update_type: 'milestone',
+            progress_percentage: milestone.progress,
             created_by: user.id,
           },
         ]);
 
-      if (error) throw error;
+      if (updateError) throw updateError;
+
+      // Mettre à jour la progression du projet
+      const { error: projectError } = await supabase
+        .from('projects')
+        .update({ progress: milestone.progress })
+        .eq('id', id);
+
+      if (projectError) throw projectError;
 
       toast({
-        title: 'Mise à jour ajoutée',
-        description: 'La mise à jour du projet a été enregistrée',
+        title: 'Étape complétée',
+        description: `L'étape "${milestone.label}" a été marquée comme terminée`,
       });
 
       setShowUpdateDialog(false);
-      setUpdateForm({
-        title: '',
-        description: '',
-        update_type: 'general',
-        progress_percentage: '',
-      });
+      setSelectedMilestone('');
       fetchProjectData();
     } catch (error: any) {
       toast({
@@ -458,6 +494,85 @@ export default function ProProjectDetail() {
         description: error.message,
         variant: 'destructive',
       });
+    }
+  };
+
+  const handleEditProject = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const { error } = await supabase
+        .from('projects')
+        .update({
+          name: projectForm.name,
+          location: projectForm.location,
+          description: projectForm.description,
+          phase: projectForm.phase,
+          status: projectForm.status,
+          start_date: projectForm.start_date,
+          end_date: projectForm.end_date,
+          progress: Number(projectForm.progress),
+        })
+        .eq('id', id);
+
+      if (error) throw error;
+
+      toast({
+        title: 'Projet modifié',
+        description: 'Les informations du projet ont été mises à jour',
+      });
+
+      setShowEditProjectDialog(false);
+      fetchProjectData();
+    } catch (error: any) {
+      toast({
+        title: 'Erreur',
+        description: error.message,
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const handleUploadProjectImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingImage(true);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${id}/cover-${Date.now()}.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('project-images')
+        .upload(fileName, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('project-images')
+        .getPublicUrl(fileName);
+
+      const { error: updateError } = await supabase
+        .from('projects')
+        .update({ image_url: publicUrl })
+        .eq('id', id);
+
+      if (updateError) throw updateError;
+
+      toast({
+        title: 'Image ajoutée',
+        description: 'L\'image du projet a été mise à jour',
+      });
+
+      fetchProjectData();
+    } catch (error: any) {
+      toast({
+        title: 'Erreur',
+        description: error.message,
+        variant: 'destructive',
+      });
+    } finally {
+      setUploadingImage(false);
     }
   };
 
@@ -629,6 +744,162 @@ export default function ProProjectDetail() {
                 </div>
               </div>
             </div>
+            <Dialog open={showEditProjectDialog} onOpenChange={setShowEditProjectDialog}>
+              <DialogTrigger asChild>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setProjectForm({
+                      name: project.name,
+                      location: project.location,
+                      description: project.description || '',
+                      phase: project.phase,
+                      status: project.status,
+                      start_date: project.start_date,
+                      end_date: project.end_date,
+                      progress: String(project.progress),
+                    });
+                  }}
+                >
+                  <Edit className="h-4 w-4 mr-2" />
+                  Modifier
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-2xl">
+                <DialogHeader>
+                  <DialogTitle>Modifier le projet</DialogTitle>
+                  <DialogDescription>
+                    Modifiez les informations du projet
+                  </DialogDescription>
+                </DialogHeader>
+                <form onSubmit={handleEditProject} className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="edit_name">Nom du projet *</Label>
+                      <Input
+                        id="edit_name"
+                        required
+                        value={projectForm.name}
+                        onChange={(e) => setProjectForm({ ...projectForm, name: e.target.value })}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="edit_location">Localisation *</Label>
+                      <Input
+                        id="edit_location"
+                        required
+                        value={projectForm.location}
+                        onChange={(e) => setProjectForm({ ...projectForm, location: e.target.value })}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="edit_description">Description</Label>
+                    <Textarea
+                      id="edit_description"
+                      value={projectForm.description}
+                      onChange={(e) => setProjectForm({ ...projectForm, description: e.target.value })}
+                      rows={3}
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="edit_phase">Phase *</Label>
+                      <Select
+                        value={projectForm.phase}
+                        onValueChange={(value) => setProjectForm({ ...projectForm, phase: value })}
+                      >
+                        <SelectTrigger id="edit_phase">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Étude">Étude</SelectItem>
+                          <SelectItem value="Construction">Construction</SelectItem>
+                          <SelectItem value="Finitions">Finitions</SelectItem>
+                          <SelectItem value="Livraison">Livraison</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="edit_status">Statut *</Label>
+                      <Select
+                        value={projectForm.status}
+                        onValueChange={(value) => setProjectForm({ ...projectForm, status: value })}
+                      >
+                        <SelectTrigger id="edit_status">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="En cours">En cours</SelectItem>
+                          <SelectItem value="Terminé">Terminé</SelectItem>
+                          <SelectItem value="En pause">En pause</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="edit_start_date">Date de début *</Label>
+                      <Input
+                        id="edit_start_date"
+                        type="date"
+                        required
+                        value={projectForm.start_date}
+                        onChange={(e) => setProjectForm({ ...projectForm, start_date: e.target.value })}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="edit_end_date">Date de fin *</Label>
+                      <Input
+                        id="edit_end_date"
+                        type="date"
+                        required
+                        value={projectForm.end_date}
+                        onChange={(e) => setProjectForm({ ...projectForm, end_date: e.target.value })}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="edit_progress">Progression (%)</Label>
+                    <Input
+                      id="edit_progress"
+                      type="number"
+                      min="0"
+                      max="100"
+                      value={projectForm.progress}
+                      onChange={(e) => setProjectForm({ ...projectForm, progress: e.target.value })}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="project_image">Image du projet</Label>
+                    <Input
+                      id="project_image"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleUploadProjectImage}
+                      disabled={uploadingImage}
+                    />
+                    {uploadingImage && <p className="text-sm text-muted-foreground">Téléchargement...</p>}
+                  </div>
+
+                  <div className="flex gap-4 pt-4">
+                    <Button type="submit" className="flex-1">Enregistrer</Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setShowEditProjectDialog(false)}
+                    >
+                      Annuler
+                    </Button>
+                  </div>
+                </form>
+              </DialogContent>
+            </Dialog>
           </div>
 
           {/* Progress */}
@@ -907,92 +1178,111 @@ export default function ProProjectDetail() {
           </TabsContent>
 
           <TabsContent value="updates" className="space-y-6">
+            {/* Calendrier des étapes */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Calendrier du projet</CardTitle>
+                <CardDescription>Étapes clés de construction</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {projectMilestones.map((milestone, index) => {
+                    const isCompleted = project.progress >= milestone.progress;
+                    const milestoneUpdate = updates.find(
+                      u => u.update_type === 'milestone' && u.progress_percentage === milestone.progress
+                    );
+                    
+                    return (
+                      <div key={milestone.id} className="flex items-start gap-4">
+                        <div className="flex flex-col items-center">
+                          <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                            isCompleted ? 'bg-success text-success-foreground' : 'bg-muted text-muted-foreground'
+                          }`}>
+                            {isCompleted ? <Check className="h-4 w-4" /> : <span className="text-xs">{index + 1}</span>}
+                          </div>
+                          {index < projectMilestones.length - 1 && (
+                            <div className={`w-0.5 h-12 ${isCompleted ? 'bg-success' : 'bg-border'}`} />
+                          )}
+                        </div>
+                        <div className="flex-1 pb-8">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <p className={`font-medium ${isCompleted ? 'text-foreground' : 'text-muted-foreground'}`}>
+                                {milestone.label}
+                              </p>
+                              {milestoneUpdate && (
+                                <p className="text-sm text-muted-foreground mt-1">
+                                  <Clock className="h-3 w-3 inline mr-1" />
+                                  {new Date(milestoneUpdate.created_at).toLocaleDateString('fr-FR')}
+                                </p>
+                              )}
+                            </div>
+                            <span className="text-sm text-muted-foreground">{milestone.progress}%</span>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </CardContent>
+            </Card>
+
             <Card>
               <CardHeader>
                 <div className="flex justify-between items-center">
                   <div>
-                    <CardTitle>Journal des mises à jour</CardTitle>
-                    <CardDescription>Suivez l'évolution du projet</CardDescription>
+                    <CardTitle>Marquer une étape comme terminée</CardTitle>
+                    <CardDescription>Complétez les étapes au fur et à mesure</CardDescription>
                   </div>
                   <Dialog open={showUpdateDialog} onOpenChange={setShowUpdateDialog}>
                     <DialogTrigger asChild>
                       <Button>
                         <Plus className="mr-2 h-4 w-4" />
-                        Nouvelle mise à jour
+                        Compléter une étape
                       </Button>
                     </DialogTrigger>
                     <DialogContent>
                       <DialogHeader>
-                        <DialogTitle>Ajouter une mise à jour</DialogTitle>
+                        <DialogTitle>Compléter une étape</DialogTitle>
                         <DialogDescription>
-                          Informez vos clients de l'avancement du projet
+                          Sélectionnez l'étape qui vient d'être terminée
                         </DialogDescription>
                       </DialogHeader>
-                      <form onSubmit={handleAddUpdate} className="space-y-4">
+                      <div className="space-y-4">
                         <div className="space-y-2">
-                          <Label htmlFor="title">Titre *</Label>
-                          <Input
-                            id="title"
-                            required
-                            value={updateForm.title}
-                            onChange={(e) => setUpdateForm({ ...updateForm, title: e.target.value })}
-                            placeholder="Ex: Début des finitions"
-                          />
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label htmlFor="update_type">Type</Label>
-                          <Select
-                            value={updateForm.update_type}
-                            onValueChange={(value) => setUpdateForm({ ...updateForm, update_type: value })}
-                          >
-                            <SelectTrigger id="update_type">
-                              <SelectValue />
+                          <Label htmlFor="milestone_select">Étape terminée *</Label>
+                          <Select value={selectedMilestone} onValueChange={setSelectedMilestone}>
+                            <SelectTrigger id="milestone_select">
+                              <SelectValue placeholder="Sélectionnez une étape" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="general">Général</SelectItem>
-                              <SelectItem value="progress">Avancement</SelectItem>
-                              <SelectItem value="milestone">Étape clé</SelectItem>
-                              <SelectItem value="delay">Retard</SelectItem>
+                              {projectMilestones
+                                .filter(m => project.progress < m.progress)
+                                .map((milestone) => (
+                                  <SelectItem key={milestone.id} value={milestone.id}>
+                                    {milestone.label} ({milestone.progress}%)
+                                  </SelectItem>
+                                ))}
                             </SelectContent>
                           </Select>
                         </div>
 
-                        <div className="space-y-2">
-                          <Label htmlFor="progress">Pourcentage d'avancement</Label>
-                          <Input
-                            id="progress"
-                            type="number"
-                            min="0"
-                            max="100"
-                            value={updateForm.progress_percentage}
-                            onChange={(e) => setUpdateForm({ ...updateForm, progress_percentage: e.target.value })}
-                            placeholder="75"
-                          />
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label htmlFor="description">Description</Label>
-                          <Textarea
-                            id="description"
-                            value={updateForm.description}
-                            onChange={(e) => setUpdateForm({ ...updateForm, description: e.target.value })}
-                            placeholder="Détails de la mise à jour..."
-                            rows={4}
-                          />
-                        </div>
-
-                        <div className="flex gap-4">
-                          <Button type="submit" className="flex-1">Publier</Button>
+                        <div className="flex gap-4 pt-4">
+                          <Button onClick={handleAddMilestone} className="flex-1">
+                            Valider
+                          </Button>
                           <Button
                             type="button"
                             variant="outline"
-                            onClick={() => setShowUpdateDialog(false)}
+                            onClick={() => {
+                              setShowUpdateDialog(false);
+                              setSelectedMilestone('');
+                            }}
                           >
                             Annuler
                           </Button>
                         </div>
-                      </form>
+                      </div>
                     </DialogContent>
                   </Dialog>
                 </div>
