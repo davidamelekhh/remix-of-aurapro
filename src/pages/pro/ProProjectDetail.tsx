@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ArrowLeft, Users, Calendar, MapPin, Edit, Trash2, Plus, Home, UserPlus, FileText, MessageSquare, Upload, Download, Send, Clock, Check, X } from 'lucide-react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
+import { PaymentDialog } from '@/components/project/PaymentDialog';
 import { ProjectScheduleCalendar } from '@/components/project/ProjectScheduleCalendar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -113,11 +114,13 @@ export default function ProProjectDetail() {
   const [updates, setUpdates] = useState<ProjectUpdate[]>([]);
   const [documents, setDocuments] = useState<ProjectDocument[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
+  const [payments, setPayments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [showUnitDialog, setShowUnitDialog] = useState(false);
   const [showAssignDialog, setShowAssignDialog] = useState(false);
   const [showMilestoneDialog, setShowMilestoneDialog] = useState(false);
   const [showEditProjectDialog, setShowEditProjectDialog] = useState(false);
+  const [showPaymentDialog, setShowPaymentDialog] = useState(false);
   const [selectedUnitId, setSelectedUnitId] = useState<string>('');
   const [selectedClientId, setSelectedClientId] = useState<string>('');
   const [selectedMilestoneId, setSelectedMilestoneId] = useState<string>('');
@@ -286,6 +289,16 @@ export default function ProProjectDetail() {
 
       if (messagesError) throw messagesError;
       setMessages(messagesData || []);
+
+      // Fetch payment schedules
+      const { data: paymentsData, error: paymentsError } = await supabase
+        .from('payment_schedules')
+        .select('*')
+        .eq('project_id', id)
+        .order('due_date', { ascending: true });
+
+      if (paymentsError) throw paymentsError;
+      setPayments(paymentsData || []);
 
     } catch (error: any) {
       toast({
@@ -994,10 +1007,18 @@ export default function ProProjectDetail() {
           </TabsContent>
 
           <TabsContent value="schedule" className="space-y-6">
+            <div className="flex justify-end mb-4">
+              <Button onClick={() => setShowPaymentDialog(true)}>
+                <Plus className="mr-2 h-4 w-4" />
+                Ajouter un paiement
+              </Button>
+            </div>
             <ProjectScheduleCalendar
               projectId={id!}
               milestones={updates.filter(u => u.update_type === 'milestone') as any[]}
+              payments={payments}
               onMilestoneUpdate={fetchProjectData}
+              onPaymentUpdate={fetchProjectData}
             />
           </TabsContent>
 
@@ -1546,6 +1567,15 @@ export default function ProProjectDetail() {
           </DialogContent>
         </Dialog>
       </div>
+
+      <PaymentDialog
+        open={showPaymentDialog}
+        onOpenChange={setShowPaymentDialog}
+        projectId={id!}
+        units={units}
+        clients={clients}
+        onPaymentAdded={fetchProjectData}
+      />
     </div>
   );
 }
