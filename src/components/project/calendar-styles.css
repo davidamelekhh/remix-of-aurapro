@@ -1,6 +1,4 @@
 /* FullCalendar Theme Integration with Lovable Design System */
-@import '@fullcalendar/core/main.css';
-@import '@fullcalendar/daygrid/main.css';
 
 /* Override FullCalendar styles with our design tokens */
 .fc {
