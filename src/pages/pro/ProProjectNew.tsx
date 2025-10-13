@@ -104,7 +104,8 @@ export default function ProProjectNew() {
         imageUrl = publicUrl;
       }
 
-      const { error } = await supabase
+      // Insert project
+      const { data: newProject, error } = await supabase
         .from('projects')
         .insert([
           {
@@ -113,13 +114,60 @@ export default function ProProjectNew() {
             progress: Number(formData.progress),
             image_url: imageUrl,
           },
-        ]);
+        ])
+        .select()
+        .single();
 
       if (error) throw error;
 
+      // Auto-generate milestones with dates
+      if (newProject && formData.start_date && formData.end_date) {
+        const startDate = new Date(formData.start_date);
+        const endDate = new Date(formData.end_date);
+        const totalDays = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+        
+        const milestones = [
+          { id: 'foundation', label: 'Fondations', progress: 10 },
+          { id: 'structure', label: 'Structure', progress: 25 },
+          { id: 'walls', label: 'Murs et cloisons', progress: 40 },
+          { id: 'roof', label: 'Toiture', progress: 55 },
+          { id: 'plumbing', label: 'Plomberie', progress: 65 },
+          { id: 'electricity', label: 'Électricité', progress: 75 },
+          { id: 'finishes', label: 'Finitions', progress: 85 },
+          { id: 'exterior', label: 'Aménagements extérieurs', progress: 95 },
+          { id: 'delivery', label: 'Livraison', progress: 100 },
+        ];
+
+        const milestonesToInsert = milestones.map((milestone, index) => {
+          const prevProgress = index > 0 ? milestones[index - 1].progress : 0;
+          const progressRange = milestone.progress - prevProgress;
+          const daysForMilestone = Math.ceil((totalDays * progressRange) / 100);
+          
+          const milestoneStartDate = new Date(startDate);
+          milestoneStartDate.setDate(milestoneStartDate.getDate() + Math.ceil((totalDays * prevProgress) / 100));
+          
+          const milestoneEndDate = new Date(milestoneStartDate);
+          milestoneEndDate.setDate(milestoneEndDate.getDate() + daysForMilestone);
+
+          return {
+            project_id: newProject.id,
+            title: milestone.label,
+            description: `Étape ${milestone.label}`,
+            update_type: 'milestone',
+            progress_percentage: 0,
+            start_date: milestoneStartDate.toISOString().split('T')[0],
+            end_date: milestoneEndDate.toISOString().split('T')[0],
+            status: 'on_time',
+            created_by: user.id,
+          };
+        });
+
+        await supabase.from('project_updates').insert(milestonesToInsert);
+      }
+
       toast({
         title: 'Projet créé',
-        description: 'Le projet a été créé avec succès',
+        description: 'Le projet et ses jalons ont été créés avec succès',
       });
 
       navigate('/pro/projects');

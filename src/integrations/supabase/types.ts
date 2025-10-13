@@ -226,10 +226,13 @@ export type Database = {
           created_at: string
           created_by: string
           description: string | null
+          end_date: string | null
           id: string
           media_urls: string[] | null
           progress_percentage: number | null
           project_id: string
+          start_date: string | null
+          status: string | null
           title: string
           update_type: string
           updated_at: string
@@ -238,10 +241,13 @@ export type Database = {
           created_at?: string
           created_by: string
           description?: string | null
+          end_date?: string | null
           id?: string
           media_urls?: string[] | null
           progress_percentage?: number | null
           project_id: string
+          start_date?: string | null
+          status?: string | null
           title: string
           update_type?: string
           updated_at?: string
@@ -250,10 +256,13 @@ export type Database = {
           created_at?: string
           created_by?: string
           description?: string | null
+          end_date?: string | null
           id?: string
           media_urls?: string[] | null
           progress_percentage?: number | null
           project_id?: string
+          start_date?: string | null
+          status?: string | null
           title?: string
           update_type?: string
           updated_at?: string
@@ -407,11 +416,23 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_current_user_client_id: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
+        Returns: boolean
+      }
+      is_client_assigned_to_project: {
+        Args: { _client_id: string; _project_id: string }
+        Returns: boolean
+      }
+      is_client_assigned_to_unit: {
+        Args: { _client_id: string; _unit_id: string }
         Returns: boolean
       }
     }

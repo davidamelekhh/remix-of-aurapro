@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ArrowLeft, Users, Calendar, MapPin, Edit, Trash2, Plus, Home, UserPlus, FileText, MessageSquare, Upload, Download, Send, Clock, Check, X } from 'lucide-react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
+import { ProjectScheduleCalendar } from '@/components/project/ProjectScheduleCalendar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
@@ -76,6 +77,9 @@ type ProjectUpdate = {
   progress_percentage: number | null;
   created_at: string;
   media_urls: string[] | null;
+  start_date: string | null;
+  end_date: string | null;
+  status: string | null;
 };
 
 type ProjectDocument = {
@@ -948,6 +952,7 @@ export default function ProProjectDetail() {
         <Tabs defaultValue="overview" className="space-y-6">
           <TabsList>
             <TabsTrigger value="overview">Vue d'ensemble</TabsTrigger>
+            <TabsTrigger value="schedule">Planning</TabsTrigger>
             <TabsTrigger value="units">Lots ({units.length})</TabsTrigger>
             <TabsTrigger value="updates">Mises à jour ({updates.length})</TabsTrigger>
             <TabsTrigger value="documents">Documents ({documents.length})</TabsTrigger>
@@ -986,6 +991,14 @@ export default function ProProjectDetail() {
                 )}
               </CardContent>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="schedule" className="space-y-6">
+            <ProjectScheduleCalendar
+              projectId={id!}
+              milestones={updates.filter(u => u.update_type === 'milestone') as any[]}
+              onMilestoneUpdate={fetchProjectData}
+            />
           </TabsContent>
 
           <TabsContent value="units" className="space-y-6">
