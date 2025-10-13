@@ -177,16 +177,16 @@ export function PaymentDialog({
             <div className="space-y-2">
               <Label htmlFor="payment_unit">Lot (optionnel)</Label>
               <Select
-                value={formData.unit_id}
+                value={formData.unit_id || "none"}
                 onValueChange={(value) =>
-                  setFormData({ ...formData, unit_id: value })
+                  setFormData({ ...formData, unit_id: value === "none" ? "" : value })
                 }
               >
                 <SelectTrigger id="payment_unit">
                   <SelectValue placeholder="Sélectionner un lot" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Aucun</SelectItem>
+                  <SelectItem value="none">Aucun</SelectItem>
                   {units.map((unit) => (
                     <SelectItem key={unit.id} value={unit.id}>
                       {unit.unit_number}
@@ -199,16 +199,16 @@ export function PaymentDialog({
             <div className="space-y-2">
               <Label htmlFor="payment_client">Client (optionnel)</Label>
               <Select
-                value={formData.client_id}
+                value={formData.client_id || "none"}
                 onValueChange={(value) =>
-                  setFormData({ ...formData, client_id: value })
+                  setFormData({ ...formData, client_id: value === "none" ? "" : value })
                 }
               >
                 <SelectTrigger id="payment_client">
                   <SelectValue placeholder="Sélectionner un client" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Aucun</SelectItem>
+                  <SelectItem value="none">Aucun</SelectItem>
                   {clients.map((client) => (
                     <SelectItem key={client.id} value={client.id}>
                       {client.name}
