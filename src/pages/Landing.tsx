@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { ArrowRight, CheckCircle2, BarChart3, Bell, FolderOpen, Users, Shield, Clock, TrendingUp, MessageSquare } from 'lucide-react';
 import auraLogo from '@/assets/aura-pro-logo.png';
+import heroProfessional from '@/assets/hero-professional.png';
 import { BentoCard } from '@/components/ui/bento';
 import { TestimonialsColumn } from '@/components/ui/testimonials-columns';
 import { motion } from 'motion/react';
@@ -111,10 +112,14 @@ export default function Landing() {
               Demander une démo
             </Button>
           </div>
-          {/* Placeholder for demo video/image */}
+          {/* Hero Image */}
           <div className="mt-16 relative">
-            <div className="aspect-video bg-muted rounded-3xl border border-border shadow-float flex items-center justify-center">
-              <p className="text-muted-foreground">Espace pour image/vidéo de démonstration</p>
+            <div className="rounded-3xl border border-border shadow-float overflow-hidden bg-gradient-to-br from-muted/50 to-muted">
+              <img 
+                src={heroProfessional} 
+                alt="Professionnel gérant l'immobilier avec Aura PRO" 
+                className="w-full h-auto"
+              />
             </div>
           </div>
         </div>
