@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { ArrowRight, CheckCircle2, BarChart3, Bell, FolderOpen, Users, Shield, Clock, TrendingUp, MessageSquare } from 'lucide-react';
 import auraLogo from '@/assets/aura-pro-logo.png';
+import { BentoCard } from '@/components/ui/bento';
 
 export default function Landing() {
   return (
@@ -53,39 +54,42 @@ export default function Landing() {
       </section>
 
       {/* Problem Section */}
-      <section className="py-20 px-6 bg-secondary/30">
+      <section className="py-20 px-6 bg-background">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4">
             Les défis du secteur immobilier
           </h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-card rounded-3xl p-8 border border-border space-y-4">
-              <div className="h-12 w-12 bg-muted rounded-2xl flex items-center justify-center">
-                <MessageSquare className="h-6 w-6 text-foreground" />
-              </div>
-              <h3 className="text-xl font-semibold">Communication fragmentée</h3>
-              <p className="text-muted-foreground leading-relaxed">
-                Emails perdus, messages dispersés et informations difficiles à retrouver entre clients et promoteurs.
-              </p>
-            </div>
-            <div className="bg-card rounded-3xl p-8 border border-border space-y-4">
-              <div className="h-12 w-12 bg-muted rounded-2xl flex items-center justify-center">
-                <BarChart3 className="h-6 w-6 text-foreground" />
-              </div>
-              <h3 className="text-xl font-semibold">Manque de visibilité</h3>
-              <p className="text-muted-foreground leading-relaxed">
-                Impossible de suivre l'avancement réel des projets sans multiplier les appels et réunions.
-              </p>
-            </div>
-            <div className="bg-card rounded-3xl p-8 border border-border space-y-4">
-              <div className="h-12 w-12 bg-muted rounded-2xl flex items-center justify-center">
-                <Clock className="h-6 w-6 text-foreground" />
-              </div>
-              <h3 className="text-xl font-semibold">Gestion manuelle inefficace</h3>
-              <p className="text-muted-foreground leading-relaxed">
-                Retards, erreurs et perte de temps causés par des processus administratifs obsolètes.
-              </p>
-            </div>
+          <p className="max-w-3xl text-xl text-muted-foreground mb-16">
+            Les problèmes qui ralentissent votre productivité au quotidien.
+          </p>
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+            <BentoCard
+              eyebrow="Problème"
+              title="Communication fragmentée"
+              description="Emails perdus, messages dispersés et informations difficiles à retrouver entre clients et promoteurs."
+              graphic={
+                <div className="absolute inset-0 bg-gradient-to-br from-red-500/20 to-orange-500/20" />
+              }
+              className="lg:col-span-1"
+            />
+            <BentoCard
+              eyebrow="Problème"
+              title="Manque de visibilité"
+              description="Impossible de suivre l'avancement réel des projets sans multiplier les appels et réunions."
+              graphic={
+                <div className="absolute inset-0 bg-gradient-to-br from-orange-500/20 to-yellow-500/20" />
+              }
+              className="lg:col-span-1"
+            />
+            <BentoCard
+              eyebrow="Problème"
+              title="Gestion manuelle inefficace"
+              description="Retards, erreurs et perte de temps causés par des processus administratifs obsolètes."
+              graphic={
+                <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/20 to-red-500/20" />
+              }
+              className="lg:col-span-1"
+            />
           </div>
         </div>
       </section>
