@@ -86,8 +86,12 @@ export default function Landing() {
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-6">
-        <div className="max-w-5xl mx-auto text-center space-y-8">
+      <section className="pt-32 pb-20 px-6 relative overflow-hidden">
+        {/* Grid Background */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/50 to-background"></div>
+        
+        <div className="max-w-5xl mx-auto text-center space-y-8 relative z-10">
           <h1 className="text-6xl md:text-7xl font-bold tracking-tight leading-[1.1]">
             La gestion immobilière
             <br />
