@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Building2, ArrowRight, Sparkles } from 'lucide-react';
+import { Building2, ArrowRight, Sparkles, Hexagon } from 'lucide-react';
 
 export default function Portal() {
   return (
@@ -16,20 +16,21 @@ export default function Portal() {
         <div className="max-w-6xl w-full">
           {/* Hero Section */}
           <div className="text-center mb-16 space-y-6">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/5 rounded-full border border-primary/10 mb-4">
-              <Sparkles className="h-4 w-4 text-primary" />
-              <span className="text-sm font-medium text-foreground">Plateforme de gestion immobilière</span>
+            {/* Logo + Brand */}
+            <div className="flex items-center justify-center gap-3 mb-8">
+              <div className="relative">
+                <Hexagon className="h-12 w-12 text-primary fill-primary/10" strokeWidth={2.5} />
+                <Sparkles className="h-5 w-5 text-primary absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+              </div>
+              <h1 className="text-5xl md:text-6xl font-bold tracking-tight">
+                <span className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
+                  Aura PRO
+                </span>
+              </h1>
             </div>
             
-            <h1 className="text-5xl md:text-7xl font-bold text-foreground mb-4 tracking-tight">
-              Bienvenue sur votre
-              <span className="block mt-2 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
-                espace immobilier
-              </span>
-            </h1>
-            
-            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-              Gérez vos projets, suivez leur avancement et collaborez efficacement avec tous vos partenaires
+            <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto leading-relaxed font-light">
+              Votre plateforme de gestion immobilière intelligente
             </p>
           </div>
 
