@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -20,23 +20,35 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
-interface PaymentDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  projectId: string;
-  units: Array<{ id: string; unit_number: string }>;
-  clients: Array<{ id: string; name: string }>;
-  onPaymentAdded: () => void;
+interface Payment {
+  id: string;
+  title: string;
+  description: string | null;
+  amount: number;
+  due_date: string;
+  payment_percentage: number | null;
+  unit_id: string | null;
+  client_id: string | null;
+  status: string;
 }
 
-export function PaymentDialog({
+interface PaymentEditDialogProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  payment: Payment | null;
+  units: Array<{ id: string; unit_number: string }>;
+  clients: Array<{ id: string; name: string }>;
+  onPaymentUpdated: () => void;
+}
+
+export function PaymentEditDialog({
   open,
   onOpenChange,
-  projectId,
+  payment,
   units,
   clients,
-  onPaymentAdded,
-}: PaymentDialogProps) {
+  onPaymentUpdated,
+}: PaymentEditDialogProps) {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
@@ -49,17 +61,31 @@ export function PaymentDialog({
     status: "pending",
   });
 
+  useEffect(() => {
+    if (payment) {
+      setFormData({
+        title: payment.title,
+        description: payment.description || "",
+        amount: String(payment.amount),
+        due_date: payment.due_date,
+        payment_percentage: payment.payment_percentage ? String(payment.payment_percentage) : "",
+        unit_id: payment.unit_id || "",
+        client_id: payment.client_id || "",
+        status: payment.status,
+      });
+    }
+  }, [payment]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!payment) return;
+
     setLoading(true);
 
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error("Non authentifié");
-
-      const { error } = await supabase.from("payment_schedules").insert([
-        {
-          project_id: projectId,
+      const { error } = await supabase
+        .from("payment_schedules")
+        .update({
           title: formData.title,
           description: formData.description || null,
           amount: parseFloat(formData.amount),
@@ -70,25 +96,14 @@ export function PaymentDialog({
           unit_id: formData.unit_id || null,
           client_id: formData.client_id || null,
           status: formData.status,
-          created_by: user.id,
-        },
-      ]);
+        })
+        .eq("id", payment.id);
 
       if (error) throw error;
 
-      toast.success("Paiement ajouté avec succès");
-      setFormData({
-        title: "",
-        description: "",
-        amount: "",
-        due_date: "",
-        payment_percentage: "",
-        unit_id: "",
-        client_id: "",
-        status: "pending",
-      });
+      toast.success("Paiement modifié avec succès");
       onOpenChange(false);
-      onPaymentAdded();
+      onPaymentUpdated();
     } catch (error: any) {
       toast.error(error.message);
     } finally {
@@ -96,20 +111,22 @@ export function PaymentDialog({
     }
   };
 
+  if (!payment) return null;
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Ajouter un paiement</DialogTitle>
+          <DialogTitle>Modifier le paiement</DialogTitle>
           <DialogDescription>
-            Créez un nouveau paiement dans le planning du projet
+            Modifiez les informations du paiement
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="payment_title">Titre *</Label>
+            <Label htmlFor="edit_payment_title">Titre *</Label>
             <Input
-              id="payment_title"
+              id="edit_payment_title"
               required
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
@@ -118,9 +135,9 @@ export function PaymentDialog({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="payment_description">Description</Label>
+            <Label htmlFor="edit_payment_description">Description</Label>
             <Textarea
-              id="payment_description"
+              id="edit_payment_description"
               value={formData.description}
               onChange={(e) =>
                 setFormData({ ...formData, description: e.target.value })
@@ -132,9 +149,9 @@ export function PaymentDialog({
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="payment_amount">Montant (MAD) *</Label>
+              <Label htmlFor="edit_payment_amount">Montant (MAD) *</Label>
               <Input
-                id="payment_amount"
+                id="edit_payment_amount"
                 type="number"
                 step="0.01"
                 required
@@ -147,9 +164,9 @@ export function PaymentDialog({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="payment_percentage">Pourcentage (%)</Label>
+              <Label htmlFor="edit_payment_percentage">Pourcentage (%)</Label>
               <Input
-                id="payment_percentage"
+                id="edit_payment_percentage"
                 type="number"
                 min="0"
                 max="100"
@@ -163,12 +180,12 @@ export function PaymentDialog({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="payment_status">Statut *</Label>
+            <Label htmlFor="edit_payment_status">Statut *</Label>
             <Select
               value={formData.status}
               onValueChange={(value) => setFormData({ ...formData, status: value })}
             >
-              <SelectTrigger id="payment_status">
+              <SelectTrigger id="edit_payment_status">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -180,9 +197,9 @@ export function PaymentDialog({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="payment_due_date">Date d'échéance *</Label>
+            <Label htmlFor="edit_payment_due_date">Date d'échéance *</Label>
             <Input
-              id="payment_due_date"
+              id="edit_payment_due_date"
               type="date"
               required
               value={formData.due_date}
@@ -194,14 +211,14 @@ export function PaymentDialog({
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="payment_unit">Lot (optionnel)</Label>
+              <Label htmlFor="edit_payment_unit">Lot (optionnel)</Label>
               <Select
                 value={formData.unit_id || "none"}
                 onValueChange={(value) =>
                   setFormData({ ...formData, unit_id: value === "none" ? "" : value })
                 }
               >
-                <SelectTrigger id="payment_unit">
+                <SelectTrigger id="edit_payment_unit">
                   <SelectValue placeholder="Sélectionner un lot" />
                 </SelectTrigger>
                 <SelectContent>
@@ -216,14 +233,14 @@ export function PaymentDialog({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="payment_client">Client (optionnel)</Label>
+              <Label htmlFor="edit_payment_client">Client (optionnel)</Label>
               <Select
                 value={formData.client_id || "none"}
                 onValueChange={(value) =>
                   setFormData({ ...formData, client_id: value === "none" ? "" : value })
                 }
               >
-                <SelectTrigger id="payment_client">
+                <SelectTrigger id="edit_payment_client">
                   <SelectValue placeholder="Sélectionner un client" />
                 </SelectTrigger>
                 <SelectContent>
@@ -240,7 +257,7 @@ export function PaymentDialog({
 
           <div className="flex gap-4 pt-4">
             <Button type="submit" disabled={loading} className="flex-1">
-              {loading ? "Ajout..." : "Ajouter le paiement"}
+              {loading ? "Modification..." : "Modifier le paiement"}
             </Button>
             <Button
               type="button"

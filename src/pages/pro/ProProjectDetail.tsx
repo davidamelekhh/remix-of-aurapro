@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { ArrowLeft, Users, Calendar, MapPin, Edit, Trash2, Plus, Home, UserPlus, FileText, MessageSquare, Upload, Download, Send, Clock, Check, X } from 'lucide-react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { PaymentDialog } from '@/components/project/PaymentDialog';
+import { PaymentEditDialog } from '@/components/project/PaymentEditDialog';
 import { ProjectScheduleCalendar } from '@/components/project/ProjectScheduleCalendar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -121,6 +122,8 @@ export default function ProProjectDetail() {
   const [showMilestoneDialog, setShowMilestoneDialog] = useState(false);
   const [showEditProjectDialog, setShowEditProjectDialog] = useState(false);
   const [showPaymentDialog, setShowPaymentDialog] = useState(false);
+  const [showPaymentEditDialog, setShowPaymentEditDialog] = useState(false);
+  const [selectedPayment, setSelectedPayment] = useState<any>(null);
   const [selectedUnitId, setSelectedUnitId] = useState<string>('');
   const [selectedClientId, setSelectedClientId] = useState<string>('');
   const [selectedMilestoneId, setSelectedMilestoneId] = useState<string>('');
@@ -1321,7 +1324,19 @@ export default function ProProjectDetail() {
                                   {relatedPayments.map((payment) => (
                                     <div key={payment.id} className="ml-4 p-2 rounded-md bg-muted/50 text-sm">
                                       <div className="flex items-center justify-between">
-                                        <span className="font-medium">{payment.title}</span>
+                                        <div className="flex items-center gap-2">
+                                          <span className="font-medium">{payment.title}</span>
+                                          <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={() => {
+                                              setSelectedPayment(payment);
+                                              setShowPaymentEditDialog(true);
+                                            }}
+                                          >
+                                            <Edit className="h-3 w-3" />
+                                          </Button>
+                                        </div>
                                         <Badge variant={
                                           payment.status === 'paid' ? 'default' : 
                                           payment.status === 'overdue' ? 'destructive' : 
@@ -1605,6 +1620,15 @@ export default function ProProjectDetail() {
         units={units}
         clients={clients}
         onPaymentAdded={fetchProjectData}
+      />
+
+      <PaymentEditDialog
+        open={showPaymentEditDialog}
+        onOpenChange={setShowPaymentEditDialog}
+        payment={selectedPayment}
+        units={units}
+        clients={clients}
+        onPaymentUpdated={fetchProjectData}
       />
     </div>
   );
