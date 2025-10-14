@@ -965,7 +965,6 @@ export default function ProProjectDetail() {
         <Tabs defaultValue="overview" className="space-y-6">
           <TabsList>
             <TabsTrigger value="overview">Vue d'ensemble</TabsTrigger>
-            <TabsTrigger value="schedule">Planning</TabsTrigger>
             <TabsTrigger value="units">Lots ({units.length})</TabsTrigger>
             <TabsTrigger value="updates">Mises à jour ({updates.length})</TabsTrigger>
             <TabsTrigger value="documents">Documents ({documents.length})</TabsTrigger>
@@ -1006,21 +1005,6 @@ export default function ProProjectDetail() {
             </Card>
           </TabsContent>
 
-          <TabsContent value="schedule" className="space-y-6">
-            <div className="flex justify-end mb-4">
-              <Button onClick={() => setShowPaymentDialog(true)}>
-                <Plus className="mr-2 h-4 w-4" />
-                Ajouter un paiement
-              </Button>
-            </div>
-            <ProjectScheduleCalendar
-              projectId={id!}
-              milestones={updates.filter(u => u.update_type === 'milestone') as any[]}
-              payments={payments}
-              onMilestoneUpdate={fetchProjectData}
-              onPaymentUpdate={fetchProjectData}
-            />
-          </TabsContent>
 
           <TabsContent value="units" className="space-y-6">
             <Card>
@@ -1243,10 +1227,25 @@ export default function ProProjectDetail() {
           </TabsContent>
 
           <TabsContent value="updates" className="space-y-6">
+            <div className="flex justify-end mb-4">
+              <Button onClick={() => setShowPaymentDialog(true)}>
+                <Plus className="mr-2 h-4 w-4" />
+                Ajouter un paiement
+              </Button>
+            </div>
+            
+            <ProjectScheduleCalendar
+              projectId={id!}
+              milestones={updates.filter(u => u.update_type === 'milestone') as any[]}
+              payments={payments}
+              onMilestoneUpdate={fetchProjectData}
+              onPaymentUpdate={fetchProjectData}
+            />
+
             <Card>
               <CardHeader>
-                <CardTitle>Calendrier du projet</CardTitle>
-                <CardDescription>Suivez et complétez les étapes de construction</CardDescription>
+                <CardTitle>Étapes de construction</CardTitle>
+                <CardDescription>Suivez et complétez les étapes du projet</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
