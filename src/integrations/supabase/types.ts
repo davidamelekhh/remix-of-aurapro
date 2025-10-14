@@ -362,6 +362,7 @@ export type Database = {
           created_at: string
           description: string | null
           end_date: string
+          estimated_revenue: number | null
           id: string
           image_url: string | null
           location: string
@@ -377,6 +378,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           end_date: string
+          estimated_revenue?: number | null
           id?: string
           image_url?: string | null
           location: string
@@ -392,6 +394,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           end_date?: string
+          estimated_revenue?: number | null
           id?: string
           image_url?: string | null
           location?: string

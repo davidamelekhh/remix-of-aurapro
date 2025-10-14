@@ -40,6 +40,7 @@ export default function ProProjectNew() {
     phase: '',
     status: 'En cours',
     progress: 0,
+    estimated_revenue: 0,
     start_date: '',
     end_date: '',
   });
@@ -112,6 +113,7 @@ export default function ProProjectNew() {
             ...formData,
             owner_id: user.id,
             progress: Number(formData.progress),
+            estimated_revenue: Number(formData.estimated_revenue),
             image_url: imageUrl,
           },
         ])
@@ -331,6 +333,20 @@ export default function ProProjectNew() {
                     onChange={(e) => setFormData({ ...formData, end_date: e.target.value })}
                   />
                 </div>
+              </div>
+
+              {/* Estimated Revenue */}
+              <div className="space-y-2">
+                <Label htmlFor="estimated_revenue">Revenu estimé (MAD)</Label>
+                <Input
+                  id="estimated_revenue"
+                  type="number"
+                  min="0"
+                  step="1000"
+                  value={formData.estimated_revenue}
+                  onChange={(e) => setFormData({ ...formData, estimated_revenue: Number(e.target.value) })}
+                  placeholder="ex: 50000000"
+                />
               </div>
 
               {/* Image upload */}

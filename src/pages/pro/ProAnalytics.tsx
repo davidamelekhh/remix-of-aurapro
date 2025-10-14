@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { ProNavigation } from '@/components/layout/ProNavigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
-import { BarChart3, Clock, CheckCircle2, AlertCircle, TrendingUp } from 'lucide-react';
+import { BarChart3, Clock, CheckCircle2, AlertCircle, TrendingUp, DollarSign } from 'lucide-react';
 import { format, isAfter, isBefore, subDays } from 'date-fns';
 import { fr } from 'date-fns/locale';
 
@@ -13,6 +13,8 @@ interface AnalyticsData {
   avgDelayPerStage: number;
   unitsDelivered: number;
   unitsSold: number;
+  totalRevenue: number;
+  paidRevenue: number;
   weeklyActivity: {
     messages: number;
     documents: number;
@@ -27,6 +29,8 @@ export default function ProAnalytics() {
     avgDelayPerStage: 0,
     unitsDelivered: 0,
     unitsSold: 0,
+    totalRevenue: 0,
+    paidRevenue: 0,
     weeklyActivity: { messages: 0, documents: 0 }
   });
   const [loading, setLoading] = useState(true);
@@ -73,6 +77,12 @@ export default function ProAnalytics() {
         .eq('projects.owner_id', user.id)
         .gte('created_at', weekAgo.toISOString());
 
+      // Fetch payments
+      const { data: payments } = await supabase
+        .from('payment_schedules')
+        .select('*, projects!inner(owner_id)')
+        .eq('projects.owner_id', user.id);
+
       // Calculate analytics
       const totalProjects = projects?.length || 0;
       const avgProgress = projects?.reduce((sum, p) => sum + p.progress, 0) / (totalProjects || 1);
@@ -97,6 +107,10 @@ export default function ProAnalytics() {
       const unitsSold = units?.filter(u => u.status === 'Vendu').length || 0;
       const unitsDelivered = units?.filter(u => u.status === 'Livré').length || 0;
 
+      // Calculate revenue
+      const totalRevenue = projects?.reduce((sum, p) => sum + (p.estimated_revenue || 0), 0) || 0;
+      const paidRevenue = payments?.filter(p => p.status === 'paid').reduce((sum, p) => sum + (p.amount || 0), 0) || 0;
+
       setAnalytics({
         totalProjects,
         avgProgress: Math.round(avgProgress),
@@ -104,6 +118,8 @@ export default function ProAnalytics() {
         avgDelayPerStage: Math.round(avgDelayPerStage),
         unitsSold,
         unitsDelivered,
+        totalRevenue,
+        paidRevenue,
         weeklyActivity: {
           messages: messages?.length || 0,
           documents: documents?.length || 0
@@ -169,6 +185,34 @@ export default function ProAnalytics() {
                 <div className="text-2xl font-bold">{analytics.unitsSold}</div>
                 <p className="text-xs text-muted-foreground">
                   {analytics.unitsDelivered} livré{analytics.unitsDelivered > 1 ? 's' : ''}
+                </p>
+              </CardContent>
+            </Card>
+
+            {/* Total Revenue */}
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">CA Total Estimé</CardTitle>
+                <DollarSign className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{(analytics.totalRevenue / 1000000).toFixed(2)}M MAD</div>
+                <p className="text-xs text-muted-foreground">
+                  Tous les projets
+                </p>
+              </CardContent>
+            </Card>
+
+            {/* Paid Revenue */}
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">CA Encaissé</CardTitle>
+                <CheckCircle2 className="h-4 w-4 text-success" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{(analytics.paidRevenue / 1000000).toFixed(2)}M MAD</div>
+                <p className="text-xs text-muted-foreground">
+                  {analytics.totalRevenue > 0 ? Math.round((analytics.paidRevenue / analytics.totalRevenue) * 100) : 0}% du total
                 </p>
               </CardContent>
             </Card>

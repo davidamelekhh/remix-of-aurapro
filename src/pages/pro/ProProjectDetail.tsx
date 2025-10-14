@@ -45,6 +45,7 @@ type Project = {
   image_url: string | null;
   start_date: string;
   end_date: string;
+  estimated_revenue: number | null;
 };
 
 type PropertyUnit = {
@@ -148,6 +149,7 @@ export default function ProProjectDetail() {
     start_date: '',
     end_date: '',
     progress: '',
+    estimated_revenue: '',
   });
   const [unitForm, setUnitForm] = useState({
     unit_number: '',
@@ -577,6 +579,7 @@ export default function ProProjectDetail() {
           start_date: projectForm.start_date,
           end_date: projectForm.end_date,
           progress: Number(projectForm.progress),
+          estimated_revenue: Number(projectForm.estimated_revenue),
         })
         .eq('id', id);
 
@@ -823,6 +826,7 @@ export default function ProProjectDetail() {
                       start_date: project.start_date,
                       end_date: project.end_date,
                       progress: String(project.progress),
+                      estimated_revenue: String(project.estimated_revenue || 0),
                     });
                   }}
                 >
@@ -937,6 +941,18 @@ export default function ProProjectDetail() {
                       max="100"
                       value={projectForm.progress}
                       onChange={(e) => setProjectForm({ ...projectForm, progress: e.target.value })}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="edit_estimated_revenue">Revenu estimé (MAD)</Label>
+                    <Input
+                      id="edit_estimated_revenue"
+                      type="number"
+                      min="0"
+                      step="1000"
+                      value={projectForm.estimated_revenue}
+                      onChange={(e) => setProjectForm({ ...projectForm, estimated_revenue: e.target.value })}
                     />
                   </div>
 
