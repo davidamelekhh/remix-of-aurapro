@@ -22,7 +22,7 @@ export function Navigation() {
               <div className="w-8 h-8 bg-foreground rounded-lg flex items-center justify-center">
                 <Building2 className="h-5 w-5 text-background" />
               </div>
-              <span className="text-xl font-bold text-foreground">Nexo</span>
+              <span className="text-xl font-bold text-foreground">Aura</span>
             </Link>
 
             {/* Desktop Navigation */}

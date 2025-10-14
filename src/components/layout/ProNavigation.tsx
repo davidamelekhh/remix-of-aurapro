@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Building2, LayoutDashboard, FolderKanban, Users, Menu, X, LogOut, Settings } from 'lucide-react';
+import { Building2, LayoutDashboard, FolderKanban, Users, Menu, X, LogOut, Settings, BarChart3, UserCog } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -9,6 +9,8 @@ const navigation = [
   { name: 'Dashboard', href: '/pro/dashboard', icon: LayoutDashboard },
   { name: 'Projets', href: '/pro/projects', icon: FolderKanban },
   { name: 'Clients', href: '/pro/clients', icon: Users },
+  { name: 'Analytics', href: '/pro/analytics', icon: BarChart3 },
+  { name: 'Intervenants', href: '/pro/stakeholders', icon: UserCog },
   { name: 'Paramètres', href: '/pro/settings', icon: Settings },
 ];
 
@@ -27,7 +29,7 @@ export function ProNavigation() {
               <div className="w-8 h-8 bg-foreground rounded-lg flex items-center justify-center">
                 <Building2 className="h-5 w-5 text-background" />
               </div>
-              <span className="text-xl font-bold text-foreground">Nexo Pro</span>
+              <span className="text-xl font-bold text-foreground">Aura Pro</span>
             </Link>
 
             {/* Navigation */}

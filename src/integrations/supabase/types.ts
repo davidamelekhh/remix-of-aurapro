@@ -463,6 +463,78 @@ export type Database = {
           },
         ]
       }
+      stakeholder_assignments: {
+        Row: {
+          assigned_at: string
+          id: string
+          milestone_id: string
+          stakeholder_id: string
+        }
+        Insert: {
+          assigned_at?: string
+          id?: string
+          milestone_id: string
+          stakeholder_id: string
+        }
+        Update: {
+          assigned_at?: string
+          id?: string
+          milestone_id?: string
+          stakeholder_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stakeholder_assignments_milestone_id_fkey"
+            columns: ["milestone_id"]
+            isOneToOne: false
+            referencedRelation: "project_updates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stakeholder_assignments_stakeholder_id_fkey"
+            columns: ["stakeholder_id"]
+            isOneToOne: false
+            referencedRelation: "stakeholders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      stakeholders: {
+        Row: {
+          company: string | null
+          created_at: string
+          email: string | null
+          id: string
+          name: string
+          owner_id: string
+          phone: string | null
+          role: string
+          updated_at: string
+        }
+        Insert: {
+          company?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          name: string
+          owner_id: string
+          phone?: string | null
+          role: string
+          updated_at?: string
+        }
+        Update: {
+          company?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          name?: string
+          owner_id?: string
+          phone?: string | null
+          role?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
