@@ -1244,8 +1244,8 @@ export default function ProProjectDetail() {
 
             <Card>
               <CardHeader>
-                <CardTitle>Étapes de construction</CardTitle>
-                <CardDescription>Suivez et complétez les étapes du projet</CardDescription>
+                <CardTitle>Étapes de construction et paiements</CardTitle>
+                <CardDescription>Suivez les étapes du projet et l'échéancier des paiements</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
@@ -1254,6 +1254,15 @@ export default function ProProjectDetail() {
                     const milestoneUpdate = updates.find(
                       u => u.update_type === 'milestone' && u.progress_percentage === milestone.progress
                     );
+                    
+                    // Trouver les paiements associés à cette étape (basé sur la progression)
+                    const relatedPayments = payments.filter(payment => {
+                      const currentProgress = milestone.progress;
+                      const prevProgress = index > 0 ? projectMilestones[index - 1].progress : 0;
+                      return payment.payment_percentage && 
+                             payment.payment_percentage > prevProgress && 
+                             payment.payment_percentage <= currentProgress;
+                    });
                     
                     return (
                       <div key={milestone.id} className="flex items-start gap-4">
@@ -1311,6 +1320,36 @@ export default function ProProjectDetail() {
                                     </div>
                                   )}
                                 </>
+                              )}
+                              
+                              {/* Afficher les paiements liés à cette étape */}
+                              {relatedPayments.length > 0 && (
+                                <div className="mt-3 space-y-2">
+                                  <p className="text-sm font-medium text-muted-foreground">💰 Paiements associés :</p>
+                                  {relatedPayments.map((payment) => (
+                                    <div key={payment.id} className="ml-4 p-2 rounded-md bg-muted/50 text-sm">
+                                      <div className="flex items-center justify-between">
+                                        <span className="font-medium">{payment.title}</span>
+                                        <Badge variant={
+                                          payment.status === 'paid' ? 'default' : 
+                                          payment.status === 'overdue' ? 'destructive' : 
+                                          'secondary'
+                                        }>
+                                          {payment.status === 'paid' ? 'Payé' : 
+                                           payment.status === 'overdue' ? 'En retard' : 
+                                           'En attente'}
+                                        </Badge>
+                                      </div>
+                                      <div className="flex items-center gap-4 mt-1 text-muted-foreground">
+                                        <span>{payment.amount.toLocaleString()} MAD</span>
+                                        {payment.payment_percentage && (
+                                          <span>({payment.payment_percentage}%)</span>
+                                        )}
+                                        <span>Échéance: {new Date(payment.due_date).toLocaleDateString('fr-FR')}</span>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
                               )}
                             </div>
                             <Badge variant={isCompleted ? 'default' : 'outline'}>
