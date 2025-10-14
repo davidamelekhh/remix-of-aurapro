@@ -3,6 +3,9 @@ import { ArrowRight, CheckCircle2, BarChart3, Bell, FolderOpen, Users, Shield, C
 import auraLogo from '@/assets/aura-pro-logo.png';
 import heroProfessional from '@/assets/hero-professional.png';
 import heroAfter from '@/assets/hero-after.png';
+import problemCommunication from '@/assets/problem-communication.png';
+import problemVisibility from '@/assets/problem-visibility.png';
+import problemAdmin from '@/assets/problem-admin.png';
 import { BentoCard } from '@/components/ui/bento';
 import { TestimonialsColumn } from '@/components/ui/testimonials-columns';
 import { BeforeAfterSlider } from '@/components/ui/before-after-slider';
@@ -143,7 +146,11 @@ export default function Landing() {
               title="Communication fragmentée"
               description="Emails perdus, messages dispersés et informations difficiles à retrouver entre clients et promoteurs."
               graphic={
-                <div className="absolute inset-0 bg-gradient-to-br from-red-500/20 to-orange-500/20" />
+                <img 
+                  src={problemCommunication} 
+                  alt="Communication fragmentée" 
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
               }
               className="lg:col-span-1"
             />
@@ -152,7 +159,11 @@ export default function Landing() {
               title="Manque de visibilité"
               description="Impossible de suivre l'avancement réel des projets sans multiplier les appels et réunions."
               graphic={
-                <div className="absolute inset-0 bg-gradient-to-br from-orange-500/20 to-yellow-500/20" />
+                <img 
+                  src={problemVisibility} 
+                  alt="Manque de visibilité" 
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
               }
               className="lg:col-span-1"
             />
@@ -161,7 +172,11 @@ export default function Landing() {
               title="Gestion manuelle inefficace"
               description="Retards, erreurs et perte de temps causés par des processus administratifs obsolètes."
               graphic={
-                <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/20 to-red-500/20" />
+                <img 
+                  src={problemAdmin} 
+                  alt="Gestion manuelle inefficace" 
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
               }
               className="lg:col-span-1"
             />
