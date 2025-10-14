@@ -1233,14 +1233,6 @@ export default function ProProjectDetail() {
                 Ajouter un paiement
               </Button>
             </div>
-            
-            <ProjectScheduleCalendar
-              projectId={id!}
-              milestones={updates.filter(u => u.update_type === 'milestone') as any[]}
-              payments={payments}
-              onMilestoneUpdate={fetchProjectData}
-              onPaymentUpdate={fetchProjectData}
-            />
 
             <Card>
               <CardHeader>
