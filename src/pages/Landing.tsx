@@ -4,6 +4,7 @@ import auraLogo from '@/assets/aura-pro-logo.png';
 import heroProfessional from '@/assets/hero-professional.png';
 import { BentoCard } from '@/components/ui/bento';
 import { TestimonialsColumn } from '@/components/ui/testimonials-columns';
+import { BeforeAfterSlider } from '@/components/ui/before-after-slider';
 import { motion } from 'motion/react';
 
 const testimonials = [
@@ -112,13 +113,14 @@ export default function Landing() {
               Demander une démo
             </Button>
           </div>
-          {/* Hero Image */}
+          {/* Before/After Comparison */}
           <div className="mt-16 relative">
-            <div className="rounded-3xl border border-border shadow-float overflow-hidden bg-gradient-to-br from-muted/50 to-muted">
-              <img 
-                src={heroProfessional} 
-                alt="Professionnel gérant l'immobilier avec Aura PRO" 
-                className="w-full h-auto"
+            <div className="rounded-3xl border border-border shadow-float overflow-hidden">
+              <BeforeAfterSlider
+                beforeImage={heroProfessional}
+                afterImage={heroProfessional}
+                beforeAlt="Avant Aura PRO"
+                afterAlt="Avec Aura PRO"
               />
             </div>
           </div>
