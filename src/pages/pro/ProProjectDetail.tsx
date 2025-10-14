@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, Users, Calendar, MapPin, Edit, Trash2, Plus, Home, UserPlus, FileText, MessageSquare, Upload, Download, Send, Clock, Check, X } from 'lucide-react';
+import { ArrowLeft, Users, Calendar, MapPin, Edit, Trash2, Plus, Home, UserPlus, FileText, MessageSquare, Upload, Download, Send, Clock, Check, X, UserCog } from 'lucide-react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { PaymentDialog } from '@/components/project/PaymentDialog';
 import { PaymentEditDialog } from '@/components/project/PaymentEditDialog';
+import { StakeholderAssignDialog } from '@/components/project/StakeholderAssignDialog';
 import { ProjectScheduleCalendar } from '@/components/project/ProjectScheduleCalendar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -123,6 +124,7 @@ export default function ProProjectDetail() {
   const [showEditProjectDialog, setShowEditProjectDialog] = useState(false);
   const [showPaymentDialog, setShowPaymentDialog] = useState(false);
   const [showPaymentEditDialog, setShowPaymentEditDialog] = useState(false);
+  const [showStakeholderDialog, setShowStakeholderDialog] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState<any>(null);
   const [selectedUnitId, setSelectedUnitId] = useState<string>('');
   const [selectedClientId, setSelectedClientId] = useState<string>('');
@@ -1285,9 +1287,22 @@ export default function ProProjectDetail() {
                         <div className="flex-1 pb-8">
                           <div className="flex items-start justify-between">
                             <div className="flex-1">
-                              <p className={`font-medium text-lg ${isCompleted ? 'text-foreground' : 'text-muted-foreground'}`}>
-                                {milestone.label}
-                              </p>
+                              <div className="flex items-center justify-between mb-2">
+                                <p className={`font-medium text-lg ${isCompleted ? 'text-foreground' : 'text-muted-foreground'}`}>
+                                  {milestone.label}
+                                </p>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => {
+                                    setSelectedMilestoneId(milestone.id);
+                                    setShowStakeholderDialog(true);
+                                  }}
+                                >
+                                  <UserCog className="h-4 w-4 mr-2" />
+                                  Intervenants
+                                </Button>
+                              </div>
                               {milestoneUpdate && (
                                 <>
                                   <p className="text-sm text-muted-foreground mt-1">
@@ -1629,6 +1644,13 @@ export default function ProProjectDetail() {
         units={units}
         clients={clients}
         onPaymentUpdated={fetchProjectData}
+      />
+
+      <StakeholderAssignDialog
+        milestoneId={selectedMilestoneId}
+        open={showStakeholderDialog}
+        onOpenChange={setShowStakeholderDialog}
+        onAssigned={fetchProjectData}
       />
     </div>
   );
