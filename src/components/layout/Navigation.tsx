@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Building2, Home, Menu, X } from 'lucide-react';
+import { Home, Menu, X } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import logo from '@/assets/logo.png';
 
 const navigation = [
   { name: 'Mes biens', href: '/', icon: Home },
@@ -19,9 +20,7 @@ export function Navigation() {
           <div className="flex items-center">
             {/* Logo */}
             <Link to="/" className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-foreground rounded-lg flex items-center justify-center">
-                <Building2 className="h-5 w-5 text-background" />
-              </div>
+              <img src={logo} alt="Aura Logo" className="w-10 h-10" />
               <span className="text-xl font-bold text-foreground">Aura</span>
             </Link>
 

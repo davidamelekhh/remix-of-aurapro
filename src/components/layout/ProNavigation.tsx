@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Building2, LayoutDashboard, FolderKanban, Users, Menu, X, LogOut, Settings, BarChart3 } from 'lucide-react';
+import { LayoutDashboard, FolderKanban, Users, Menu, X, LogOut, Settings, BarChart3 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/useAuth';
+import logo from '@/assets/logo.png';
 
 const navigation = [
   { name: 'Dashboard', href: '/pro/dashboard', icon: LayoutDashboard },
@@ -25,9 +26,7 @@ export function ProNavigation() {
           <div className="flex items-center space-x-8">
             {/* Logo */}
             <Link to="/pro/dashboard" className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-foreground rounded-lg flex items-center justify-center">
-                <Building2 className="h-5 w-5 text-background" />
-              </div>
+              <img src={logo} alt="Aura Pro Logo" className="w-10 h-10" />
               <span className="text-xl font-bold text-foreground">Aura Pro</span>
             </Link>
 
