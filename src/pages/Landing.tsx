@@ -2,6 +2,69 @@ import { Button } from '@/components/ui/button';
 import { ArrowRight, CheckCircle2, BarChart3, Bell, FolderOpen, Users, Shield, Clock, TrendingUp, MessageSquare } from 'lucide-react';
 import auraLogo from '@/assets/aura-pro-logo.png';
 import { BentoCard } from '@/components/ui/bento';
+import { TestimonialsColumn } from '@/components/ui/testimonials-columns';
+import { motion } from 'motion/react';
+
+const testimonials = [
+  {
+    text: "Aura PRO a complètement transformé notre manière de gérer nos projets immobiliers. La transparence et la communication avec nos clients n'ont jamais été aussi fluides.",
+    image: "https://randomuser.me/api/portraits/men/1.jpg",
+    name: "Ahmed Benali",
+    role: "Promoteur Immobilier",
+  },
+  {
+    text: "Grâce à Aura PRO, nous avons réduit nos délais de gestion de 60%. L'interface intuitive facilite la collaboration avec toutes nos équipes.",
+    image: "https://randomuser.me/api/portraits/women/2.jpg",
+    name: "Sarah Mansouri",
+    role: "Chef de Projet",
+  },
+  {
+    text: "La plateforme nous permet de suivre chaque étape en temps réel. Nos clients apprécient vraiment cette transparence totale.",
+    image: "https://randomuser.me/api/portraits/men/3.jpg",
+    name: "Karim El Amrani",
+    role: "Directeur Commercial",
+  },
+  {
+    text: "Les notifications intelligentes nous font gagner un temps précieux. Nous ne manquons plus jamais une échéance importante.",
+    image: "https://randomuser.me/api/portraits/women/4.jpg",
+    name: "Fatima Zahra",
+    role: "Gestionnaire de Projets",
+  },
+  {
+    text: "L'espace documentaire sécurisé a simplifié toute notre gestion administrative. Tout est centralisé et accessible en un clic.",
+    image: "https://randomuser.me/api/portraits/men/5.jpg",
+    name: "Mehdi Alaoui",
+    role: "Responsable Administratif",
+  },
+  {
+    text: "Aura PRO nous a permis de doubler notre portefeuille clients sans augmenter nos effectifs. Une vraie révolution.",
+    image: "https://randomuser.me/api/portraits/women/6.jpg",
+    name: "Leila Tazi",
+    role: "Directrice Générale",
+  },
+  {
+    text: "En tant que client, j'apprécie la visibilité totale sur l'avancement de mon projet. Je recommande vivement.",
+    image: "https://randomuser.me/api/portraits/men/7.jpg",
+    name: "Youssef Berrada",
+    role: "Client Investisseur",
+  },
+  {
+    text: "Le suivi automatisé et les analytics nous permettent de prendre de meilleures décisions stratégiques.",
+    image: "https://randomuser.me/api/portraits/women/8.jpg",
+    name: "Nadia Chraibi",
+    role: "Analyste Business",
+  },
+  {
+    text: "Une solution complète qui a vraiment compris les besoins du secteur immobilier marocain. Excellent support client.",
+    image: "https://randomuser.me/api/portraits/men/9.jpg",
+    name: "Omar Idrissi",
+    role: "Promoteur",
+  },
+];
+
+const firstColumn = testimonials.slice(0, 3);
+const secondColumn = testimonials.slice(3, 6);
+const thirdColumn = testimonials.slice(6, 9);
 
 export default function Landing() {
   return (
@@ -232,26 +295,31 @@ export default function Landing() {
       </section>
 
       {/* Testimonials Section */}
-      <section id="testimonials" className="py-20 px-6 bg-secondary/30">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-16">
-            Ils utilisent déjà Aura PRO
-          </h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} className="bg-card rounded-3xl p-8 border border-border space-y-4">
-                <div className="flex items-center gap-4">
-                  <div className="h-12 w-12 bg-muted rounded-full"></div>
-                  <div>
-                    <div className="font-semibold">Nom Prénom</div>
-                    <div className="text-sm text-muted-foreground">Promoteur Immobilier</div>
-                  </div>
-                </div>
-                <p className="text-muted-foreground leading-relaxed italic">
-                  "Citation témoignage à personnaliser. Aura PRO a transformé notre manière de travailler."
-                </p>
-              </div>
-            ))}
+      <section id="testimonials" className="py-20 px-6 bg-background relative">
+        <div className="container z-10 mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+            viewport={{ once: true }}
+            className="flex flex-col items-center justify-center max-w-[540px] mx-auto"
+          >
+            <div className="flex justify-center">
+              <div className="border py-1 px-4 rounded-lg text-sm">Témoignages</div>
+            </div>
+
+            <h2 className="text-4xl md:text-5xl font-bold tracking-tight mt-5 text-center">
+              Ils utilisent déjà Aura PRO
+            </h2>
+            <p className="text-center mt-5 text-muted-foreground text-lg">
+              Découvrez ce que nos clients disent de nous.
+            </p>
+          </motion.div>
+
+          <div className="flex justify-center gap-6 mt-10 [mask-image:linear-gradient(to_bottom,transparent,black_25%,black_75%,transparent)] max-h-[740px] overflow-hidden">
+            <TestimonialsColumn testimonials={firstColumn} duration={15} />
+            <TestimonialsColumn testimonials={secondColumn} className="hidden md:block" duration={19} />
+            <TestimonialsColumn testimonials={thirdColumn} className="hidden lg:block" duration={17} />
           </div>
         </div>
       </section>
