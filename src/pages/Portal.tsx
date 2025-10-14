@@ -18,11 +18,11 @@ export default function Portal() {
           {/* Hero Section */}
           <div className="text-center mb-16 space-y-6">
             {/* Logo + Brand */}
-            <div className="flex items-center justify-center gap-4 mb-8">
+            <div className="flex flex-col items-center justify-center gap-4 mb-8">
               <img 
                 src={auraLogo} 
                 alt="Aura PRO Logo" 
-                className="h-16 w-16 md:h-20 md:w-20 object-contain"
+                className="h-20 w-20 md:h-24 md:w-24 object-contain"
               />
               <h1 className="text-5xl md:text-6xl font-bold tracking-tight">
                 <span className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
