@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Navigation } from '@/components/layout/Navigation';
 import { ProjectCard } from '@/components/dashboard/ProjectCard';
-import { Building2 } from 'lucide-react';
+import { Building2, ArrowRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 type PropertyUnit = {
   id: string;
@@ -29,6 +31,7 @@ type Project = {
 };
 
 export default function ClientDashboard() {
+  const navigate = useNavigate();
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
@@ -180,7 +183,11 @@ export default function ClientDashboard() {
         ) : (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {projects.map((project) => (
-              <Card key={project.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+              <Card 
+                key={project.id} 
+                className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
+                onClick={() => navigate(`/client/project/${project.id}`)}
+              >
                 {project.image_url && (
                   <div className="h-48 overflow-hidden">
                     <img
@@ -222,7 +229,7 @@ export default function ClientDashboard() {
                     </div>
                   )}
 
-                  <div className="space-y-2">
+                  <div className="space-y-2 mb-4">
                     <div className="flex justify-between text-sm">
                       <span>Phase:</span>
                       <span className="font-medium">{project.phase}</span>
@@ -236,6 +243,18 @@ export default function ClientDashboard() {
                       <span className="font-medium">{project.progress}%</span>
                     </div>
                   </div>
+
+                  <Button 
+                    variant="outline" 
+                    className="w-full"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigate(`/client/project/${project.id}`);
+                    }}
+                  >
+                    Voir les détails
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
                 </CardContent>
               </Card>
             ))}

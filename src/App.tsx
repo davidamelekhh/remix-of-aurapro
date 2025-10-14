@@ -16,6 +16,7 @@ import ProSettings from "./pages/pro/ProSettings";
 import ProAnalytics from "./pages/pro/ProAnalytics";
 import ProStakeholders from "./pages/pro/ProStakeholders";
 import ClientDashboard from "./pages/client/ClientDashboard";
+import ClientProjectDetail from "./pages/client/ClientProjectDetail";
 import NotFound from "./pages/NotFound";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 
@@ -37,6 +38,7 @@ const App = () => (
           
           {/* Client Routes - Protected */}
           <Route path="/client/dashboard" element={<ProtectedRoute><ClientDashboard /></ProtectedRoute>} />
+          <Route path="/client/project/:id" element={<ProtectedRoute><ClientProjectDetail /></ProtectedRoute>} />
           
           {/* Pro Routes - Protected */}
           <Route path="/pro/dashboard" element={<ProtectedRoute><ProDashboard /></ProtectedRoute>} />
