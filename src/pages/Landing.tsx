@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowRight, CheckCircle2, BarChart3, Bell, FolderOpen, Users, Shield, Clock, TrendingUp, MessageSquare } from 'lucide-react';
 import auraLogo from '@/assets/aura-pro-logo.png';
 import heroProfessional from '@/assets/hero-professional.png';
+import heroAfter from '@/assets/hero-after.png';
 import { BentoCard } from '@/components/ui/bento';
 import { TestimonialsColumn } from '@/components/ui/testimonials-columns';
 import { BeforeAfterSlider } from '@/components/ui/before-after-slider';
@@ -118,7 +119,7 @@ export default function Landing() {
             <div className="rounded-3xl border border-border shadow-float overflow-hidden">
               <BeforeAfterSlider
                 beforeImage={heroProfessional}
-                afterImage={heroProfessional}
+                afterImage={heroAfter}
                 beforeAlt="Avant Aura PRO"
                 afterAlt="Avec Aura PRO"
               />
