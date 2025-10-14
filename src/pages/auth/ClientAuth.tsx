@@ -40,39 +40,91 @@ export default function ClientAuth() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Client-side validation
+    if (!formData.email.trim() || !formData.password) {
+      toast({
+        title: 'Erreur',
+        description: 'Veuillez remplir tous les champs',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      toast({
+        title: 'Erreur',
+        description: 'Le mot de passe doit contenir au moins 6 caractères',
+        variant: 'destructive',
+      });
+      return;
+    }
+
     setLoading(true);
 
     try {
       const { data: authData, error } = await supabase.auth.signInWithPassword({
-        email: formData.email,
+        email: formData.email.trim().toLowerCase(),
         password: formData.password,
       });
 
-      if (error) throw error;
+      if (error) {
+        if (error.message.includes('Invalid login')) {
+          throw new Error('Email ou mot de passe incorrect');
+        }
+        throw error;
+      }
+      
       if (!authData.user) throw new Error('Erreur de connexion');
 
-      // Fetch user role to verify it's a client
-      const { data: roleData } = await supabase
+      // Verify client role
+      const { data: roleData, error: roleError } = await supabase
         .from('user_roles')
         .select('role')
         .eq('user_id', authData.user.id)
-        .single();
+        .maybeSingle();
 
-      if (roleData?.role !== 'client') {
+      if (roleError || !roleData || roleData.role !== 'client') {
         await supabase.auth.signOut();
-        throw new Error('Cet accès est réservé aux clients');
+        throw new Error('Accès refusé. Cet espace est réservé aux clients.');
+      }
+
+      // Verify client record exists and is active
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('email')
+        .eq('id', authData.user.id)
+        .maybeSingle();
+
+      if (profile?.email) {
+        const { data: client } = await supabase
+          .from('clients')
+          .select('id, status')
+          .ilike('email', profile.email)
+          .maybeSingle();
+
+        if (!client) {
+          await supabase.auth.signOut();
+          throw new Error('Compte client introuvable. Contactez votre promoteur.');
+        }
+
+        if (client.status !== 'Actif') {
+          await supabase.auth.signOut();
+          throw new Error('Votre compte est inactif. Contactez votre promoteur.');
+        }
       }
 
       toast({
         title: 'Connexion réussie',
-        description: 'Bienvenue !',
+        description: 'Bienvenue dans votre espace client',
       });
 
       navigate('/client/dashboard');
     } catch (error: any) {
+      console.error('Auth error:', error);
       toast({
         title: 'Erreur',
-        description: error.message,
+        description: error.message || 'Une erreur est survenue',
         variant: 'destructive',
       });
     } finally {

@@ -44,62 +44,109 @@ export default function ProAuth() {
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Client-side validation
+    if (!formData.email.trim() || !formData.password) {
+      toast({
+        title: 'Erreur',
+        description: 'Veuillez remplir tous les champs obligatoires',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    if (!isLogin && (!formData.fullName.trim() || !formData.companyName.trim())) {
+      toast({
+        title: 'Erreur',
+        description: 'Veuillez remplir tous les champs obligatoires',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      toast({
+        title: 'Erreur',
+        description: 'Le mot de passe doit contenir au moins 6 caractères',
+        variant: 'destructive',
+      });
+      return;
+    }
+
     setLoading(true);
 
     try {
       if (isLogin) {
         const { data: authData, error } = await supabase.auth.signInWithPassword({
-          email: formData.email,
+          email: formData.email.trim().toLowerCase(),
           password: formData.password,
         });
 
-        if (error) throw error;
+        if (error) {
+          if (error.message.includes('Invalid login')) {
+            throw new Error('Email ou mot de passe incorrect');
+          }
+          throw error;
+        }
+        
         if (!authData.user) throw new Error('Erreur de connexion');
 
-        // Fetch user role to verify it's a pro
-        const { data: roleData } = await supabase
+        // Verify pro role
+        const { data: roleData, error: roleError } = await supabase
           .from('user_roles')
           .select('role')
           .eq('user_id', authData.user.id)
-          .single();
+          .maybeSingle();
 
-        if (roleData?.role !== 'pro') {
+        if (roleError || !roleData || roleData.role !== 'pro') {
           await supabase.auth.signOut();
-          throw new Error('Cet accès est réservé aux promoteurs');
+          throw new Error('Accès refusé. Cet espace est réservé aux promoteurs.');
         }
 
         toast({
           title: 'Connexion réussie',
-          description: 'Bienvenue !',
+          description: 'Bienvenue dans votre espace promoteur',
         });
 
         navigate('/pro/dashboard');
       } else {
-        const { error } = await supabase.auth.signUp({
-          email: formData.email,
+        const { data: authData, error } = await supabase.auth.signUp({
+          email: formData.email.trim().toLowerCase(),
           password: formData.password,
           options: {
             emailRedirectTo: `${window.location.origin}/pro/dashboard`,
             data: {
-              full_name: formData.fullName,
-              company_name: formData.companyName,
-              phone: formData.phone,
+              full_name: formData.fullName.trim(),
+              company_name: formData.companyName.trim(),
+              phone: formData.phone.trim(),
             }
           }
         });
 
-        if (error) throw error;
+        if (error) {
+          if (error.message.includes('already registered')) {
+            throw new Error('Un compte avec cet email existe déjà');
+          }
+          throw error;
+        }
+
+        if (!authData.user) {
+          throw new Error('Erreur lors de la création du compte');
+        }
 
         toast({
-          title: 'Compte créé',
-          description: 'Vous pouvez maintenant vous connecter.',
+          title: 'Inscription réussie',
+          description: 'Votre compte promoteur a été créé avec succès. Connexion automatique...',
         });
-        setIsLogin(true);
+
+        // Auto login after registration
+        navigate('/pro/dashboard');
       }
     } catch (error: any) {
+      console.error('Auth error:', error);
       toast({
         title: 'Erreur',
-        description: error.message,
+        description: error.message || 'Une erreur est survenue',
         variant: 'destructive',
       });
     } finally {

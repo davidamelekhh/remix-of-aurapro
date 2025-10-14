@@ -48,15 +48,7 @@ export type Database = {
           status?: string
           updated_at?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "clients_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       payment_schedules: {
         Row: {
@@ -195,7 +187,7 @@ export type Database = {
           {
             foreignKeyName: "project_clients_unit_id_fkey"
             columns: ["unit_id"]
-            isOneToOne: false
+            isOneToOne: true
             referencedRelation: "property_units"
             referencedColumns: ["id"]
           },
@@ -246,13 +238,6 @@ export type Database = {
             referencedRelation: "projects"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "project_documents_uploaded_by_fkey"
-            columns: ["uploaded_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
         ]
       }
       project_messages: {
@@ -285,11 +270,57 @@ export type Database = {
             referencedRelation: "projects"
             referencedColumns: ["id"]
           },
+        ]
+      }
+      project_milestones: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          description: string | null
+          end_date: string | null
+          id: string
+          label: string
+          milestone_key: string
+          progress_percentage: number
+          project_id: string
+          start_date: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          label: string
+          milestone_key: string
+          progress_percentage?: number
+          project_id: string
+          start_date?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          label?: string
+          milestone_key?: string
+          progress_percentage?: number
+          project_id?: string
+          start_date?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
           {
-            foreignKeyName: "project_messages_sender_id_fkey"
-            columns: ["sender_id"]
+            foreignKeyName: "project_milestones_project_id_fkey"
+            columns: ["project_id"]
             isOneToOne: false
-            referencedRelation: "profiles"
+            referencedRelation: "projects"
             referencedColumns: ["id"]
           },
         ]
@@ -341,13 +372,6 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
-          {
-            foreignKeyName: "project_updates_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "project_updates_project_id_fkey"
             columns: ["project_id"]
@@ -406,15 +430,7 @@ export type Database = {
           status?: string
           updated_at?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "projects_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       property_units: {
         Row: {
@@ -490,7 +506,7 @@ export type Database = {
             foreignKeyName: "stakeholder_assignments_milestone_id_fkey"
             columns: ["milestone_id"]
             isOneToOne: false
-            referencedRelation: "project_updates"
+            referencedRelation: "project_milestones"
             referencedColumns: ["id"]
           },
           {

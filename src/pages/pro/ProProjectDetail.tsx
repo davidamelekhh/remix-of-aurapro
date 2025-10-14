@@ -161,18 +161,20 @@ export default function ProProjectDetail() {
     description: '',
   });
 
-  // Étapes prédéfinies du projet
-  const projectMilestones = [
-    { id: 'foundation', label: 'Fondations', progress: 10 },
-    { id: 'structure', label: 'Structure', progress: 25 },
-    { id: 'walls', label: 'Murs et cloisons', progress: 40 },
-    { id: 'roof', label: 'Toiture', progress: 55 },
-    { id: 'plumbing', label: 'Plomberie', progress: 65 },
-    { id: 'electricity', label: 'Électricité', progress: 75 },
-    { id: 'finishes', label: 'Finitions', progress: 85 },
-    { id: 'exterior', label: 'Aménagements extérieurs', progress: 95 },
-    { id: 'delivery', label: 'Livraison', progress: 100 },
+  // Defined milestones
+  const milestoneDefinitions = [
+    { key: 'foundation', label: 'Fondations', progress: 10 },
+    { key: 'structure', label: 'Structure', progress: 25 },
+    { key: 'walls', label: 'Murs et cloisons', progress: 40 },
+    { key: 'roof', label: 'Toiture', progress: 55 },
+    { key: 'plumbing', label: 'Plomberie', progress: 65 },
+    { key: 'electricity', label: 'Électricité', progress: 75 },
+    { key: 'finishes', label: 'Finitions', progress: 85 },
+    { key: 'exterior', label: 'Aménagements extérieurs', progress: 95 },
+    { key: 'delivery', label: 'Livraison', progress: 100 },
   ];
+  
+  const [projectMilestones, setProjectMilestones] = useState<any[]>([]);
 
   useEffect(() => {
     if (id) {
@@ -287,17 +289,29 @@ export default function ProProjectDetail() {
       // Fetch messages with profiles
       const { data: messagesData, error: messagesError } = await supabase
         .from('project_messages')
-        .select(`
-          *,
-          profiles (
-            full_name
-          )
-        `)
+        .select('*')
         .eq('project_id', id)
         .order('created_at', { ascending: true });
 
       if (messagesError) throw messagesError;
-      setMessages(messagesData || []);
+
+      // Fetch profiles for messages
+      if (messagesData && messagesData.length > 0) {
+        const senderIds = [...new Set(messagesData.map(m => m.sender_id))];
+        const { data: profilesData } = await supabase
+          .from('profiles')
+          .select('id, full_name')
+          .in('id', senderIds);
+
+        const profilesMap = new Map(profilesData?.map(p => [p.id, p]) || []);
+        const messagesWithProfiles = messagesData.map(msg => ({
+          ...msg,
+          profiles: profilesMap.get(msg.sender_id)
+        }));
+        setMessages(messagesWithProfiles as any);
+      } else {
+        setMessages([]);
+      }
 
       // Fetch payment schedules
       const { data: paymentsData, error: paymentsError } = await supabase
@@ -318,6 +332,36 @@ export default function ProProjectDetail() {
 
       if (stakeholdersError) throw stakeholdersError;
       setStakeholders(stakeholdersData || []);
+
+      // Fetch or create project milestones
+      const { data: existingMilestones, error: milestonesError } = await supabase
+        .from('project_milestones')
+        .select('*')
+        .eq('project_id', id)
+        .order('progress_percentage');
+
+      if (milestonesError) throw milestonesError;
+
+      // If no milestones exist, create them
+      if (!existingMilestones || existingMilestones.length === 0) {
+        const milestonesToCreate = milestoneDefinitions.map(m => ({
+          project_id: id,
+          milestone_key: m.key,
+          label: m.label,
+          progress_percentage: m.progress,
+          status: 'pending'
+        }));
+
+        const { data: createdMilestones, error: createError } = await supabase
+          .from('project_milestones')
+          .insert(milestonesToCreate)
+          .select();
+
+        if (createError) throw createError;
+        setProjectMilestones(createdMilestones || []);
+      } else {
+        setProjectMilestones(existingMilestones);
+      }
 
     } catch (error: any) {
       toast({
@@ -519,7 +563,19 @@ export default function ProProjectDetail() {
         mediaUrls.push(publicUrl);
       }
 
-      // Create milestone update
+      // Update milestone status
+      const { error: milestoneError } = await supabase
+        .from('project_milestones')
+        .update({
+          status: 'completed',
+          completed_at: new Date().toISOString(),
+          description: milestoneForm.description || `Étape "${milestone.label}" complétée`
+        })
+        .eq('id', selectedMilestoneId);
+
+      if (milestoneError) throw milestoneError;
+
+      // Create milestone update for tracking
       const { error: updateError } = await supabase
         .from('project_updates')
         .insert([
@@ -528,7 +584,7 @@ export default function ProProjectDetail() {
             title: milestone.label,
             description: milestoneForm.description || `Étape "${milestone.label}" complétée`,
             update_type: 'milestone',
-            progress_percentage: milestone.progress,
+            progress_percentage: milestone.progress_percentage,
             created_by: user.id,
             media_urls: mediaUrls.length > 0 ? mediaUrls : null,
           },
@@ -539,7 +595,7 @@ export default function ProProjectDetail() {
       // Update project progress
       const { error: projectError } = await supabase
         .from('projects')
-        .update({ progress: milestone.progress })
+        .update({ progress: milestone.progress_percentage })
         .eq('id', id);
 
       if (projectError) throw projectError;
@@ -1276,15 +1332,15 @@ export default function ProProjectDetail() {
               <CardContent>
                 <div className="space-y-3">
                   {projectMilestones.map((milestone, index) => {
-                    const isCompleted = project.progress >= milestone.progress;
+                    const isCompleted = milestone.status === 'completed';
                     const milestoneUpdate = updates.find(
-                      u => u.update_type === 'milestone' && u.progress_percentage === milestone.progress
+                      u => u.update_type === 'milestone' && u.progress_percentage === milestone.progress_percentage
                     );
                     
                     // Trouver les paiements associés à cette étape (basé sur la progression)
                     const relatedPayments = payments.filter(payment => {
-                      const currentProgress = milestone.progress;
-                      const prevProgress = index > 0 ? projectMilestones[index - 1].progress : 0;
+                      const currentProgress = milestone.progress_percentage;
+                      const prevProgress = index > 0 ? projectMilestones[index - 1].progress_percentage : 0;
                       return payment.payment_percentage && 
                              payment.payment_percentage > prevProgress && 
                              payment.payment_percentage <= currentProgress;
