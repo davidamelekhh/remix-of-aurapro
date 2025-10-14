@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, Users, Calendar, MapPin, Edit, Trash2, Plus, Home, UserPlus, FileText, MessageSquare, Upload, Download, Send, Clock, Check, X, UserCog } from 'lucide-react';
+import { ArrowLeft, Users, Calendar, MapPin, Edit, Trash2, Plus, Home, UserPlus, FileText, MessageSquare, Upload, Download, Send, Clock, Check, X, UserCog, Building2, Phone, Mail } from 'lucide-react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { PaymentDialog } from '@/components/project/PaymentDialog';
 import { PaymentEditDialog } from '@/components/project/PaymentEditDialog';
@@ -117,6 +117,7 @@ export default function ProProjectDetail() {
   const [documents, setDocuments] = useState<ProjectDocument[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
   const [payments, setPayments] = useState<any[]>([]);
+  const [stakeholders, setStakeholders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [showUnitDialog, setShowUnitDialog] = useState(false);
   const [showAssignDialog, setShowAssignDialog] = useState(false);
@@ -125,6 +126,7 @@ export default function ProProjectDetail() {
   const [showPaymentDialog, setShowPaymentDialog] = useState(false);
   const [showPaymentEditDialog, setShowPaymentEditDialog] = useState(false);
   const [showStakeholderDialog, setShowStakeholderDialog] = useState(false);
+  const [showStakeholderFormDialog, setShowStakeholderFormDialog] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState<any>(null);
   const [selectedUnitId, setSelectedUnitId] = useState<string>('');
   const [selectedClientId, setSelectedClientId] = useState<string>('');
@@ -304,6 +306,16 @@ export default function ProProjectDetail() {
 
       if (paymentsError) throw paymentsError;
       setPayments(paymentsData || []);
+
+      // Fetch stakeholders
+      const { data: stakeholdersData, error: stakeholdersError } = await supabase
+        .from('stakeholders')
+        .select('*')
+        .eq('owner_id', user.id)
+        .order('name');
+
+      if (stakeholdersError) throw stakeholdersError;
+      setStakeholders(stakeholdersData || []);
 
     } catch (error: any) {
       toast({
@@ -972,6 +984,7 @@ export default function ProProjectDetail() {
             <TabsTrigger value="overview">Vue d'ensemble</TabsTrigger>
             <TabsTrigger value="units">Lots ({units.length})</TabsTrigger>
             <TabsTrigger value="updates">Mises à jour ({updates.length})</TabsTrigger>
+            <TabsTrigger value="stakeholders">Intervenants</TabsTrigger>
             <TabsTrigger value="documents">Documents ({documents.length})</TabsTrigger>
             <TabsTrigger value="chat">Chat</TabsTrigger>
           </TabsList>
@@ -1455,6 +1468,95 @@ export default function ProProjectDetail() {
 
           </TabsContent>
 
+          <TabsContent value="stakeholders" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <div className="flex justify-between items-center">
+                  <div>
+                    <CardTitle>Intervenants du projet</CardTitle>
+                    <CardDescription>Gérez les intervenants et leurs assignations aux étapes</CardDescription>
+                  </div>
+                  <Button onClick={() => setShowStakeholderFormDialog(true)}>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Ajouter un intervenant
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                {stakeholders.length === 0 ? (
+                  <div className="text-center py-12">
+                    <UserCog className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                    <p className="text-muted-foreground">Aucun intervenant pour le moment</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {stakeholders.map((stakeholder) => (
+                      <Card key={stakeholder.id}>
+                        <CardHeader className="flex flex-row items-start justify-between space-y-0">
+                          <div>
+                            <CardTitle className="text-lg">{stakeholder.name}</CardTitle>
+                            <p className="text-sm text-muted-foreground">{stakeholder.role}</p>
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={async () => {
+                              if (!confirm('Êtes-vous sûr de vouloir supprimer cet intervenant ?')) return;
+                              try {
+                                const { error } = await supabase
+                                  .from('stakeholders')
+                                  .delete()
+                                  .eq('id', stakeholder.id);
+
+                                if (error) throw error;
+
+                                toast({
+                                  title: 'Succès',
+                                  description: 'Intervenant supprimé'
+                                });
+
+                                fetchProjectData();
+                              } catch (error) {
+                                console.error('Error deleting stakeholder:', error);
+                                toast({
+                                  title: 'Erreur',
+                                  description: 'Impossible de supprimer l\'intervenant',
+                                  variant: 'destructive'
+                                });
+                              }
+                            }}
+                          >
+                            <Trash2 className="h-4 w-4 text-destructive" />
+                          </Button>
+                        </CardHeader>
+                        <CardContent className="space-y-2">
+                          {stakeholder.company && (
+                            <div className="flex items-center text-sm text-muted-foreground">
+                              <Building2 className="h-4 w-4 mr-2" />
+                              {stakeholder.company}
+                            </div>
+                          )}
+                          {stakeholder.phone && (
+                            <div className="flex items-center text-sm text-muted-foreground">
+                              <Phone className="h-4 w-4 mr-2" />
+                              {stakeholder.phone}
+                            </div>
+                          )}
+                          {stakeholder.email && (
+                            <div className="flex items-center text-sm text-muted-foreground">
+                              <Mail className="h-4 w-4 mr-2" />
+                              {stakeholder.email}
+                            </div>
+                          )}
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
           <TabsContent value="documents" className="space-y-6">
             <Card>
               <CardHeader>
@@ -1652,6 +1754,104 @@ export default function ProProjectDetail() {
         onOpenChange={setShowStakeholderDialog}
         onAssigned={fetchProjectData}
       />
+
+      {/* Add Stakeholder Dialog */}
+      <Dialog open={showStakeholderFormDialog} onOpenChange={setShowStakeholderFormDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Ajouter un intervenant</DialogTitle>
+            <DialogDescription>
+              Créez un nouveau contact intervenant pour ce projet
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.currentTarget);
+            
+            try {
+              const { data: { user } } = await supabase.auth.getUser();
+              if (!user) return;
+
+              const { error } = await supabase
+                .from('stakeholders')
+                .insert([{
+                  owner_id: user.id,
+                  name: formData.get('name') as string,
+                  role: formData.get('role') as string,
+                  company: formData.get('company') as string || null,
+                  phone: formData.get('phone') as string || null,
+                  email: formData.get('email') as string || null
+                }]);
+
+              if (error) throw error;
+
+              toast({
+                title: 'Succès',
+                description: 'Intervenant ajouté avec succès'
+              });
+
+              setShowStakeholderFormDialog(false);
+              fetchProjectData();
+            } catch (error) {
+              console.error('Error creating stakeholder:', error);
+              toast({
+                title: 'Erreur',
+                description: 'Impossible d\'ajouter l\'intervenant',
+                variant: 'destructive'
+              });
+            }
+          }}>
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="name">Nom *</Label>
+                <Input
+                  id="name"
+                  name="name"
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="role">Rôle *</Label>
+                <Input
+                  id="role"
+                  name="role"
+                  placeholder="ex: Architecte, Électricien, etc."
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="company">Entreprise</Label>
+                <Input
+                  id="company"
+                  name="company"
+                />
+              </div>
+              <div>
+                <Label htmlFor="phone">Téléphone</Label>
+                <Input
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                />
+              </div>
+              <div>
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                />
+              </div>
+            </div>
+            <div className="flex gap-2 mt-6">
+              <Button type="submit" className="flex-1">Ajouter</Button>
+              <Button type="button" variant="outline" onClick={() => setShowStakeholderFormDialog(false)}>
+                Annuler
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
