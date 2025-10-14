@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Portal from "./pages/Portal";
+import Landing from "./pages/Landing";
 import ProAuth from "./pages/auth/ProAuth";
 import ClientAuth from "./pages/auth/ClientAuth";
 import ProDashboard from "./pages/pro/ProDashboard";
@@ -29,8 +30,9 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          {/* Portal Route */}
-          <Route path="/" element={<Portal />} />
+          {/* Landing & Portal Routes */}
+          <Route path="/" element={<Landing />} />
+          <Route path="/portal" element={<Portal />} />
           
           {/* Auth Routes */}
           <Route path="/auth/promoteur" element={<ProAuth />} />
