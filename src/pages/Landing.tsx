@@ -6,6 +6,7 @@ import heroAfter from '@/assets/hero-after.png';
 import problemCommunication from '@/assets/problem-communication.png';
 import problemVisibility from '@/assets/problem-visibility.png';
 import problemAdmin from '@/assets/problem-admin.png';
+import solutionDashboard from '@/assets/solution-dashboard.png';
 import { BentoCard } from '@/components/ui/bento';
 import { TestimonialsColumn } from '@/components/ui/testimonials-columns';
 import { BeforeAfterSlider } from '@/components/ui/before-after-slider';
@@ -218,8 +219,12 @@ export default function Landing() {
               </div>
             </div>
             <div className="relative">
-              <div className="aspect-square bg-muted rounded-3xl border border-border shadow-float flex items-center justify-center">
-                <p className="text-muted-foreground text-center px-8">Espace pour illustration de la solution</p>
+              <div className="aspect-square rounded-3xl border border-border shadow-float overflow-hidden">
+                <img 
+                  src={solutionDashboard} 
+                  alt="Tableau de bord Aura PRO" 
+                  className="w-full h-full object-cover"
+                />
               </div>
             </div>
           </div>
