@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Building2, ArrowRight, Sparkles, Hexagon } from 'lucide-react';
+import { Building2, ArrowRight } from 'lucide-react';
+import auraLogo from '@/assets/aura-pro-logo.png';
 
 export default function Portal() {
   return (
@@ -17,11 +18,12 @@ export default function Portal() {
           {/* Hero Section */}
           <div className="text-center mb-16 space-y-6">
             {/* Logo + Brand */}
-            <div className="flex items-center justify-center gap-3 mb-8">
-              <div className="relative">
-                <Hexagon className="h-12 w-12 text-primary fill-primary/10" strokeWidth={2.5} />
-                <Sparkles className="h-5 w-5 text-primary absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
-              </div>
+            <div className="flex items-center justify-center gap-4 mb-8">
+              <img 
+                src={auraLogo} 
+                alt="Aura PRO Logo" 
+                className="h-16 w-16 md:h-20 md:w-20 object-contain"
+              />
               <h1 className="text-5xl md:text-6xl font-bold tracking-tight">
                 <span className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
                   Aura PRO
