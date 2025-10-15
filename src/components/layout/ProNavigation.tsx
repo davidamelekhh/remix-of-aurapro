@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/useAuth';
 import { motion } from 'framer-motion';
-import aiAssistant from '@/assets/ai-assistant.png';
+import aiAssistant from '@/assets/ai-assistant-pro.png';
 import auraProLogo from '@/assets/aura-pro-logo.png';
 
 const navigation = [
@@ -123,7 +123,7 @@ export function ProNavigation() {
               </div>
             </nav>
 
-            {/* Center AI Circle */}
+            {/* Center AI Rectangle */}
             <div className="flex items-center justify-center">
               <motion.div
                 initial={{ scale: 0.9, opacity: 0 }}
@@ -131,15 +131,15 @@ export function ProNavigation() {
                 transition={{ duration: 0.6, ease: 'easeOut' }}
                 className="relative"
               >
-                <div className="w-[280px] h-[280px] rounded-full bg-gradient-to-br from-foreground/5 to-foreground/10 border border-border/30 shadow-2xl flex items-center justify-center overflow-hidden backdrop-blur-sm">
+                <div className="w-full max-w-[600px] rounded-2xl bg-gradient-to-br from-foreground/5 to-foreground/10 border border-border/30 shadow-2xl overflow-hidden backdrop-blur-sm">
                   {/* AI Assistant Image */}
                   <img 
                     src={aiAssistant} 
                     alt="AI Assistant" 
-                    className="w-full h-full object-cover"
+                    className="w-full h-auto object-cover"
                   />
                   {/* Subtle glow effect */}
-                  <div className="absolute inset-0 rounded-full bg-gradient-to-t from-primary/5 to-transparent opacity-50" />
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-primary/5 to-transparent opacity-50" />
                 </div>
               </motion.div>
             </div>
