@@ -88,12 +88,15 @@ export function ProNavigation() {
             {/* Left Navigation */}
             <nav className="space-y-6">
               {/* Logo */}
-              <div className="flex flex-col items-center pb-4">
-                <img 
-                  src={auraProLogo} 
-                  alt="Aura Pro" 
-                  className="h-12 w-auto mb-4"
-                />
+              <div className="flex flex-col pb-4">
+                <div className="flex items-center gap-3 mb-4">
+                  <img 
+                    src={auraProLogo} 
+                    alt="Aura Pro" 
+                    className="h-10 w-auto"
+                  />
+                  <span className="text-2xl font-bold text-foreground">Aura Pro</span>
+                </div>
                 <div className="w-full h-px bg-border/30" />
               </div>
 
@@ -178,63 +181,6 @@ export function ProNavigation() {
         </div>
       </div>
 
-      {/* Mobile/Tablet Header */}
-      <nav className="lg:hidden bg-card border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="flex justify-between items-center h-16">
-            <Link to="/pro/dashboard" className="flex items-center space-x-2">
-              <Sparkles className="h-6 w-6 text-primary" />
-              <span className="text-xl font-bold text-foreground">Aura Pro</span>
-            </Link>
-
-            <div className="flex items-center gap-4">
-              <div className="hidden sm:block text-sm text-muted-foreground">Mode Promoteur</div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setIsOpen(!isOpen)}
-              >
-                {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-              </Button>
-            </div>
-          </div>
-
-          {/* Mobile Navigation */}
-          {isOpen && (
-            <div className="border-t border-border mt-2 pt-2 pb-4">
-              <div className="space-y-1">
-                {navigation.map((item) => {
-                  const isActive = location.pathname === item.href || location.pathname.startsWith(item.href + '/');
-                  return (
-                    <Link
-                      key={item.name}
-                      to={item.href}
-                      onClick={() => setIsOpen(false)}
-                      className={cn(
-                        'flex items-center px-3 py-2 rounded-md text-sm font-medium transition-all duration-200',
-                        isActive
-                          ? 'bg-foreground text-background'
-                          : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
-                      )}
-                    >
-                      <item.icon className="h-4 w-4 mr-2" />
-                      {item.name}
-                    </Link>
-                  );
-                })}
-                <Button 
-                  variant="ghost" 
-                  onClick={signOut}
-                  className="w-full justify-start"
-                >
-                  <LogOut className="mr-2 h-5 w-5" />
-                  Déconnexion
-                </Button>
-              </div>
-            </div>
-          )}
-        </div>
-      </nav>
     </>
   );
 }
