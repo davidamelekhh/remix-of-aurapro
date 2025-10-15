@@ -124,14 +124,14 @@ export function ProNavigation() {
             </nav>
 
             {/* Center AI Rectangle */}
-            <div className="flex items-center justify-center">
+            <div className="flex items-start justify-center">
               <motion.div
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 0.6, ease: 'easeOut' }}
                 className="relative"
               >
-                <div className="w-full max-w-[600px] rounded-2xl bg-gradient-to-br from-foreground/5 to-foreground/10 border border-border/30 shadow-2xl overflow-hidden backdrop-blur-sm">
+                <div className="w-full max-w-[700px] rounded-2xl bg-gradient-to-br from-foreground/5 to-foreground/10 border border-border/30 shadow-2xl overflow-hidden backdrop-blur-sm">
                   {/* AI Assistant Image */}
                   <img 
                     src={aiAssistant} 
@@ -149,7 +149,7 @@ export function ProNavigation() {
               initial={{ x: 20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="bg-card/50 backdrop-blur-sm border border-border/30 rounded-2xl p-5 shadow-lg mt-4"
+              className="bg-card/50 backdrop-blur-sm border border-border/30 rounded-2xl p-5 shadow-lg"
             >
               <div className="flex items-center gap-2 mb-4">
                 <Sparkles className="h-4 w-4 text-primary" />
