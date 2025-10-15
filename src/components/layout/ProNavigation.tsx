@@ -149,32 +149,34 @@ export function ProNavigation() {
               initial={{ x: 20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="bg-card/50 backdrop-blur-sm border border-border/30 rounded-2xl p-5 shadow-lg"
+              className="bg-card/50 backdrop-blur-sm border border-border/30 rounded-2xl p-6 shadow-lg h-full flex flex-col justify-between"
             >
-              <div className="flex items-center gap-2 mb-4">
-                <Sparkles className="h-4 w-4 text-primary" />
-                <h3 className="text-sm font-semibold text-foreground/80 uppercase tracking-wide">
-                  Page Summary
-                </h3>
+              <div>
+                <div className="flex items-center gap-2 mb-6">
+                  <Sparkles className="h-4 w-4 text-primary" />
+                  <h3 className="text-sm font-semibold text-foreground/80 uppercase tracking-wide">
+                    Page Summary
+                  </h3>
+                </div>
+
+                <div className="space-y-4">
+                  {/* Key metrics */}
+                  <div className="space-y-4">
+                    {pageSummary.insights.map((insight, idx) => (
+                      <div key={idx} className="flex items-center justify-between">
+                        <span className="text-sm text-foreground/60">{insight.label}</span>
+                        <span className="text-lg font-bold text-foreground">{insight.value}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
 
-              <div className="space-y-4">
-                {/* Key metrics */}
-                <div className="space-y-3">
-                  {pageSummary.insights.map((insight, idx) => (
-                    <div key={idx} className="flex items-center justify-between">
-                      <span className="text-sm text-foreground/60">{insight.label}</span>
-                      <span className="text-lg font-bold text-foreground">{insight.value}</span>
-                    </div>
-                  ))}
-                </div>
-
-                {/* AI Quote */}
-                <div className="pt-4 border-t border-border/20">
-                  <p className="text-sm text-foreground/70 italic leading-relaxed">
-                    "{pageSummary.quote}"
-                  </p>
-                </div>
+              {/* AI Quote at bottom */}
+              <div className="pt-6 border-t border-border/20 mt-auto">
+                <p className="text-sm text-foreground/70 italic leading-relaxed">
+                  "{pageSummary.quote}"
+                </p>
               </div>
             </motion.div>
           </div>
