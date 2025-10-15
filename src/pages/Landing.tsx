@@ -185,6 +185,58 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* Questions Section */}
+      <section className="py-32 px-6 bg-foreground text-background relative overflow-hidden">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-20">
+            Les questions que vous entendez chaque jour
+          </h2>
+          
+          <div className="space-y-8 mb-16">
+            {[
+              "Où en est mon projet exactement ?",
+              "Pourquoi ce retard n'a pas été signalé ?",
+              "Quand recevrai-je le prochain paiement ?",
+              "Où sont les documents signés ?",
+              "Qui s'occupe de cette partie du chantier ?",
+              "Pourquoi les équipes ne sont pas alignées ?",
+              "Comment je peux suivre l'avancement en temps réel ?"
+            ].map((question, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
+                whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                transition={{ 
+                  duration: 0.6, 
+                  delay: index * 0.15,
+                  ease: [0.16, 1, 0.3, 1]
+                }}
+                viewport={{ once: true, margin: "-100px" }}
+                className="text-2xl md:text-3xl font-light text-background/80 text-center"
+              >
+                {question}
+              </motion.div>
+            ))}
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ 
+              duration: 0.8, 
+              delay: 1.2,
+              ease: [0.16, 1, 0.3, 1]
+            }}
+            viewport={{ once: true }}
+            className="text-center"
+          >
+            <p className="text-3xl md:text-4xl font-bold text-background">
+              Avec Aura PRO, vous avez toutes les réponses.
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Solution Section */}
       <section id="solution" className="py-32 px-6">
         <div className="max-w-7xl mx-auto">
