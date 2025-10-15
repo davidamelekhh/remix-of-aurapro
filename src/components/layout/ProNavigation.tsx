@@ -114,7 +114,7 @@ export function ProNavigation() {
                 transition={{ duration: 0.6, ease: 'easeOut' }}
                 className="relative"
               >
-                <div className="w-48 h-48 rounded-full bg-gradient-to-br from-foreground/5 to-foreground/10 border border-border/30 shadow-2xl flex items-center justify-center overflow-hidden backdrop-blur-sm">
+                <div className="w-56 h-56 rounded-full bg-gradient-to-br from-foreground/5 to-foreground/10 border border-border/30 shadow-2xl flex items-center justify-center overflow-hidden backdrop-blur-sm">
                   {/* AI Assistant Image */}
                   <img 
                     src={aiAssistant} 
