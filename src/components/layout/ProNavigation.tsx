@@ -149,7 +149,7 @@ export function ProNavigation() {
               initial={{ x: 20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="bg-card/50 backdrop-blur-sm border border-border/30 rounded-2xl p-5 shadow-lg"
+              className="bg-card/50 backdrop-blur-sm border border-border/30 rounded-2xl p-5 shadow-lg mt-8"
             >
               <div className="flex items-center gap-2 mb-4">
                 <Sparkles className="h-4 w-4 text-primary" />
