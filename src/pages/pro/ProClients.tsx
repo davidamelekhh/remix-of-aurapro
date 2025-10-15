@@ -84,11 +84,7 @@ export default function ProClients() {
       <ProNavigation />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-foreground">Gestion des clients</h1>
-            <p className="text-muted-foreground mt-1">Gérez vos clients et leurs accès projets</p>
-          </div>
+        <div className="flex justify-end items-center mb-8">
           <Link to="/pro/clients/new">
             <Button size="lg">
               <UserPlus className="mr-2 h-4 w-4" />

@@ -270,7 +270,7 @@ export default function ProAnalytics() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.1 }}
             >
-              <h2 className="text-2xl font-semibold mb-8 text-foreground">Vue d'ensemble</h2>
+              
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {/* CA Estimé */}
                 <motion.div
