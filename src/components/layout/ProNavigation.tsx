@@ -84,9 +84,9 @@ export function ProNavigation() {
       {/* Desktop Header */}
       <div className="hidden lg:block bg-background border-b border-border/20">
         <div className="max-w-[1800px] mx-auto px-12 py-4">
-          <div className="grid grid-cols-[280px_1fr_320px] gap-8 items-start">
+          <div className="grid grid-cols-[280px_1fr_320px] gap-8 items-stretch">
             {/* Left Navigation */}
-            <div className="bg-card/50 backdrop-blur-sm border border-border/30 rounded-2xl p-4 shadow-lg flex flex-col h-[360px]">
+            <div className="bg-card/50 backdrop-blur-sm border border-border/30 rounded-2xl p-4 shadow-lg flex flex-col">
               <nav className="h-full flex flex-col">
                 {/* Logo */}
                 <div className="flex flex-col pb-2 mb-3">
@@ -151,7 +151,7 @@ export function ProNavigation() {
               initial={{ x: 20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="bg-card/50 backdrop-blur-sm border border-border/30 rounded-2xl p-4 shadow-lg flex flex-col justify-between h-[360px]"
+              className="bg-card/50 backdrop-blur-sm border border-border/30 rounded-2xl p-4 shadow-lg flex flex-col justify-between"
             >
               <div>
                 <div className="mb-4 pb-3 border-b border-border/30">
