@@ -207,8 +207,8 @@ export default function Landing() {
                 initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
                 whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 transition={{ 
-                  duration: 0.6, 
-                  delay: index * 0.15,
+                  duration: 0.8, 
+                  delay: index * 0.5,
                   ease: [0.16, 1, 0.3, 1]
                 }}
                 viewport={{ once: true, margin: "-100px" }}
@@ -224,7 +224,7 @@ export default function Landing() {
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ 
               duration: 0.8, 
-              delay: 1.2,
+              delay: 3.5,
               ease: [0.16, 1, 0.3, 1]
             }}
             viewport={{ once: true }}
