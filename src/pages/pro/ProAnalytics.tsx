@@ -246,17 +246,6 @@ export default function ProAnalytics() {
       <ProNavigation />
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Header */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="mb-16 text-center"
-        >
-          <h1 className="text-5xl font-bold text-foreground mb-4">Analytics</h1>
-          <p className="text-lg text-muted-foreground">La tour de contrôle de votre empire immobilier</p>
-        </motion.div>
-
         {loading ? (
           <div className="text-center py-20">
             <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent"></div>
