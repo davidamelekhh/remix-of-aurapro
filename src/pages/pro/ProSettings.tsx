@@ -7,8 +7,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { ProNavigation } from '@/components/layout/ProNavigation';
-import { Settings, User, Building, Mail, Phone, Lock, Save } from 'lucide-react';
+import { Settings, User, Building, Mail, Phone, Lock, Save, CreditCard, Crown } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
+import { Badge } from '@/components/ui/badge';
 
 export default function ProSettings() {
   const navigate = useNavigate();
@@ -265,6 +266,87 @@ export default function ProSettings() {
                   {saving ? 'Enregistrement...' : 'Enregistrer les modifications'}
                 </Button>
               </form>
+            </CardContent>
+          </Card>
+
+          {/* Subscription Plan */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <CreditCard className="h-5 w-5" />
+                Plan d'abonnement
+              </CardTitle>
+              <CardDescription>
+                Gérez votre abonnement et vos paiements
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-semibold text-lg">Plan Gratuit</h3>
+                    <Badge variant="secondary">Actuel</Badge>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    Accès aux fonctionnalités de base
+                  </p>
+                </div>
+                <div className="text-right">
+                  <p className="text-2xl font-bold">0€</p>
+                  <p className="text-sm text-muted-foreground">/mois</p>
+                </div>
+              </div>
+
+              <Separator />
+
+              <div className="space-y-4">
+                <h4 className="font-semibold">Plan Premium</h4>
+                <div className="p-4 border rounded-lg bg-gradient-to-r from-primary/5 to-primary/10">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <Crown className="h-5 w-5 text-primary" />
+                        <h3 className="font-semibold text-lg">Plan Pro</h3>
+                      </div>
+                      <p className="text-sm text-muted-foreground">
+                        Accès à toutes les fonctionnalités avancées
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-2xl font-bold">29€</p>
+                      <p className="text-sm text-muted-foreground">/mois</p>
+                    </div>
+                  </div>
+                  
+                  <ul className="space-y-2 mb-4 text-sm">
+                    <li className="flex items-center gap-2">
+                      <div className="h-1.5 w-1.5 rounded-full bg-primary" />
+                      Projets illimités
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <div className="h-1.5 w-1.5 rounded-full bg-primary" />
+                      Clients et parties prenantes illimités
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <div className="h-1.5 w-1.5 rounded-full bg-primary" />
+                      Stockage de documents étendu
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <div className="h-1.5 w-1.5 rounded-full bg-primary" />
+                      Analyses et rapports avancés
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <div className="h-1.5 w-1.5 rounded-full bg-primary" />
+                      Support prioritaire
+                    </li>
+                  </ul>
+
+                  <Button className="w-full">
+                    <Crown className="mr-2 h-4 w-4" />
+                    Passer au plan Pro
+                  </Button>
+                </div>
+              </div>
             </CardContent>
           </Card>
 
