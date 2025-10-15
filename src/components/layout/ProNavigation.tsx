@@ -1,37 +1,90 @@
 import { useState } from 'react';
-import { LayoutDashboard, FolderKanban, Users, Menu, X, LogOut, Settings, BarChart3 } from 'lucide-react';
+import { LayoutDashboard, FolderKanban, Users, Menu, X, LogOut, Settings, BarChart3, Sparkles } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/useAuth';
-import logo from '@/assets/logo.png';
+import { motion } from 'framer-motion';
 
 const navigation = [
   { name: 'Dashboard', href: '/pro/dashboard', icon: LayoutDashboard },
-  { name: 'Projets', href: '/pro/projects', icon: FolderKanban },
   { name: 'Clients', href: '/pro/clients', icon: Users },
+  { name: 'Projets', href: '/pro/projects', icon: FolderKanban },
   { name: 'Analytics', href: '/pro/analytics', icon: BarChart3 },
   { name: 'Paramètres', href: '/pro/settings', icon: Settings },
 ];
+
+// Page summary data based on current route
+const getPageSummary = (pathname: string) => {
+  if (pathname.includes('/dashboard')) {
+    return {
+      title: 'Dashboard',
+      insights: [
+        { label: 'Projets actifs', value: '12' },
+        { label: 'Complétion moyenne', value: '73%' },
+        { label: 'Clients satisfaits', value: '98%' },
+      ],
+      quote: 'Vos projets progressent bien. Aucun retard majeur détecté.',
+    };
+  }
+  if (pathname.includes('/analytics')) {
+    return {
+      title: 'Analytics',
+      insights: [
+        { label: 'CA estimé', value: '2.4M€' },
+        { label: 'ROI moyen', value: '+24%' },
+        { label: 'Croissance', value: '+18%' },
+      ],
+      quote: 'Performance exceptionnelle ce trimestre.',
+    };
+  }
+  if (pathname.includes('/projects')) {
+    return {
+      title: 'Projets',
+      insights: [
+        { label: 'En cours', value: '8' },
+        { label: 'Terminés', value: '24' },
+        { label: 'Pipeline', value: '5' },
+      ],
+      quote: 'Pipeline solide pour les prochains mois.',
+    };
+  }
+  if (pathname.includes('/clients')) {
+    return {
+      title: 'Clients',
+      insights: [
+        { label: 'Total clients', value: '47' },
+        { label: 'Nouveaux ce mois', value: '3' },
+        { label: 'Taux satisfaction', value: '96%' },
+      ],
+      quote: 'Relations clients excellentes.',
+    };
+  }
+  return {
+    title: 'Aura Pro',
+    insights: [
+      { label: 'Vue globale', value: '—' },
+      { label: 'Statut', value: 'OK' },
+      { label: 'Alertes', value: '0' },
+    ],
+    quote: 'Tout fonctionne parfaitement.',
+  };
+};
 
 export function ProNavigation() {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const { signOut } = useAuth();
+  const pageSummary = getPageSummary(location.pathname);
 
   return (
-    <nav className="bg-card border-b border-border">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          <div className="flex items-center space-x-8">
-            {/* Logo */}
-            <Link to="/pro/dashboard" className="flex items-center space-x-2">
-              <img src={logo} alt="Aura Pro Logo" className="w-10 h-10" />
-              <span className="text-xl font-bold text-foreground">Aura Pro</span>
-            </Link>
-
-            {/* Navigation */}
-            <div className="hidden md:flex md:space-x-1">
+    <>
+      {/* Desktop Header */}
+      <div className="hidden lg:block bg-background border-b border-border/20">
+        <div className="max-w-[1800px] mx-auto px-12 py-8">
+          <div className="grid grid-cols-[280px_1fr_320px] gap-12 items-start">
+            {/* Left Navigation */}
+            <nav className="space-y-2">
               {navigation.map((item) => {
                 const isActive = location.pathname === item.href || location.pathname.startsWith(item.href + '/');
                 return (
@@ -39,35 +92,87 @@ export function ProNavigation() {
                     key={item.name}
                     to={item.href}
                     className={cn(
-                      'flex items-center px-3 py-2 rounded-md text-sm font-medium transition-all duration-200',
+                      'flex items-center gap-3 px-4 py-3 rounded-2xl text-base font-medium transition-all duration-300',
                       isActive
-                        ? 'bg-foreground text-background'
-                        : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
+                        ? 'bg-foreground text-background shadow-lg'
+                        : 'text-foreground/70 hover:text-foreground hover:bg-secondary/50'
                     )}
                   >
-                    <item.icon className="h-4 w-4 mr-2" />
+                    <item.icon className="h-5 w-5" />
                     {item.name}
                   </Link>
                 );
               })}
-            </div>
-          </div>
+            </nav>
 
-          {/* User section */}
-          <div className="flex items-center space-x-4">
-            <div className="hidden md:block text-sm text-muted-foreground">Mode Promoteur</div>
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              onClick={signOut}
-              className="hidden md:flex items-center gap-2"
+            {/* Center AI Circle */}
+            <div className="flex items-center justify-center">
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.6, ease: 'easeOut' }}
+                className="relative"
+              >
+                <div className="w-64 h-64 rounded-full bg-gradient-to-br from-foreground/5 to-foreground/10 border border-border/30 shadow-2xl flex items-center justify-center overflow-hidden backdrop-blur-sm">
+                  {/* AI Assistant Placeholder */}
+                  <div className="flex flex-col items-center justify-center">
+                    <Sparkles className="h-16 w-16 text-foreground/40 mb-3" />
+                    <p className="text-sm text-foreground/50 font-medium">AI Assistant</p>
+                  </div>
+                  {/* Subtle glow effect */}
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-t from-primary/5 to-transparent opacity-50" />
+                </div>
+              </motion.div>
+            </div>
+
+            {/* Right Summary Box */}
+            <motion.div
+              initial={{ x: 20, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="bg-card/50 backdrop-blur-sm border border-border/30 rounded-2xl p-6 shadow-lg"
             >
-              <LogOut className="h-4 w-4" />
-              Déconnexion
-            </Button>
-            
-            {/* Mobile menu button */}
-            <div className="md:hidden">
+              <div className="flex items-center gap-2 mb-4">
+                <Sparkles className="h-4 w-4 text-primary" />
+                <h3 className="text-sm font-semibold text-foreground/80 uppercase tracking-wide">
+                  Page Summary
+                </h3>
+              </div>
+
+              <div className="space-y-4">
+                {/* Key metrics */}
+                <div className="space-y-3">
+                  {pageSummary.insights.map((insight, idx) => (
+                    <div key={idx} className="flex items-center justify-between">
+                      <span className="text-sm text-foreground/60">{insight.label}</span>
+                      <span className="text-lg font-bold text-foreground">{insight.value}</span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* AI Quote */}
+                <div className="pt-4 border-t border-border/20">
+                  <p className="text-sm text-foreground/70 italic leading-relaxed">
+                    "{pageSummary.quote}"
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile/Tablet Header */}
+      <nav className="lg:hidden bg-card border-b border-border">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="flex justify-between items-center h-16">
+            <Link to="/pro/dashboard" className="flex items-center space-x-2">
+              <Sparkles className="h-6 w-6 text-primary" />
+              <span className="text-xl font-bold text-foreground">Aura Pro</span>
+            </Link>
+
+            <div className="flex items-center gap-4">
+              <div className="hidden sm:block text-sm text-muted-foreground">Mode Promoteur</div>
               <Button
                 variant="ghost"
                 size="sm"
@@ -77,43 +182,43 @@ export function ProNavigation() {
               </Button>
             </div>
           </div>
-        </div>
 
-        {/* Mobile Navigation */}
-        {isOpen && (
-          <div className="md:hidden border-t border-border mt-2 pt-2 pb-4">
-            <div className="space-y-1">
-              {navigation.map((item) => {
-                const isActive = location.pathname === item.href || location.pathname.startsWith(item.href + '/');
-                return (
-                  <Link
-                    key={item.name}
-                    to={item.href}
-                    onClick={() => setIsOpen(false)}
-                    className={cn(
-                      'flex items-center px-3 py-2 rounded-md text-sm font-medium transition-all duration-200',
-                      isActive
-                        ? 'bg-foreground text-background'
-                        : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
-                    )}
-                  >
-                    <item.icon className="h-4 w-4 mr-2" />
-                    {item.name}
-                  </Link>
-                );
-              })}
-              <Button 
-                variant="ghost" 
-                onClick={signOut}
-                className="w-full justify-start"
-              >
-                <LogOut className="mr-2 h-5 w-5" />
-                Déconnexion
-              </Button>
+          {/* Mobile Navigation */}
+          {isOpen && (
+            <div className="border-t border-border mt-2 pt-2 pb-4">
+              <div className="space-y-1">
+                {navigation.map((item) => {
+                  const isActive = location.pathname === item.href || location.pathname.startsWith(item.href + '/');
+                  return (
+                    <Link
+                      key={item.name}
+                      to={item.href}
+                      onClick={() => setIsOpen(false)}
+                      className={cn(
+                        'flex items-center px-3 py-2 rounded-md text-sm font-medium transition-all duration-200',
+                        isActive
+                          ? 'bg-foreground text-background'
+                          : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
+                      )}
+                    >
+                      <item.icon className="h-4 w-4 mr-2" />
+                      {item.name}
+                    </Link>
+                  );
+                })}
+                <Button 
+                  variant="ghost" 
+                  onClick={signOut}
+                  className="w-full justify-start"
+                >
+                  <LogOut className="mr-2 h-5 w-5" />
+                  Déconnexion
+                </Button>
+              </div>
             </div>
-          </div>
-        )}
-      </div>
-    </nav>
+          )}
+        </div>
+      </nav>
+    </>
   );
 }
