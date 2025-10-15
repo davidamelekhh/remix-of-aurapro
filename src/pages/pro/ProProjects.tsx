@@ -95,6 +95,12 @@ export default function ProProjects() {
             <Filter className="mr-2 h-4 w-4" />
             Filtrer
           </Button>
+          <Link to="/pro/projects/new">
+            <Button>
+              <Plus className="mr-2 h-4 w-4" />
+              Nouveau Projet
+            </Button>
+          </Link>
         </div>
 
         {/* Projects Grid */}
