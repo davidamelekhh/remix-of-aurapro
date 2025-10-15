@@ -84,12 +84,12 @@ export function ProNavigation() {
       {/* Desktop Header */}
       <div className="hidden lg:block bg-background border-b border-border/20">
         <div className="max-w-[1800px] mx-auto px-12 py-4">
-          <div className="grid grid-cols-[280px_1fr_320px] gap-8 items-start">
+          <div className="grid grid-cols-[280px_1fr_320px] gap-8 items-stretch">
             {/* Left Navigation */}
-            <div className="bg-card/50 backdrop-blur-sm border border-border/30 rounded-2xl p-6 shadow-lg h-full">
-              <nav className="space-y-4 h-full flex flex-col">
+            <div className="bg-card/50 backdrop-blur-sm border border-border/30 rounded-2xl p-5 shadow-lg flex flex-col">
+              <nav className="h-full flex flex-col">
                 {/* Logo */}
-                <div className="flex flex-col pb-3">
+                <div className="flex flex-col pb-3 mb-4">
                   <div className="flex items-center gap-3 mb-3">
                     <img 
                       src={auraProLogo} 
@@ -110,7 +110,7 @@ export function ProNavigation() {
                         key={item.name}
                         to={item.href}
                         className={cn(
-                          'flex items-center gap-3 px-4 py-2 rounded-2xl text-sm font-medium transition-all duration-300',
+                          'flex items-center gap-3 px-4 py-2.5 rounded-2xl text-sm font-medium transition-all duration-300',
                           isActive
                             ? 'bg-foreground text-background shadow-lg'
                             : 'text-foreground/70 hover:text-foreground hover:bg-secondary/50'
@@ -151,10 +151,10 @@ export function ProNavigation() {
               initial={{ x: 20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="bg-card/50 backdrop-blur-sm border border-border/30 rounded-2xl p-6 shadow-lg h-full flex flex-col justify-between"
+              className="bg-card/50 backdrop-blur-sm border border-border/30 rounded-2xl p-5 shadow-lg flex flex-col justify-between"
             >
               <div>
-                <div className="flex items-center gap-2 mb-6">
+                <div className="flex items-center gap-2 mb-5">
                   <Sparkles className="h-4 w-4 text-primary" />
                   <h3 className="text-sm font-semibold text-foreground/80 uppercase tracking-wide">
                     Page Summary
@@ -175,7 +175,7 @@ export function ProNavigation() {
               </div>
 
               {/* AI Quote at bottom */}
-              <div className="pt-6 border-t border-border/20 mt-auto">
+              <div className="pt-5 border-t border-border/20 mt-auto">
                 <p className="text-sm text-foreground/70 italic leading-relaxed">
                   "{pageSummary.quote}"
                 </p>
