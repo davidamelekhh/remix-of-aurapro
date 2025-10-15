@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { ProNavigation } from '@/components/layout/ProNavigation';
 import { Card, CardContent } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
@@ -6,6 +6,8 @@ import { TrendingUp, DollarSign, CheckCircle2, AlertCircle, Sparkles, MapPin, Ba
 import { isAfter, subDays } from 'date-fns';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
+import mapboxgl from 'mapbox-gl';
+import 'mapbox-gl/dist/mapbox-gl.css';
 
 interface AnalyticsData {
   totalProjects: number;
@@ -28,6 +30,7 @@ interface Project {
   progress: number;
   status: string;
   location: string;
+  estimated_revenue: number;
 }
 
 export default function ProAnalytics() {
@@ -44,10 +47,69 @@ export default function ProAnalytics() {
   });
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
+  const mapContainer = useRef<HTMLDivElement>(null);
+  const map = useRef<mapboxgl.Map | null>(null);
+  const [selectedProject, setSelectedProject] = useState<string | null>(null);
 
   useEffect(() => {
     fetchAnalytics();
   }, []);
+
+  useEffect(() => {
+    if (!mapContainer.current || projects.length === 0) return;
+
+    mapboxgl.accessToken = 'pk.eyJ1IjoibG92YWJsZSIsImEiOiJjbTgycmNyNWswMzA2MmtzNmI1cHU4dXN1In0.JCL7LmLhLQo_NxABBJm5Bw';
+    
+    if (!map.current) {
+      map.current = new mapboxgl.Map({
+        container: mapContainer.current,
+        style: 'mapbox://styles/mapbox/light-v11',
+        center: [-7.5898, 33.5731], // Morocco center
+        zoom: 5,
+      });
+
+      map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
+    }
+
+    // Add markers for projects
+    projects.forEach((project) => {
+      const el = document.createElement('div');
+      el.className = 'marker';
+      el.style.width = '30px';
+      el.style.height = '30px';
+      el.style.borderRadius = '50%';
+      el.style.cursor = 'pointer';
+      el.style.border = '3px solid white';
+      el.style.boxShadow = '0 2px 8px rgba(0,0,0,0.2)';
+      
+      if (project.progress >= 90) {
+        el.style.backgroundColor = 'hsl(var(--success))';
+      } else if (project.progress >= 50) {
+        el.style.backgroundColor = 'hsl(var(--primary))';
+      } else if (project.progress >= 25) {
+        el.style.backgroundColor = 'hsl(var(--muted-foreground))';
+      } else {
+        el.style.backgroundColor = 'hsl(var(--destructive))';
+      }
+
+      // Random coordinates around Morocco for demo
+      const lat = 33.5731 + (Math.random() - 0.5) * 4;
+      const lng = -7.5898 + (Math.random() - 0.5) * 4;
+
+      new mapboxgl.Marker(el)
+        .setLngLat([lng, lat])
+        .addTo(map.current!);
+
+      el.addEventListener('click', () => {
+        setSelectedProject(project.id);
+      });
+    });
+
+    return () => {
+      map.current?.remove();
+      map.current = null;
+    };
+  }, [projects]);
 
   const fetchAnalytics = async () => {
     try {
@@ -65,7 +127,8 @@ export default function ProAnalytics() {
         name: p.name,
         progress: p.progress,
         status: p.status,
-        location: p.location
+        location: p.location,
+        estimated_revenue: p.estimated_revenue || 0
       })) || []);
 
       // Fetch milestones
@@ -334,46 +397,74 @@ export default function ProAnalytics() {
               transition={{ duration: 0.7, delay: 0.3 }}
             >
               <h2 className="text-2xl font-semibold mb-8 text-foreground">Carte des Projets</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {projects.map((project, index) => (
-                  <motion.div
-                    key={project.id}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.4, delay: 0.4 + index * 0.1 }}
-                    whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
-                  >
-                    <Card className={`backdrop-blur-xl ${getStatusColor(project.progress)} border transition-all duration-300 hover:shadow-lg cursor-pointer`}>
-                      <CardContent className="p-5">
-                        <div className="flex items-start justify-between mb-3">
-                          <div className="flex-1">
-                            <h3 className="font-semibold text-foreground mb-1">{project.name}</h3>
-                            <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                              <MapPin className="h-3 w-3" />
-                              <span>{project.location}</span>
+              <div className="flex gap-6">
+                {/* Map Container */}
+                <div className="flex-1">
+                  <div 
+                    ref={mapContainer} 
+                    className="w-full h-[600px] rounded-2xl shadow-xl border border-border/20 overflow-hidden"
+                  />
+                </div>
+
+                {/* Project Cards Column */}
+                <div className="w-80 space-y-3 overflow-y-auto max-h-[600px] pr-2">
+                  {projects.map((project, index) => (
+                    <motion.div
+                      key={project.id}
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.4, delay: 0.4 + index * 0.1 }}
+                      whileHover={{ x: -4, transition: { duration: 0.2 } }}
+                      onClick={() => setSelectedProject(project.id)}
+                    >
+                      <Card className={`backdrop-blur-xl ${getStatusColor(project.progress)} ${selectedProject === project.id ? 'ring-2 ring-primary' : ''} border transition-all duration-300 hover:shadow-lg cursor-pointer`}>
+                        <CardContent className="p-4">
+                          <div className="flex items-start justify-between mb-3">
+                            <div className="flex-1 min-w-0">
+                              <h3 className="font-semibold text-foreground mb-1 truncate">{project.name}</h3>
+                              <div className="flex items-center gap-1 text-xs text-muted-foreground mb-2">
+                                <MapPin className="h-3 w-3 flex-shrink-0" />
+                                <span className="truncate">{project.location}</span>
+                              </div>
                             </div>
                           </div>
-                          <div className="text-right">
-                            <div className="text-2xl font-bold text-foreground">{project.progress}%</div>
+
+                          {/* Revenue */}
+                          <div className="mb-3 p-2 bg-background/30 rounded-lg">
+                            <div className="flex items-center gap-1 text-xs text-muted-foreground mb-1">
+                              <DollarSign className="h-3 w-3" />
+                              <span>Revenue Estimé</span>
+                            </div>
+                            <div className="text-lg font-bold text-foreground">
+                              {(project.estimated_revenue / 1000000).toFixed(2)}M MAD
+                            </div>
                           </div>
-                        </div>
-                        <div className="w-full bg-muted/30 rounded-full h-2 overflow-hidden">
-                          <motion.div
-                            initial={{ width: 0 }}
-                            animate={{ width: `${project.progress}%` }}
-                            transition={{ duration: 1, delay: 0.6 + index * 0.1, ease: "easeOut" }}
-                            className={`h-full ${
-                              project.progress >= 90 ? 'bg-success' :
-                              project.progress >= 50 ? 'bg-primary' :
-                              project.progress >= 25 ? 'bg-muted-foreground' :
-                              'bg-destructive'
-                            }`}
-                          />
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                ))}
+
+                          {/* Progress */}
+                          <div className="space-y-2">
+                            <div className="flex items-center justify-between text-xs">
+                              <span className="text-muted-foreground">Progression</span>
+                              <span className="font-semibold text-foreground">{project.progress}%</span>
+                            </div>
+                            <div className="w-full bg-muted/30 rounded-full h-2 overflow-hidden">
+                              <motion.div
+                                initial={{ width: 0 }}
+                                animate={{ width: `${project.progress}%` }}
+                                transition={{ duration: 1, delay: 0.6 + index * 0.1, ease: "easeOut" }}
+                                className={`h-full ${
+                                  project.progress >= 90 ? 'bg-success' :
+                                  project.progress >= 50 ? 'bg-primary' :
+                                  project.progress >= 25 ? 'bg-muted-foreground' :
+                                  'bg-destructive'
+                                }`}
+                              />
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+                  ))}
+                </div>
               </div>
             </motion.section>
 
