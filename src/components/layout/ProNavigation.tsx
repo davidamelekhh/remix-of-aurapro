@@ -86,7 +86,7 @@ export function ProNavigation() {
         <div className="max-w-[1800px] mx-auto px-12 py-4">
           <div className="grid grid-cols-[280px_1fr_320px] gap-8 items-start">
             {/* Left Navigation */}
-            <div className="bg-card/50 backdrop-blur-sm border border-border/30 rounded-2xl p-5 shadow-lg h-full">
+            <div className="bg-card/50 backdrop-blur-sm border border-border/30 rounded-2xl p-6 shadow-lg h-full">
               <nav className="space-y-4 h-full flex flex-col">
                 {/* Logo */}
                 <div className="flex flex-col pb-3">
@@ -151,10 +151,10 @@ export function ProNavigation() {
               initial={{ x: 20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="bg-card/50 backdrop-blur-sm border border-border/30 rounded-2xl p-5 shadow-lg h-full flex flex-col justify-between"
+              className="bg-card/50 backdrop-blur-sm border border-border/30 rounded-2xl p-6 shadow-lg h-full flex flex-col justify-between"
             >
               <div>
-                <div className="flex items-center gap-2 mb-5">
+                <div className="flex items-center gap-2 mb-6">
                   <Sparkles className="h-4 w-4 text-primary" />
                   <h3 className="text-sm font-semibold text-foreground/80 uppercase tracking-wide">
                     Page Summary
@@ -175,7 +175,7 @@ export function ProNavigation() {
               </div>
 
               {/* AI Quote at bottom */}
-              <div className="pt-5 border-t border-border/20 mt-auto">
+              <div className="pt-6 border-t border-border/20 mt-auto">
                 <p className="text-sm text-foreground/70 italic leading-relaxed">
                   "{pageSummary.quote}"
                 </p>
