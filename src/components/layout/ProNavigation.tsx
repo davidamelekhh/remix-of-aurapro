@@ -86,42 +86,44 @@ export function ProNavigation() {
         <div className="max-w-[1800px] mx-auto px-12 py-4">
           <div className="grid grid-cols-[280px_1fr_320px] gap-8 items-start">
             {/* Left Navigation */}
-            <nav className="space-y-4">
-              {/* Logo */}
-              <div className="flex flex-col pb-3">
-                <div className="flex items-center gap-3 mb-3">
-                  <img 
-                    src={auraProLogo} 
-                    alt="Aura Pro" 
-                    className="h-8 w-auto"
-                  />
-                  <span className="text-xl font-bold text-foreground">Aura Pro</span>
+            <div className="bg-card/50 backdrop-blur-sm border border-border/30 rounded-2xl p-6 shadow-lg h-full">
+              <nav className="space-y-4 h-full flex flex-col">
+                {/* Logo */}
+                <div className="flex flex-col pb-3">
+                  <div className="flex items-center gap-3 mb-3">
+                    <img 
+                      src={auraProLogo} 
+                      alt="Aura Pro" 
+                      className="h-8 w-auto"
+                    />
+                    <span className="text-xl font-bold text-foreground">Aura Pro</span>
+                  </div>
+                  <div className="w-full h-px bg-border/30" />
                 </div>
-                <div className="w-full h-px bg-border/30" />
-              </div>
 
-              {/* Navigation Links */}
-              <div className="space-y-1">
-                {navigation.map((item) => {
-                  const isActive = location.pathname === item.href || location.pathname.startsWith(item.href + '/');
-                  return (
-                    <Link
-                      key={item.name}
-                      to={item.href}
-                      className={cn(
-                        'flex items-center gap-3 px-4 py-2 rounded-2xl text-sm font-medium transition-all duration-300',
-                        isActive
-                          ? 'bg-foreground text-background shadow-lg'
-                          : 'text-foreground/70 hover:text-foreground hover:bg-secondary/50'
-                      )}
-                    >
-                      <item.icon className="h-4 w-4" />
-                      {item.name}
-                    </Link>
-                  );
-                })}
-              </div>
-            </nav>
+                {/* Navigation Links */}
+                <div className="space-y-1 flex-1">
+                  {navigation.map((item) => {
+                    const isActive = location.pathname === item.href || location.pathname.startsWith(item.href + '/');
+                    return (
+                      <Link
+                        key={item.name}
+                        to={item.href}
+                        className={cn(
+                          'flex items-center gap-3 px-4 py-2 rounded-2xl text-sm font-medium transition-all duration-300',
+                          isActive
+                            ? 'bg-foreground text-background shadow-lg'
+                            : 'text-foreground/70 hover:text-foreground hover:bg-secondary/50'
+                        )}
+                      >
+                        <item.icon className="h-4 w-4" />
+                        {item.name}
+                      </Link>
+                    );
+                  })}
+                </div>
+              </nav>
+            </div>
 
             {/* Center AI Rectangle */}
             <div className="flex items-start justify-center">
