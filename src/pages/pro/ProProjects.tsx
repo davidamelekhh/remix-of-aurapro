@@ -80,14 +80,6 @@ export default function ProProjects() {
       <ProNavigation />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex justify-end items-center mb-8">
-          <Link to="/pro/projects/new">
-            <Button size="lg">
-              <Plus className="mr-2 h-4 w-4" />
-              Nouveau projet
-            </Button>
-          </Link>
-        </div>
         {/* Search & Filter */}
         <div className="flex gap-4 mb-6">
           <div className="relative flex-1">
