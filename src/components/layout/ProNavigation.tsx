@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/useAuth';
 import { motion } from 'framer-motion';
+import aiAssistant from '@/assets/ai-assistant.png';
 
 const navigation = [
   { name: 'Dashboard', href: '/pro/dashboard', icon: LayoutDashboard },
@@ -114,11 +115,12 @@ export function ProNavigation() {
                 className="relative"
               >
                 <div className="w-64 h-64 rounded-full bg-gradient-to-br from-foreground/5 to-foreground/10 border border-border/30 shadow-2xl flex items-center justify-center overflow-hidden backdrop-blur-sm">
-                  {/* AI Assistant Placeholder */}
-                  <div className="flex flex-col items-center justify-center">
-                    <Sparkles className="h-16 w-16 text-foreground/40 mb-3" />
-                    <p className="text-sm text-foreground/50 font-medium">AI Assistant</p>
-                  </div>
+                  {/* AI Assistant Image */}
+                  <img 
+                    src={aiAssistant} 
+                    alt="AI Assistant" 
+                    className="w-full h-full object-cover"
+                  />
                   {/* Subtle glow effect */}
                   <div className="absolute inset-0 rounded-full bg-gradient-to-t from-primary/5 to-transparent opacity-50" />
                 </div>
