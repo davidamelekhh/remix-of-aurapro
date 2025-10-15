@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { LayoutDashboard, FolderKanban, Users, Menu, X, LogOut, Settings, BarChart3, Sparkles } from 'lucide-react';
+import { LayoutDashboard, FolderKanban, Users, Menu, X, LogOut, Settings, BarChart3 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -154,10 +154,9 @@ export function ProNavigation() {
               className="bg-card/50 backdrop-blur-sm border border-border/30 rounded-2xl p-4 shadow-lg flex flex-col justify-between"
             >
               <div>
-                <div className="flex items-center gap-2 mb-4">
-                  <Sparkles className="h-4 w-4 text-primary" />
+                <div className="mb-4 pb-3 border-b border-border/30">
                   <h3 className="text-sm font-semibold text-foreground/80 uppercase tracking-wide">
-                    Page Summary
+                    AI Summary
                   </h3>
                 </div>
 
@@ -165,7 +164,7 @@ export function ProNavigation() {
                   {/* Key metrics */}
                   <div className="space-y-3">
                     {pageSummary.insights.map((insight, idx) => (
-                      <div key={idx} className="flex items-center justify-between">
+                      <div key={idx} className="flex items-center justify-between py-2 px-3 rounded-lg border border-border/20 bg-background/30">
                         <span className="text-sm text-foreground/60">{insight.label}</span>
                         <span className="text-lg font-bold text-foreground">{insight.value}</span>
                       </div>
