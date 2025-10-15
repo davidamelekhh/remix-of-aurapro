@@ -83,19 +83,19 @@ export function ProNavigation() {
     <>
       {/* Desktop Header */}
       <div className="hidden lg:block bg-background border-b border-border/20">
-        <div className="max-w-[1800px] mx-auto px-12 py-8">
-          <div className="grid grid-cols-[280px_1fr_320px] gap-12 items-start">
+        <div className="max-w-[1800px] mx-auto px-12 py-4">
+          <div className="grid grid-cols-[280px_1fr_320px] gap-8 items-start">
             {/* Left Navigation */}
-            <nav className="space-y-6">
+            <nav className="space-y-4">
               {/* Logo */}
-              <div className="flex flex-col pb-4">
-                <div className="flex items-center gap-3 mb-4">
+              <div className="flex flex-col pb-3">
+                <div className="flex items-center gap-3 mb-3">
                   <img 
                     src={auraProLogo} 
                     alt="Aura Pro" 
-                    className="h-10 w-auto"
+                    className="h-8 w-auto"
                   />
-                  <span className="text-2xl font-bold text-foreground">Aura Pro</span>
+                  <span className="text-xl font-bold text-foreground">Aura Pro</span>
                 </div>
                 <div className="w-full h-px bg-border/30" />
               </div>
@@ -109,13 +109,13 @@ export function ProNavigation() {
                       key={item.name}
                       to={item.href}
                       className={cn(
-                        'flex items-center gap-3 px-4 py-2.5 rounded-2xl text-base font-medium transition-all duration-300',
+                        'flex items-center gap-3 px-4 py-2 rounded-2xl text-sm font-medium transition-all duration-300',
                         isActive
                           ? 'bg-foreground text-background shadow-lg'
                           : 'text-foreground/70 hover:text-foreground hover:bg-secondary/50'
                       )}
                     >
-                      <item.icon className="h-5 w-5" />
+                      <item.icon className="h-4 w-4" />
                       {item.name}
                     </Link>
                   );
@@ -131,7 +131,7 @@ export function ProNavigation() {
                 transition={{ duration: 0.6, ease: 'easeOut' }}
                 className="relative"
               >
-                <div className="w-[328px] h-[328px] rounded-full bg-gradient-to-br from-foreground/5 to-foreground/10 border border-border/30 shadow-2xl flex items-center justify-center overflow-hidden backdrop-blur-sm">
+                <div className="w-[280px] h-[280px] rounded-full bg-gradient-to-br from-foreground/5 to-foreground/10 border border-border/30 shadow-2xl flex items-center justify-center overflow-hidden backdrop-blur-sm">
                   {/* AI Assistant Image */}
                   <img 
                     src={aiAssistant} 
@@ -149,7 +149,7 @@ export function ProNavigation() {
               initial={{ x: 20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="bg-card/50 backdrop-blur-sm border border-border/30 rounded-2xl p-6 shadow-lg"
+              className="bg-card/50 backdrop-blur-sm border border-border/30 rounded-2xl p-5 shadow-lg"
             >
               <div className="flex items-center gap-2 mb-4">
                 <Sparkles className="h-4 w-4 text-primary" />
