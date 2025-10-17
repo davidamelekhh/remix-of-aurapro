@@ -1,5 +1,12 @@
 import { Button } from '@/components/ui/button';
 import { ArrowRight, CheckCircle2, BarChart3, Bell, FolderOpen, Users, Shield, Clock, TrendingUp, MessageSquare } from 'lucide-react';
+import { useState } from 'react';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { useNavigate } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
 import auraLogo from '@/assets/aura-pro-logo.png';
 import heroProfessional from '@/assets/hero-professional.png';
 import heroAfter from '@/assets/hero-after.png';
@@ -74,6 +81,31 @@ const secondColumn = testimonials.slice(3, 6);
 const thirdColumn = testimonials.slice(6, 9);
 
 export default function Landing() {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const [isDemoDialogOpen, setIsDemoDialogOpen] = useState(false);
+
+  const handleDemoSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const data = {
+      name: formData.get('name'),
+      email: formData.get('email'),
+      company: formData.get('company'),
+      message: formData.get('message'),
+    };
+    
+    console.log('Demo request:', data);
+    
+    toast({
+      title: "Demande envoyée !",
+      description: "Nous vous contacterons dans les 24h.",
+    });
+    
+    setIsDemoDialogOpen(false);
+    e.currentTarget.reset();
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Navigation */}
@@ -87,7 +119,7 @@ export default function Landing() {
             <a href="#solution" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Solution</a>
             <a href="#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Fonctionnalités</a>
             <a href="#testimonials" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Témoignages</a>
-            <Button size="sm">Demander une démo</Button>
+            <Button size="sm" onClick={() => setIsDemoDialogOpen(true)}>Demander une démo</Button>
           </div>
         </div>
       </nav>
@@ -110,11 +142,11 @@ export default function Landing() {
             La plateforme qui transforme votre manière de gérer l'immobilier.
           </p>
           <div className="flex items-center justify-center gap-4 pt-4">
-            <Button size="lg" className="gap-2">
+            <Button size="lg" className="gap-2" onClick={() => navigate('/portal')}>
               Découvrir Aura PRO
               <ArrowRight className="h-4 w-4" />
             </Button>
-            <Button size="lg" variant="outline">
+            <Button size="lg" variant="outline" onClick={() => setIsDemoDialogOpen(true)}>
               Demander une démo
             </Button>
           </div>
@@ -471,6 +503,49 @@ export default function Landing() {
           </div>
         </div>
       </footer>
+
+      {/* Demo Dialog */}
+      <Dialog open={isDemoDialogOpen} onOpenChange={setIsDemoDialogOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>Demander une démo</DialogTitle>
+            <DialogDescription>
+              Remplissez le formulaire ci-dessous et nous vous contacterons dans les 24h pour planifier une démonstration personnalisée.
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleDemoSubmit} className="space-y-4 mt-4">
+            <div className="space-y-2">
+              <Label htmlFor="name">Nom complet *</Label>
+              <Input id="name" name="name" required placeholder="Ahmed Benali" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email professionnel *</Label>
+              <Input id="email" name="email" type="email" required placeholder="ahmed@entreprise.ma" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="company">Entreprise *</Label>
+              <Input id="company" name="company" required placeholder="Nom de votre entreprise" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="message">Message (optionnel)</Label>
+              <Textarea 
+                id="message" 
+                name="message" 
+                placeholder="Parlez-nous de vos besoins..."
+                rows={4}
+              />
+            </div>
+            <div className="flex gap-3 pt-2">
+              <Button type="button" variant="outline" onClick={() => setIsDemoDialogOpen(false)} className="flex-1">
+                Annuler
+              </Button>
+              <Button type="submit" className="flex-1">
+                Envoyer la demande
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
