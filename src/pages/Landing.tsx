@@ -403,12 +403,13 @@ export default function Landing() {
             badge="Offre Premium"
             title="Aura Pro"
             subtitle="La plateforme tout-en-un pour les professionnels de l'immobilier"
-            price="199€"
+            price="À partir de 299€/mois*"
             benefits={[
               { icon: 'check', text: 'Projets et clients illimités' },
               { icon: 'shield', text: 'Sécurité et conformité garanties' },
               { icon: 'heart', text: 'Support premium 7j/7' }
             ]}
+            priceNote="*Le tarif varie selon le type de propriété et vos besoins spécifiques"
             features={[
               { text: 'Tableau de bord temps réel avec analytics avancés' },
               { text: 'Gestion complète des projets et des équipes' },

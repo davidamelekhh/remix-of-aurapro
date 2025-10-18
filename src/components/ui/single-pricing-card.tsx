@@ -17,6 +17,7 @@ interface SinglePricingCardProps {
   title: string;
   subtitle: string;
   price: string;
+  priceNote?: string;
   benefits: Benefit[];
   features: Feature[];
   primaryButton: {
@@ -40,6 +41,7 @@ export function SinglePricingCard({
   title,
   subtitle,
   price,
+  priceNote,
   benefits,
   features,
   primaryButton,
@@ -77,6 +79,11 @@ export function SinglePricingCard({
             <p className="text-5xl font-bold text-foreground">
               {price}
             </p>
+            {priceNote && (
+              <p className="text-xs text-muted-foreground mt-2 leading-relaxed">
+                {priceNote}
+              </p>
+            )}
           </div>
 
           {/* Benefits */}
