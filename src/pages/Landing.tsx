@@ -17,6 +17,7 @@ import solutionDashboard from '@/assets/solution-dashboard.png';
 import articleAnalytics from '@/assets/article-analytics.jpg';
 import articleConstruction from '@/assets/article-construction.jpg';
 import articleDigital from '@/assets/article-digital.jpg';
+import earlyAdoptersBanner from '@/assets/early-adopters-banner.png';
 import { BentoCard } from '@/components/ui/bento';
 import { TestimonialsColumn } from '@/components/ui/testimonials-columns';
 import { BeforeAfterSlider } from '@/components/ui/before-after-slider';
@@ -461,9 +462,17 @@ export default function Landing() {
       </section>
 
       {/* Early Adopters Banner */}
-      <section className="relative h-[400px] overflow-hidden">
-        {/* Background Image Placeholder */}
-        <div className="absolute inset-0 bg-gradient-to-r from-gray-400 to-gray-500"></div>
+      <section className="relative h-[400px] md:h-[500px] overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <img 
+            src={earlyAdoptersBanner} 
+            alt="Early Adopters Recognition" 
+            className="w-full h-full object-cover"
+          />
+          {/* Overlay for better text readability */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent"></div>
+        </div>
         
         {/* Content */}
         <div className="relative z-10 h-full max-w-7xl mx-auto px-6 flex items-center">
