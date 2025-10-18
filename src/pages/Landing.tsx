@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { ArrowRight, CheckCircle2, BarChart3, Bell, FolderOpen, Users, Shield, Clock, TrendingUp, MessageSquare, ChevronDown } from 'lucide-react';
+import { ShimmerButton } from '@/components/ui/shimmer-button';
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
@@ -251,16 +252,15 @@ export default function Landing() {
                   className="w-full pl-28 pr-4 py-4 sm:py-6 text-base sm:text-lg rounded-xl border-2 focus:border-primary transition-all text-center sm:text-left"
                 />
               </div>
-              <Button 
+              <ShimmerButton
                 type="submit"
-                size="lg" 
-                className="group relative overflow-hidden bg-primary text-primary-foreground hover:bg-primary/90 px-6 sm:px-8 py-4 sm:py-6 text-base sm:text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 w-full sm:w-auto justify-center"
+                className="px-6 sm:px-8 py-4 sm:py-6 text-base sm:text-lg font-semibold rounded-xl w-full sm:w-auto"
               >
-                <span className="relative z-10 flex items-center gap-2">
+                <span className="flex items-center gap-2">
                   Rejoindre
-                  <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="h-5 w-5" />
                 </span>
-              </Button>
+              </ShimmerButton>
             </div>
             <p className="text-sm text-muted-foreground text-center mt-3">
               Soyez parmi les premiers à découvrir Aura Pro
@@ -383,15 +383,15 @@ export default function Landing() {
               Avec Aura PRO, <span className="font-medium">vous avez toutes les réponses.</span>
             </p>
             <div className="mt-8">
-              <Button 
-                size="lg" 
-                variant="secondary" 
-                className="gap-2"
+              <ShimmerButton
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                className="px-8 py-6 text-lg font-semibold rounded-xl"
               >
-                Rejoindre la liste d'attente
-                <ArrowRight className="h-4 w-4" />
-              </Button>
+                <span className="flex items-center gap-2">
+                  Rejoindre la liste d'attente
+                  <ArrowRight className="h-4 w-4" />
+                </span>
+              </ShimmerButton>
             </div>
           </motion.div>
         </div>
@@ -468,14 +468,15 @@ export default function Landing() {
             </div>
           </div>
           <div className="text-center mt-12">
-            <Button 
-              size="lg" 
-              className="gap-2"
+            <ShimmerButton
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="px-8 py-6 text-lg font-semibold rounded-xl"
             >
-              Rejoindre la liste d'attente
-              <ArrowRight className="h-4 w-4" />
-            </Button>
+              <span className="flex items-center gap-2">
+                Rejoindre la liste d'attente
+                <ArrowRight className="h-4 w-4" />
+              </span>
+            </ShimmerButton>
           </div>
         </div>
       </section>
@@ -553,15 +554,15 @@ export default function Landing() {
               Vous êtes les premiers à nous faire confiance, et nous n'oublierons jamais cela. Votre soutien façonne l'avenir d'Aura PRO, et nous serons toujours généreux avec ceux qui croient en notre vision dès le premier jour.
             </p>
             <div className="pt-2">
-              <Button 
-                size="lg" 
-                variant="secondary" 
-                className="gap-2"
+              <ShimmerButton
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                className="px-8 py-6 text-lg font-semibold rounded-xl"
               >
-                Rejoindre la liste d'attente
-                <ArrowRight className="h-4 w-4" />
-              </Button>
+                <span className="flex items-center gap-2">
+                  Rejoindre la liste d'attente
+                  <ArrowRight className="h-4 w-4" />
+                </span>
+              </ShimmerButton>
             </div>
           </div>
         </div>
@@ -721,14 +722,15 @@ export default function Landing() {
             </div>
           </div>
           <div className="text-center mt-12">
-            <Button 
-              size="lg" 
-              className="gap-2"
+            <ShimmerButton
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="px-8 py-6 text-lg font-semibold rounded-xl"
             >
-              Rejoindre la liste d'attente
-              <ArrowRight className="h-4 w-4" />
-            </Button>
+              <span className="flex items-center gap-2">
+                Rejoindre la liste d'attente
+                <ArrowRight className="h-4 w-4" />
+              </span>
+            </ShimmerButton>
           </div>
         </div>
       </section>
