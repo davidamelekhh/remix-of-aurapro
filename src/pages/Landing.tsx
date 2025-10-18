@@ -191,10 +191,9 @@ export default function Landing() {
                 <button
                   type="button"
                   onClick={() => setLanguageMenuOpen(!languageMenuOpen)}
-                  className="h-[56px] px-4 rounded-xl border-2 bg-background hover:bg-secondary transition-all flex items-center gap-2 text-2xl"
+                  className="h-[56px] px-4 rounded-xl border-2 bg-background hover:bg-secondary transition-all flex items-center justify-center text-4xl"
                 >
                   {languages[selectedLanguage].flag}
-                  <ChevronDown className="h-4 w-4" />
                 </button>
                 
                 {languageMenuOpen && (
