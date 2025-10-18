@@ -526,9 +526,17 @@ export default function Landing() {
             <p className="text-xl text-white/90 leading-relaxed">
               Vous êtes les premiers à nous faire confiance, et nous n'oublierons jamais cela. Votre soutien façonne l'avenir d'Aura PRO, et nous serons toujours généreux avec ceux qui croient en notre vision dès le premier jour.
             </p>
-            <p className="text-lg text-white/80 leading-relaxed">
-              Rejoignez la liste d'attente maintenant et bénéficiez d'avantages exclusifs réservés à nos early adopters.
-            </p>
+            <div className="pt-2">
+              <Button 
+                size="lg" 
+                variant="secondary" 
+                className="gap-2"
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              >
+                Rejoindre la liste d'attente
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </div>
       </section>
