@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { ArrowRight, CheckCircle2, BarChart3, Bell, FolderOpen, Users, Shield, Clock, TrendingUp, MessageSquare } from 'lucide-react';
+import { ArrowRight, CheckCircle2, BarChart3, Bell, FolderOpen, Users, Shield, Clock, TrendingUp, MessageSquare, ChevronDown } from 'lucide-react';
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
@@ -87,6 +87,15 @@ const thirdColumn = testimonials.slice(6, 9);
 export default function Landing() {
   const { toast } = useToast();
   const [waitlistEmail, setWaitlistEmail] = useState('');
+  const [selectedLanguage, setSelectedLanguage] = useState<'fr' | 'en' | 'es' | 'ar'>('fr');
+  const [languageMenuOpen, setLanguageMenuOpen] = useState(false);
+
+  const languages = {
+    fr: { flag: '🇫🇷', name: 'Français' },
+    en: { flag: '🇬🇧', name: 'English' },
+    es: { flag: '🇪🇸', name: 'Español' },
+    ar: { flag: '🇦🇪', name: 'العربية' }
+  };
 
   const handleWaitlistSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -94,7 +103,10 @@ export default function Landing() {
     try {
       const { error } = await supabase
         .from('waitlist')
-        .insert([{ email: waitlistEmail }]);
+        .insert([{ 
+          email: waitlistEmail,
+          language: selectedLanguage
+        }]);
 
       if (error) {
         if (error.code === '23505') {
@@ -174,6 +186,37 @@ export default function Landing() {
           </p>
           <form onSubmit={handleWaitlistSubmit} className="max-w-md mx-auto pt-4 px-4">
             <div className="flex flex-col sm:flex-row gap-3">
+              {/* Language Selector */}
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setLanguageMenuOpen(!languageMenuOpen)}
+                  className="h-[56px] px-4 rounded-xl border-2 bg-background hover:bg-secondary transition-all flex items-center gap-2 text-2xl"
+                >
+                  {languages[selectedLanguage].flag}
+                  <ChevronDown className="h-4 w-4" />
+                </button>
+                
+                {languageMenuOpen && (
+                  <div className="absolute top-full mt-2 bg-card border-2 border-border rounded-xl shadow-lg overflow-hidden z-50 min-w-[160px]">
+                    {Object.entries(languages).map(([code, lang]) => (
+                      <button
+                        key={code}
+                        type="button"
+                        onClick={() => {
+                          setSelectedLanguage(code as 'fr' | 'en' | 'es' | 'ar');
+                          setLanguageMenuOpen(false);
+                        }}
+                        className="w-full px-4 py-3 text-left hover:bg-secondary transition-colors flex items-center gap-3 bg-card"
+                      >
+                        <span className="text-2xl">{lang.flag}</span>
+                        <span className="text-sm font-medium">{lang.name}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
               <Input
                 type="email"
                 placeholder="Votre email professionnel"
