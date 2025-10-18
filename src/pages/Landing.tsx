@@ -254,11 +254,11 @@ export default function Landing() {
               </div>
               <ShimmerButton
                 type="submit"
-                className="px-6 sm:px-8 py-4 sm:py-6 text-base sm:text-lg font-semibold rounded-xl w-full sm:w-auto"
+                className="px-4 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-semibold rounded-xl w-full sm:w-auto"
               >
                 <span className="flex items-center gap-2">
                   Rejoindre
-                  <ArrowRight className="h-5 w-5" />
+                  <ArrowRight className="h-4 w-4" />
                 </span>
               </ShimmerButton>
             </div>
@@ -385,7 +385,7 @@ export default function Landing() {
             <div className="mt-8">
               <ShimmerButton
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                className="px-8 py-6 text-lg font-semibold rounded-xl"
+                className="px-6 py-3 text-base font-semibold rounded-xl"
               >
                 <span className="flex items-center gap-2">
                   Rejoindre la liste d'attente
@@ -470,7 +470,7 @@ export default function Landing() {
           <div className="text-center mt-12">
             <ShimmerButton
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              className="px-8 py-6 text-lg font-semibold rounded-xl"
+              className="px-6 py-3 text-base font-semibold rounded-xl"
             >
               <span className="flex items-center gap-2">
                 Rejoindre la liste d'attente
@@ -556,7 +556,7 @@ export default function Landing() {
             <div className="pt-2">
               <ShimmerButton
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                className="px-8 py-6 text-lg font-semibold rounded-xl"
+                className="px-6 py-3 text-base font-semibold rounded-xl"
               >
                 <span className="flex items-center gap-2">
                   Rejoindre la liste d'attente
@@ -724,7 +724,7 @@ export default function Landing() {
           <div className="text-center mt-12">
             <ShimmerButton
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              className="px-8 py-6 text-lg font-semibold rounded-xl"
+              className="px-6 py-3 text-base font-semibold rounded-xl"
             >
               <span className="flex items-center gap-2">
                 Rejoindre la liste d'attente
