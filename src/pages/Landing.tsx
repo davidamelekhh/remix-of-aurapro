@@ -184,7 +184,7 @@ export default function Landing() {
             <br className="hidden sm:block" />
             <span className="sm:inline"> </span>La plateforme qui transforme votre manière de gérer l'immobilier.
           </p>
-          <form onSubmit={handleWaitlistSubmit} className="max-w-md mx-auto pt-4 px-4">
+          <form onSubmit={handleWaitlistSubmit} className="max-w-3xl mx-auto pt-4 px-4">
             <div className="flex flex-col sm:flex-row gap-3">
               {/* Language Selector */}
               <div className="relative">
