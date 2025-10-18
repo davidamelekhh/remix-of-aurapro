@@ -14,6 +14,9 @@ import problemCommunication from '@/assets/problem-communication.png';
 import problemVisibility from '@/assets/problem-visibility.png';
 import problemAdmin from '@/assets/problem-admin.png';
 import solutionDashboard from '@/assets/solution-dashboard.png';
+import articleAnalytics from '@/assets/article-analytics.jpg';
+import articleConstruction from '@/assets/article-construction.jpg';
+import articleDigital from '@/assets/article-digital.jpg';
 import { BentoCard } from '@/components/ui/bento';
 import { TestimonialsColumn } from '@/components/ui/testimonials-columns';
 import { BeforeAfterSlider } from '@/components/ui/before-after-slider';
@@ -309,6 +312,17 @@ export default function Landing() {
             <p className="text-3xl md:text-4xl font-bold text-background">
               Avec Aura PRO, <span className="font-medium">vous avez toutes les réponses.</span>
             </p>
+            <div className="mt-8">
+              <Button 
+                size="lg" 
+                variant="secondary" 
+                className="gap-2"
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              >
+                Rejoindre la liste d'attente
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </div>
           </motion.div>
         </div>
       </section>
@@ -382,6 +396,16 @@ export default function Landing() {
               <div className="text-5xl font-bold">2x</div>
               <p className="text-muted-foreground">plus de satisfaction</p>
             </div>
+          </div>
+          <div className="text-center mt-12">
+            <Button 
+              size="lg" 
+              className="gap-2"
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            >
+              Rejoindre la liste d'attente
+              <ArrowRight className="h-4 w-4" />
+            </Button>
           </div>
         </div>
       </section>
@@ -589,6 +613,16 @@ export default function Landing() {
               </p>
             </div>
           </div>
+          <div className="text-center mt-12">
+            <Button 
+              size="lg" 
+              className="gap-2"
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            >
+              Rejoindre la liste d'attente
+              <ArrowRight className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
       </section>
 
@@ -638,8 +672,12 @@ export default function Landing() {
           <div className="grid md:grid-cols-3 gap-8">
             {/* Article 1 */}
             <div className="bg-card rounded-3xl border border-border overflow-hidden hover:shadow-float transition-all duration-300 group cursor-pointer">
-              <div className="aspect-video bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
-                <div className="text-6xl">📊</div>
+              <div className="aspect-video overflow-hidden">
+                <img 
+                  src={articleAnalytics} 
+                  alt="Analytics immobilier" 
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                />
               </div>
               <div className="p-8 space-y-4">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -661,8 +699,12 @@ export default function Landing() {
 
             {/* Article 2 */}
             <div className="bg-card rounded-3xl border border-border overflow-hidden hover:shadow-float transition-all duration-300 group cursor-pointer">
-              <div className="aspect-video bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
-                <div className="text-6xl">🏗️</div>
+              <div className="aspect-video overflow-hidden">
+                <img 
+                  src={articleConstruction} 
+                  alt="Construction immobilière" 
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                />
               </div>
               <div className="p-8 space-y-4">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -684,8 +726,12 @@ export default function Landing() {
 
             {/* Article 3 */}
             <div className="bg-card rounded-3xl border border-border overflow-hidden hover:shadow-float transition-all duration-300 group cursor-pointer">
-              <div className="aspect-video bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
-                <div className="text-6xl">💡</div>
+              <div className="aspect-video overflow-hidden">
+                <img 
+                  src={articleDigital} 
+                  alt="Transformation digitale" 
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                />
               </div>
               <div className="p-8 space-y-4">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
