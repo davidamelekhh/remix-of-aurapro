@@ -1,12 +1,9 @@
 import { Button } from '@/components/ui/button';
 import { ArrowRight, CheckCircle2, BarChart3, Bell, FolderOpen, Users, Shield, Clock, TrendingUp, MessageSquare } from 'lucide-react';
 import { useState } from 'react';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 import auraLogo from '@/assets/aura-pro-logo.png';
 import heroProfessional from '@/assets/hero-professional.png';
 import heroAfter from '@/assets/hero-after.png';
@@ -81,29 +78,44 @@ const secondColumn = testimonials.slice(3, 6);
 const thirdColumn = testimonials.slice(6, 9);
 
 export default function Landing() {
-  const navigate = useNavigate();
   const { toast } = useToast();
-  const [isDemoDialogOpen, setIsDemoDialogOpen] = useState(false);
+  const [waitlistEmail, setWaitlistEmail] = useState('');
 
-  const handleDemoSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleWaitlistSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const data = {
-      name: formData.get('name'),
-      email: formData.get('email'),
-      company: formData.get('company'),
-      message: formData.get('message'),
-    };
     
-    console.log('Demo request:', data);
-    
-    toast({
-      title: "Demande envoyée !",
-      description: "Nous vous contacterons dans les 24h.",
-    });
-    
-    setIsDemoDialogOpen(false);
-    e.currentTarget.reset();
+    try {
+      const { error } = await supabase
+        .from('waitlist')
+        .insert([{ email: waitlistEmail }]);
+
+      if (error) {
+        if (error.code === '23505') {
+          toast({
+            title: "Déjà inscrit",
+            description: "Cet email est déjà sur la liste d'attente.",
+            variant: "destructive",
+          });
+        } else {
+          throw error;
+        }
+        return;
+      }
+
+      toast({
+        title: "Inscription réussie !",
+        description: "Vous êtes maintenant sur la liste d'attente. Nous vous contacterons bientôt.",
+      });
+      
+      setWaitlistEmail('');
+    } catch (error) {
+      console.error('Error joining waitlist:', error);
+      toast({
+        title: "Erreur",
+        description: "Une erreur s'est produite. Veuillez réessayer.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -119,7 +131,6 @@ export default function Landing() {
             <a href="#solution" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Solution</a>
             <a href="#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Fonctionnalités</a>
             <a href="#testimonials" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Témoignages</a>
-            <Button size="sm" onClick={() => setIsDemoDialogOpen(true)}>Demander une démo</Button>
           </div>
         </div>
       </nav>
@@ -141,25 +152,42 @@ export default function Landing() {
             <br />
             La plateforme qui transforme votre manière de gérer l'immobilier.
           </p>
-          <div className="flex items-center justify-center gap-4 pt-4">
-            <Button size="lg" className="gap-2" onClick={() => navigate('/portal')}>
-              Découvrir Aura PRO
-              <ArrowRight className="h-4 w-4" />
-            </Button>
-            <Button size="lg" variant="outline" onClick={() => setIsDemoDialogOpen(true)}>
-              Demander une démo
-            </Button>
-          </div>
-          {/* Before/After Comparison */}
-          <div className="mt-16 relative">
-            <div className="rounded-3xl border border-border shadow-float overflow-hidden">
-              <BeforeAfterSlider
-                beforeImage={heroProfessional}
-                afterImage={heroAfter}
-                beforeAlt="Avant Aura PRO"
-                afterAlt="Avec Aura PRO"
+          <form onSubmit={handleWaitlistSubmit} className="max-w-md mx-auto pt-4">
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Input
+                type="email"
+                placeholder="Votre email professionnel"
+                value={waitlistEmail}
+                onChange={(e) => setWaitlistEmail(e.target.value)}
+                required
+                className="flex-1 px-6 py-6 text-lg rounded-xl border-2 focus:border-primary transition-all"
               />
+              <Button 
+                type="submit"
+                size="lg" 
+                className="group relative overflow-hidden bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-6 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 whitespace-nowrap"
+              >
+                <span className="relative z-10 flex items-center gap-2">
+                  Rejoindre
+                  <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                </span>
+              </Button>
             </div>
+            <p className="text-sm text-muted-foreground text-center mt-3">
+              Soyez parmi les premiers à découvrir Aura Pro
+            </p>
+          </form>
+        </div>
+
+        {/* Before/After Comparison */}
+        <div className="mt-16 relative max-w-5xl mx-auto">
+          <div className="rounded-3xl border border-border shadow-float overflow-hidden">
+            <BeforeAfterSlider
+              beforeImage={heroProfessional}
+              afterImage={heroAfter}
+              beforeAlt="Avant Aura PRO"
+              afterAlt="Avec Aura PRO"
+            />
           </div>
         </div>
       </section>
@@ -504,48 +532,6 @@ export default function Landing() {
         </div>
       </footer>
 
-      {/* Demo Dialog */}
-      <Dialog open={isDemoDialogOpen} onOpenChange={setIsDemoDialogOpen}>
-        <DialogContent className="sm:max-w-[500px]">
-          <DialogHeader>
-            <DialogTitle>Demander une démo</DialogTitle>
-            <DialogDescription>
-              Remplissez le formulaire ci-dessous et nous vous contacterons dans les 24h pour planifier une démonstration personnalisée.
-            </DialogDescription>
-          </DialogHeader>
-          <form onSubmit={handleDemoSubmit} className="space-y-4 mt-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Nom complet *</Label>
-              <Input id="name" name="name" required placeholder="Ahmed Benali" />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="email">Email professionnel *</Label>
-              <Input id="email" name="email" type="email" required placeholder="ahmed@entreprise.ma" />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="company">Entreprise *</Label>
-              <Input id="company" name="company" required placeholder="Nom de votre entreprise" />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="message">Message (optionnel)</Label>
-              <Textarea 
-                id="message" 
-                name="message" 
-                placeholder="Parlez-nous de vos besoins..."
-                rows={4}
-              />
-            </div>
-            <div className="flex gap-3 pt-2">
-              <Button type="button" variant="outline" onClick={() => setIsDemoDialogOpen(false)} className="flex-1">
-                Annuler
-              </Button>
-              <Button type="submit" className="flex-1">
-                Envoyer la demande
-              </Button>
-            </div>
-          </form>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
