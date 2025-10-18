@@ -159,7 +159,7 @@ export default function Landing() {
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1] text-center px-4">
             La gestion immobilière
             <br />
-            <span className="text-muted-foreground">réinventée.</span>
+            <span className="font-medium text-muted-foreground">réinventée.</span>
           </h1>
           <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto font-light leading-relaxed text-center px-4">
             Suivez chaque projet. Simplifiez chaque étape.
@@ -210,7 +210,7 @@ export default function Landing() {
       <section className="py-20 px-6 bg-background">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Les défis du secteur immobilier
+            Les défis <span className="font-medium">du secteur immobilier</span>
           </h2>
           <p className="max-w-3xl text-xl text-muted-foreground mb-16">
             Les problèmes qui ralentissent votre productivité au quotidien.
@@ -263,7 +263,7 @@ export default function Landing() {
       <section className="py-32 px-6 bg-foreground text-background relative overflow-hidden">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-4xl md:text-5xl font-bold text-center mb-20">
-            Les questions que vous entendez chaque jour
+            Les questions que vous entendez <span className="font-medium">chaque jour</span>
           </h2>
           
           <div className="space-y-8 mb-16">
@@ -305,7 +305,7 @@ export default function Landing() {
             className="text-center"
           >
             <p className="text-3xl md:text-4xl font-bold text-background">
-              Avec Aura PRO, vous avez toutes les réponses.
+              Avec Aura PRO, <span className="font-medium">vous avez toutes les réponses.</span>
             </p>
           </motion.div>
         </div>
@@ -317,7 +317,7 @@ export default function Landing() {
           <div className="grid md:grid-cols-2 gap-16 items-center">
             <div className="space-y-6">
               <h2 className="text-5xl md:text-6xl font-bold leading-tight">
-                Imaginez ne plus jamais perdre le contrôle d'un projet.
+                Imaginez ne plus jamais perdre <span className="font-medium">le contrôle d'un projet.</span>
               </h2>
               <p className="text-xl text-muted-foreground leading-relaxed">
                 Aura PRO centralise toutes vos interactions, automatise vos tâches répétitives et clarifie chaque étape de vos projets immobiliers.
@@ -361,7 +361,7 @@ export default function Landing() {
       <section className="py-20 px-6 bg-secondary/30">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-4xl md:text-5xl font-bold text-center mb-16">
-            Des résultats concrets
+            Des résultats <span className="font-medium">concrets</span>
           </h2>
           <div className="grid md:grid-cols-4 gap-6">
             <div className="bg-card rounded-3xl p-8 border border-border text-center space-y-2">
@@ -392,7 +392,7 @@ export default function Landing() {
         <div className="relative z-10 max-w-7xl mx-auto space-y-12">
           <div className="text-center space-y-4">
             <h2 className="text-4xl md:text-5xl font-bold">
-              Investissez dans votre réussite
+              Investissez dans <span className="font-medium">votre réussite</span>
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Une solution complète pour transformer votre gestion immobilière
@@ -438,7 +438,7 @@ export default function Landing() {
       <section id="features" className="py-32 px-6">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-4xl md:text-5xl font-bold text-center mb-4">
-            Une plateforme complète
+            Une plateforme <span className="font-medium">complète</span>
           </h2>
           <p className="text-xl text-muted-foreground text-center mb-16">
             pour les professionnels de l'immobilier
@@ -517,7 +517,7 @@ export default function Landing() {
             </div>
 
             <h2 className="text-4xl md:text-5xl font-bold tracking-tight mt-5 text-center">
-              Ils utilisent déjà Aura PRO
+              Ils utilisent déjà <span className="font-medium">Aura PRO</span>
             </h2>
             <p className="text-center mt-5 text-muted-foreground text-lg">
               Découvrez ce que nos clients disent de nous.
@@ -553,7 +553,7 @@ export default function Landing() {
           <h2 className="text-5xl md:text-6xl font-bold leading-tight">
             Prêt à passer à la nouvelle ère
             <br />
-            de la gestion immobilière ?
+            <span className="font-medium">de la gestion immobilière ?</span>
           </h2>
           <p className="text-xl text-background/80 max-w-2xl mx-auto">
             Rejoignez les promoteurs qui ont déjà fait le choix de l'excellence avec Aura PRO.

@@ -76,7 +76,7 @@ export function SinglePricingCard({
 
           {/* Price */}
           <div className="py-2">
-            <p className="text-5xl font-bold text-foreground">
+            <p className="text-4xl font-medium text-foreground">
               {price}
             </p>
             {priceNote && (
