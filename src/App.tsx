@@ -6,6 +6,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Portal from "./pages/Portal";
 import Landing from "./pages/Landing";
 import Contact from "./pages/Contact";
+import Article1 from "./pages/Article1";
+import Article2 from "./pages/Article2";
+import Article3 from "./pages/Article3";
 import ProAuth from "./pages/auth/ProAuth";
 import ClientAuth from "./pages/auth/ClientAuth";
 import ProDashboard from "./pages/pro/ProDashboard";
@@ -35,6 +38,11 @@ const App = () => (
           <Route path="/" element={<Landing />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/portal" element={<Portal />} />
+          
+          {/* Article Routes */}
+          <Route path="/article/rentabilite" element={<Article1 />} />
+          <Route path="/article/tendances-2025" element={<Article2 />} />
+          <Route path="/article/digitalisation" element={<Article3 />} />
           
           {/* Auth Routes */}
           <Route path="/auth/promoteur" element={<ProAuth />} />

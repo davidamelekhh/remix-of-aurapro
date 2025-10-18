@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { SinglePricingCard } from '@/components/ui/single-pricing-card';
+import { useNavigate } from 'react-router-dom';
 import auraLogo from '@/assets/aura-pro-logo.png';
 import neonLogo from '@/assets/neon-logo.png';
 import heroProfessional from '@/assets/hero-professional.png';
@@ -73,6 +74,7 @@ const firstColumn = testimonials.slice(0, 3);
 const secondColumn = testimonials.slice(3, 6);
 const thirdColumn = testimonials.slice(6, 9);
 export default function Landing() {
+  const navigate = useNavigate();
   const {
     toast
   } = useToast();
@@ -425,10 +427,10 @@ export default function Landing() {
           text: 'Formation et onboarding personnalisé'
         }, {
           text: 'Bénéficier d\'une réduction de 50% sur les 3 premiers mois'
-        }]} primaryButton={{
-          text: 'Contactez-nous',
+}]} primaryButton={{
+          text: 'Démarrer',
           onClick: () => window.scrollTo({
-            top: document.body.scrollHeight,
+            top: 0,
             behavior: 'smooth'
           })
         }} />
@@ -671,7 +673,10 @@ export default function Landing() {
 
           <div className="grid md:grid-cols-3 gap-8">
             {/* Article 1 */}
-            <div className="bg-card rounded-3xl border border-border overflow-hidden hover:shadow-float transition-all duration-300 group cursor-pointer">
+            <div 
+              onClick={() => navigate('/article/rentabilite')}
+              className="bg-card rounded-3xl border border-border overflow-hidden hover:shadow-float transition-all duration-300 group cursor-pointer"
+            >
               <div className="aspect-video overflow-hidden">
                 <img src={articleAnalytics} alt="Analytics immobilier" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
               </div>
@@ -694,7 +699,10 @@ export default function Landing() {
             </div>
 
             {/* Article 2 */}
-            <div className="bg-card rounded-3xl border border-border overflow-hidden hover:shadow-float transition-all duration-300 group cursor-pointer">
+            <div 
+              onClick={() => navigate('/article/tendances-2025')}
+              className="bg-card rounded-3xl border border-border overflow-hidden hover:shadow-float transition-all duration-300 group cursor-pointer"
+            >
               <div className="aspect-video overflow-hidden">
                 <img src={articleConstruction} alt="Construction immobilière" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
               </div>
@@ -717,7 +725,10 @@ export default function Landing() {
             </div>
 
             {/* Article 3 */}
-            <div className="bg-card rounded-3xl border border-border overflow-hidden hover:shadow-float transition-all duration-300 group cursor-pointer">
+            <div 
+              onClick={() => navigate('/article/digitalisation')}
+              className="bg-card rounded-3xl border border-border overflow-hidden hover:shadow-float transition-all duration-300 group cursor-pointer"
+            >
               <div className="aspect-video overflow-hidden">
                 <img src={articleDigital} alt="Transformation digitale" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
               </div>
