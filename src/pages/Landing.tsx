@@ -467,17 +467,6 @@ export default function Landing() {
               <p className="text-muted-foreground">plus de satisfaction</p>
             </div>
           </div>
-          <div className="text-center mt-12">
-            <ShimmerButton
-              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              className="px-6 py-3 text-base font-semibold rounded-xl"
-            >
-              <span className="flex items-center gap-2">
-                Rejoindre la liste d'attente
-                <ArrowRight className="h-4 w-4" />
-              </span>
-            </ShimmerButton>
-          </div>
         </div>
       </section>
 
