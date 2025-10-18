@@ -532,18 +532,61 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Why Aura PRO Section */}
-      <section className="py-32 px-6">
-        <div className="max-w-4xl mx-auto text-center space-y-6">
-          <h2 className="text-4xl md:text-5xl font-bold">
-            Pourquoi Aura PRO
-          </h2>
-          <p className="text-xl text-muted-foreground leading-relaxed">
-            Nous aidons les acteurs de l'immobilier à travailler plus intelligemment, pas plus durement.
-          </p>
-          <p className="text-lg text-muted-foreground leading-relaxed">
-            Aura PRO automatise l'administratif pour redonner du temps à l'humain. Notre mission est simple : simplifier la complexité de la gestion immobilière pour que vous puissiez vous concentrer sur ce qui compte vraiment — vos projets et vos clients.
-          </p>
+      {/* FAQ Section */}
+      <section id="faq" className="py-32 px-6">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center space-y-4 mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold">
+              Questions <span className="font-medium">fréquentes</span>
+            </h2>
+            <p className="text-xl text-muted-foreground">
+              Tout ce que vous devez savoir sur Aura PRO
+            </p>
+          </div>
+          
+          <div className="space-y-4">
+            <div className="bg-card rounded-2xl border border-border p-6 hover:shadow-float transition-all duration-300">
+              <h3 className="text-lg font-semibold mb-2">Comment fonctionne Aura PRO ?</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Aura PRO est une plateforme complète qui centralise tous les aspects de vos projets immobiliers : gestion de projet, communication client, suivi financier, et bien plus encore. Tout est accessible depuis un tableau de bord unique et intuitif.
+              </p>
+            </div>
+            
+            <div className="bg-card rounded-2xl border border-border p-6 hover:shadow-float transition-all duration-300">
+              <h3 className="text-lg font-semibold mb-2">Combien de temps faut-il pour mettre en place Aura PRO ?</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                La mise en place est simple et rapide. Après votre inscription, notre équipe vous accompagne avec une formation personnalisée. Vous pouvez commencer à utiliser la plateforme dès le premier jour.
+              </p>
+            </div>
+            
+            <div className="bg-card rounded-2xl border border-border p-6 hover:shadow-float transition-all duration-300">
+              <h3 className="text-lg font-semibold mb-2">Mes données sont-elles sécurisées ?</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Absolument. Nous utilisons les dernières technologies de chiffrement et nos serveurs sont conformes aux normes RGPD. Vos données sont hébergées en Europe et sauvegardées quotidiennement.
+              </p>
+            </div>
+            
+            <div className="bg-card rounded-2xl border border-border p-6 hover:shadow-float transition-all duration-300">
+              <h3 className="text-lg font-semibold mb-2">Puis-je personnaliser l'interface pour mes clients ?</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Oui ! Vous pouvez personnaliser le portail client avec votre logo, vos couleurs et même créer des sites web automatiques pour chaque projet avec votre propre identité visuelle.
+              </p>
+            </div>
+            
+            <div className="bg-card rounded-2xl border border-border p-6 hover:shadow-float transition-all duration-300">
+              <h3 className="text-lg font-semibold mb-2">Quel support proposez-vous ?</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Nous offrons un support premium 7j/7 par email, chat et téléphone. Notre équipe est là pour vous accompagner à chaque étape et répondre à toutes vos questions rapidement.
+              </p>
+            </div>
+            
+            <div className="bg-card rounded-2xl border border-border p-6 hover:shadow-float transition-all duration-300">
+              <h3 className="text-lg font-semibold mb-2">Comment fonctionne la réduction de 50% sur les 3 premiers mois ?</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                En vous inscrivant maintenant pour 299€, vous bénéficiez automatiquement d'une réduction de 50% sur vos 3 premiers mois d'abonnement une fois l'application lancée. C'est notre façon de remercier nos early adopters.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -574,6 +617,91 @@ export default function Landing() {
               alt="Aura PRO Dashboard" 
               className="w-full max-w-5xl mx-auto rounded-lg"
             />
+          </div>
+        </div>
+      </section>
+
+      {/* Articles Section */}
+      <section className="py-32 px-6 bg-secondary/30">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center space-y-4 mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold">
+              Nos derniers <span className="font-medium">articles</span>
+            </h2>
+            <p className="text-xl text-muted-foreground">
+              Conseils et actualités pour les professionnels de l'immobilier
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Article 1 */}
+            <div className="bg-card rounded-3xl border border-border overflow-hidden hover:shadow-float transition-all duration-300 group cursor-pointer">
+              <div className="aspect-video bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
+                <div className="text-6xl">📊</div>
+              </div>
+              <div className="p-8 space-y-4">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Clock className="h-4 w-4" />
+                  <span>5 min de lecture</span>
+                </div>
+                <h3 className="text-xl font-bold group-hover:text-primary transition-colors">
+                  Comment améliorer la rentabilité de vos projets immobiliers
+                </h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Découvrez les meilleures pratiques pour optimiser vos marges et réduire les coûts imprévus dans vos projets de construction.
+                </p>
+                <div className="flex items-center gap-2 text-primary font-medium">
+                  Lire l'article
+                  <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </div>
+            </div>
+
+            {/* Article 2 */}
+            <div className="bg-card rounded-3xl border border-border overflow-hidden hover:shadow-float transition-all duration-300 group cursor-pointer">
+              <div className="aspect-video bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
+                <div className="text-6xl">🏗️</div>
+              </div>
+              <div className="p-8 space-y-4">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Clock className="h-4 w-4" />
+                  <span>7 min de lecture</span>
+                </div>
+                <h3 className="text-xl font-bold group-hover:text-primary transition-colors">
+                  Les tendances de la promotion immobilière en 2025
+                </h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Analyse des nouvelles attentes des clients et des évolutions technologiques qui transforment le secteur.
+                </p>
+                <div className="flex items-center gap-2 text-primary font-medium">
+                  Lire l'article
+                  <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </div>
+            </div>
+
+            {/* Article 3 */}
+            <div className="bg-card rounded-3xl border border-border overflow-hidden hover:shadow-float transition-all duration-300 group cursor-pointer">
+              <div className="aspect-video bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
+                <div className="text-6xl">💡</div>
+              </div>
+              <div className="p-8 space-y-4">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Clock className="h-4 w-4" />
+                  <span>6 min de lecture</span>
+                </div>
+                <h3 className="text-xl font-bold group-hover:text-primary transition-colors">
+                  Digitalisation : comment transformer votre gestion de projet
+                </h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Guide pratique pour passer d'une gestion traditionnelle à une approche digitale moderne et efficace.
+                </p>
+                <div className="flex items-center gap-2 text-primary font-medium">
+                  Lire l'article
+                  <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
