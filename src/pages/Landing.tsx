@@ -9,6 +9,7 @@ import auraLogo from '@/assets/aura-pro-logo.png';
 import neonLogo from '@/assets/neon-logo.png';
 import heroProfessional from '@/assets/hero-professional.png';
 import heroAfter from '@/assets/hero-after.png';
+import dashboardLaptop from '@/assets/dashboard-laptop.png';
 import problemCommunication from '@/assets/problem-communication.png';
 import problemVisibility from '@/assets/problem-visibility.png';
 import problemAdmin from '@/assets/problem-admin.png';
@@ -568,11 +569,13 @@ export default function Landing() {
               Nous contacter
             </Button>
           </div>
-          {/* Placeholder for visual */}
+          {/* Dashboard Laptop Image */}
           <div className="mt-12 relative">
-            <div className="aspect-video bg-background/10 rounded-3xl border border-background/20 flex items-center justify-center">
-              <p className="text-background/60">Espace pour visuel ou illustration</p>
-            </div>
+            <img 
+              src={dashboardLaptop} 
+              alt="Aura PRO Dashboard" 
+              className="w-full max-w-5xl mx-auto rounded-lg"
+            />
           </div>
         </div>
       </section>
