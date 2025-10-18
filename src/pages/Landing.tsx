@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { SinglePricingCard } from '@/components/ui/single-pricing-card';
 import auraLogo from '@/assets/aura-pro-logo.png';
 import heroProfessional from '@/assets/hero-professional.png';
 import heroAfter from '@/assets/hero-after.png';
@@ -367,6 +368,57 @@ export default function Landing() {
               <p className="text-muted-foreground">plus de satisfaction</p>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Pricing Section */}
+      <section className="py-32 px-6 relative overflow-hidden">
+        {/* Background Gradient */}
+        <div className="absolute inset-0 bg-gradient-to-b from-background via-orange-50/10 to-background"></div>
+        
+        <div className="relative z-10 max-w-7xl mx-auto space-y-12">
+          <div className="text-center space-y-4">
+            <h2 className="text-4xl md:text-5xl font-bold">
+              Investissez dans votre réussite
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Une solution complète pour transformer votre gestion immobilière
+            </p>
+          </div>
+
+          <SinglePricingCard
+            badge="Offre Premium"
+            title="Aura Pro"
+            subtitle="La plateforme tout-en-un pour les professionnels de l'immobilier"
+            price="199€"
+            benefits={[
+              { icon: 'check', text: 'Projets et clients illimités' },
+              { icon: 'shield', text: 'Sécurité et conformité garanties' },
+              { icon: 'heart', text: 'Support premium 7j/7' }
+            ]}
+            features={[
+              { text: 'Tableau de bord temps réel avec analytics avancés' },
+              { text: 'Gestion complète des projets et des équipes' },
+              { text: 'Suivi financier détaillé et rapports automatiques' },
+              { text: 'Communication client intégrée et portail dédié' },
+              { text: 'Espace documentaire sécurisé avec versioning' },
+              { text: 'Notifications intelligentes et alertes personnalisées' },
+              { text: 'Calendrier de projet et gestion des échéances' },
+              { text: 'Gestion des paiements et factures automatisées' },
+              { text: 'Application mobile iOS et Android' },
+              { text: 'Intégrations avec vos outils favoris' },
+              { text: 'Mises à jour régulières et nouvelles fonctionnalités' },
+              { text: 'Formation et onboarding personnalisé' }
+            ]}
+            primaryButton={{
+              text: 'Contactez-nous',
+              onClick: () => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })
+            }}
+            secondaryButton={{
+              text: 'En savoir plus',
+              onClick: () => window.open('#features', '_self')
+            }}
+          />
         </div>
       </section>
 
