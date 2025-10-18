@@ -23,7 +23,7 @@ interface SinglePricingCardProps {
     text: string;
     onClick: () => void;
   };
-  secondaryButton: {
+  secondaryButton?: {
     text: string;
     onClick: () => void;
   };
@@ -111,14 +111,16 @@ export function SinglePricingCard({
               {primaryButton.text}
               <ChevronRight className="h-4 w-4 ml-2 group-hover:translate-x-0.5 transition-transform" />
             </Button>
-            <Button
-              onClick={secondaryButton.onClick}
-              variant="outline"
-              className="border border-border bg-background hover:bg-secondary text-foreground px-6 py-5 text-sm font-medium rounded-xl transition-all duration-300"
-            >
-              {secondaryButton.text}
-              <ExternalLink className="h-4 w-4 ml-2" />
-            </Button>
+            {secondaryButton && (
+              <Button
+                onClick={secondaryButton.onClick}
+                variant="outline"
+                className="border border-border bg-background hover:bg-secondary text-foreground px-6 py-5 text-sm font-medium rounded-xl transition-all duration-300"
+              >
+                {secondaryButton.text}
+                <ExternalLink className="h-4 w-4 ml-2" />
+              </Button>
+            )}
           </div>
         </div>
 

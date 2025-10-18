@@ -422,15 +422,12 @@ export default function Landing() {
               { text: 'Application mobile iOS et Android' },
               { text: 'Intégrations avec vos outils favoris' },
               { text: 'Mises à jour régulières et nouvelles fonctionnalités' },
-              { text: 'Formation et onboarding personnalisé' }
+              { text: 'Formation et onboarding personnalisé' },
+              { text: 'Bénéficier d\'une réduction de 50% sur les 3 premiers mois' }
             ]}
             primaryButton={{
               text: 'Contactez-nous',
               onClick: () => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })
-            }}
-            secondaryButton={{
-              text: 'En savoir plus',
-              onClick: () => window.open('#features', '_self')
             }}
           />
         </div>
