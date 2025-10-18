@@ -23,124 +23,117 @@ import { BentoCard } from '@/components/ui/bento';
 import { TestimonialsColumn } from '@/components/ui/testimonials-columns';
 import { BeforeAfterSlider } from '@/components/ui/before-after-slider';
 import { motion } from 'motion/react';
-
-const testimonials = [
-  {
-    text: "Aura PRO a complètement transformé notre manière de gérer nos projets immobiliers. La transparence et la communication avec nos clients n'ont jamais été aussi fluides.",
-    image: "https://randomuser.me/api/portraits/men/1.jpg",
-    name: "Ahmed Benali",
-    role: "Promoteur Immobilier",
-  },
-  {
-    text: "Grâce à Aura PRO, nous avons réduit nos délais de gestion de 60%. L'interface intuitive facilite la collaboration avec toutes nos équipes.",
-    image: "https://randomuser.me/api/portraits/women/2.jpg",
-    name: "Sarah Mansouri",
-    role: "Chef de Projet",
-  },
-  {
-    text: "La plateforme nous permet de suivre chaque étape en temps réel. Nos clients apprécient vraiment cette transparence totale.",
-    image: "https://randomuser.me/api/portraits/men/3.jpg",
-    name: "Karim El Amrani",
-    role: "Directeur Commercial",
-  },
-  {
-    text: "Les notifications intelligentes nous font gagner un temps précieux. Nous ne manquons plus jamais une échéance importante.",
-    image: "https://randomuser.me/api/portraits/women/4.jpg",
-    name: "Fatima Zahra",
-    role: "Gestionnaire de Projets",
-  },
-  {
-    text: "L'espace documentaire sécurisé a simplifié toute notre gestion administrative. Tout est centralisé et accessible en un clic.",
-    image: "https://randomuser.me/api/portraits/men/5.jpg",
-    name: "Mehdi Alaoui",
-    role: "Responsable Administratif",
-  },
-  {
-    text: "Aura PRO nous a permis de doubler notre portefeuille clients sans augmenter nos effectifs. Une vraie révolution.",
-    image: "https://randomuser.me/api/portraits/women/6.jpg",
-    name: "Leila Tazi",
-    role: "Directrice Générale",
-  },
-  {
-    text: "En tant que client, j'apprécie la visibilité totale sur l'avancement de mon projet. Je recommande vivement.",
-    image: "https://randomuser.me/api/portraits/men/7.jpg",
-    name: "Youssef Berrada",
-    role: "Client Investisseur",
-  },
-  {
-    text: "Le suivi automatisé et les analytics nous permettent de prendre de meilleures décisions stratégiques.",
-    image: "https://randomuser.me/api/portraits/women/8.jpg",
-    name: "Nadia Chraibi",
-    role: "Analyste Business",
-  },
-  {
-    text: "Une solution complète qui a vraiment compris les besoins du secteur immobilier marocain. Excellent support client.",
-    image: "https://randomuser.me/api/portraits/men/9.jpg",
-    name: "Omar Idrissi",
-    role: "Promoteur",
-  },
-];
-
+const testimonials = [{
+  text: "Aura PRO a complètement transformé notre manière de gérer nos projets immobiliers. La transparence et la communication avec nos clients n'ont jamais été aussi fluides.",
+  image: "https://randomuser.me/api/portraits/men/1.jpg",
+  name: "Ahmed Benali",
+  role: "Promoteur Immobilier"
+}, {
+  text: "Grâce à Aura PRO, nous avons réduit nos délais de gestion de 60%. L'interface intuitive facilite la collaboration avec toutes nos équipes.",
+  image: "https://randomuser.me/api/portraits/women/2.jpg",
+  name: "Sarah Mansouri",
+  role: "Chef de Projet"
+}, {
+  text: "La plateforme nous permet de suivre chaque étape en temps réel. Nos clients apprécient vraiment cette transparence totale.",
+  image: "https://randomuser.me/api/portraits/men/3.jpg",
+  name: "Karim El Amrani",
+  role: "Directeur Commercial"
+}, {
+  text: "Les notifications intelligentes nous font gagner un temps précieux. Nous ne manquons plus jamais une échéance importante.",
+  image: "https://randomuser.me/api/portraits/women/4.jpg",
+  name: "Fatima Zahra",
+  role: "Gestionnaire de Projets"
+}, {
+  text: "L'espace documentaire sécurisé a simplifié toute notre gestion administrative. Tout est centralisé et accessible en un clic.",
+  image: "https://randomuser.me/api/portraits/men/5.jpg",
+  name: "Mehdi Alaoui",
+  role: "Responsable Administratif"
+}, {
+  text: "Aura PRO nous a permis de doubler notre portefeuille clients sans augmenter nos effectifs. Une vraie révolution.",
+  image: "https://randomuser.me/api/portraits/women/6.jpg",
+  name: "Leila Tazi",
+  role: "Directrice Générale"
+}, {
+  text: "En tant que client, j'apprécie la visibilité totale sur l'avancement de mon projet. Je recommande vivement.",
+  image: "https://randomuser.me/api/portraits/men/7.jpg",
+  name: "Youssef Berrada",
+  role: "Client Investisseur"
+}, {
+  text: "Le suivi automatisé et les analytics nous permettent de prendre de meilleures décisions stratégiques.",
+  image: "https://randomuser.me/api/portraits/women/8.jpg",
+  name: "Nadia Chraibi",
+  role: "Analyste Business"
+}, {
+  text: "Une solution complète qui a vraiment compris les besoins du secteur immobilier marocain. Excellent support client.",
+  image: "https://randomuser.me/api/portraits/men/9.jpg",
+  name: "Omar Idrissi",
+  role: "Promoteur"
+}];
 const firstColumn = testimonials.slice(0, 3);
 const secondColumn = testimonials.slice(3, 6);
 const thirdColumn = testimonials.slice(6, 9);
-
 export default function Landing() {
-  const { toast } = useToast();
+  const {
+    toast
+  } = useToast();
   const [waitlistEmail, setWaitlistEmail] = useState('');
   const [selectedLanguage, setSelectedLanguage] = useState<'fr' | 'en' | 'es' | 'ar'>('fr');
   const [languageMenuOpen, setLanguageMenuOpen] = useState(false);
   const [contactType, setContactType] = useState<'email' | 'phone'>('email');
-
   const languages = {
-    fr: { flag: '🇫🇷', name: 'Français' },
-    en: { flag: '🇬🇧', name: 'English' },
-    es: { flag: '🇪🇸', name: 'Español' },
-    ar: { flag: '🇦🇪', name: 'العربية' }
+    fr: {
+      flag: '🇫🇷',
+      name: 'Français'
+    },
+    en: {
+      flag: '🇬🇧',
+      name: 'English'
+    },
+    es: {
+      flag: '🇪🇸',
+      name: 'Español'
+    },
+    ar: {
+      flag: '🇦🇪',
+      name: 'العربية'
+    }
   };
-
   const handleWaitlistSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
     try {
-      const { error } = await supabase
-        .from('waitlist')
-        .insert([{ 
-          email: waitlistEmail,
-          language: selectedLanguage
-        }]);
-
+      const {
+        error
+      } = await supabase.from('waitlist').insert([{
+        email: waitlistEmail,
+        language: selectedLanguage
+      }]);
       if (error) {
         if (error.code === '23505') {
           toast({
             title: "Déjà inscrit",
             description: "Cet email est déjà sur la liste d'attente.",
-            variant: "destructive",
+            variant: "destructive"
           });
         } else {
           throw error;
         }
         return;
       }
-
       toast({
         title: "Inscription réussie !",
-        description: "Vous êtes maintenant sur la liste d'attente. Nous vous contacterons bientôt.",
+        description: "Vous êtes maintenant sur la liste d'attente. Nous vous contacterons bientôt."
       });
-      
       setWaitlistEmail('');
     } catch (error) {
       console.error('Error joining waitlist:', error);
       toast({
         title: "Erreur",
         description: "Une erreur s'est produite. Veuillez réessayer.",
-        variant: "destructive",
+        variant: "destructive"
       });
     }
   };
-
-  return (
-    <div className="min-h-screen bg-background text-foreground">
+  return <div className="min-h-screen bg-background text-foreground">
       {/* Navigation */}
       <nav className="fixed top-0 w-full bg-background/80 backdrop-blur-xl border-b border-border z-50">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -164,17 +157,17 @@ export default function Landing() {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/50 to-background"></div>
         
         <div className="max-w-5xl mx-auto text-center space-y-8 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.1, duration: 0.6 }}
-            className="mb-12 flex justify-center"
-          >
-            <img 
-              src={neonLogo} 
-              alt="Aura PRO" 
-              className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full object-cover mx-auto"
-            />
+          <motion.div initial={{
+          opacity: 0,
+          scale: 0.8
+        }} animate={{
+          opacity: 1,
+          scale: 1
+        }} transition={{
+          delay: 0.1,
+          duration: 0.6
+        }} className="mb-12 flex justify-center">
+            <img src={neonLogo} alt="Aura PRO" className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full object-cover mx-auto" />
           </motion.div>
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1] text-center px-4">
             La gestion immobilière
@@ -190,93 +183,47 @@ export default function Landing() {
             <div className="flex flex-col sm:flex-row gap-3">
               {/* Language Selector */}
               <div className="relative">
-                <button
-                  type="button"
-                  onClick={() => setLanguageMenuOpen(!languageMenuOpen)}
-                  className="h-[56px] px-4 rounded-xl border-2 bg-background hover:bg-secondary transition-all flex items-center justify-center text-4xl"
-                >
+                <button type="button" onClick={() => setLanguageMenuOpen(!languageMenuOpen)} className="h-[56px] px-4 rounded-xl border-2 bg-background hover:bg-secondary transition-all flex items-center justify-center text-4xl">
                   {languages[selectedLanguage].flag}
                 </button>
                 
-                {languageMenuOpen && (
-                  <div className="absolute top-full mt-2 bg-card border-2 border-border rounded-xl shadow-lg overflow-hidden z-50 min-w-[160px]">
-                    {Object.entries(languages).map(([code, lang]) => (
-                      <button
-                        key={code}
-                        type="button"
-                        onClick={() => {
-                          setSelectedLanguage(code as 'fr' | 'en' | 'es' | 'ar');
-                          setLanguageMenuOpen(false);
-                        }}
-                        className="w-full px-4 py-3 text-left hover:bg-secondary transition-colors flex items-center gap-3 bg-card"
-                      >
+                {languageMenuOpen && <div className="absolute top-full mt-2 bg-card border-2 border-border rounded-xl shadow-lg overflow-hidden z-50 min-w-[160px]">
+                    {Object.entries(languages).map(([code, lang]) => <button key={code} type="button" onClick={() => {
+                  setSelectedLanguage(code as 'fr' | 'en' | 'es' | 'ar');
+                  setLanguageMenuOpen(false);
+                }} className="w-full px-4 py-3 text-left hover:bg-secondary transition-colors flex items-center gap-3 bg-card">
                         <span className="text-2xl">{lang.flag}</span>
                         <span className="text-sm font-medium">{lang.name}</span>
-                      </button>
-                    ))}
-                  </div>
-                )}
+                      </button>)}
+                  </div>}
               </div>
 
               <div className="flex-1 relative">
                 <div className="absolute left-3 top-1/2 -translate-y-1/2 z-10 flex gap-1 bg-muted/50 backdrop-blur-sm rounded-lg p-1">
-                  <button
-                    type="button"
-                    onClick={() => setContactType('email')}
-                    className={`px-2 py-1 text-xs rounded transition-all ${
-                      contactType === 'email' 
-                        ? 'bg-background text-foreground shadow-sm' 
-                        : 'text-muted-foreground hover:text-foreground'
-                    }`}
-                  >
+                  <button type="button" onClick={() => setContactType('email')} className={`px-2 py-1 text-xs rounded transition-all ${contactType === 'email' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>
                     Email
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => setContactType('phone')}
-                    className={`px-2 py-1 text-xs rounded transition-all ${
-                      contactType === 'phone' 
-                        ? 'bg-background text-foreground shadow-sm' 
-                        : 'text-muted-foreground hover:text-foreground'
-                    }`}
-                  >
+                  <button type="button" onClick={() => setContactType('phone')} className={`px-2 py-1 text-xs rounded transition-all ${contactType === 'phone' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>
                     Tél
                   </button>
                 </div>
-                <Input
-                  type={contactType === 'email' ? 'email' : 'tel'}
-                  placeholder={contactType === 'email' ? 'Votre email professionnel' : 'Votre numéro de téléphone'}
-                  value={waitlistEmail}
-                  onChange={(e) => setWaitlistEmail(e.target.value)}
-                  required
-                  className="w-full pl-28 pr-4 py-4 sm:py-6 text-base sm:text-lg rounded-xl border-2 focus:border-primary transition-all text-center sm:text-left"
-                />
+                <Input type={contactType === 'email' ? 'email' : 'tel'} placeholder={contactType === 'email' ? 'Votre email professionnel' : 'Votre numéro de téléphone'} value={waitlistEmail} onChange={e => setWaitlistEmail(e.target.value)} required className="w-full pl-28 pr-4 py-4 sm:py-6 text-base sm:text-lg rounded-xl border-2 focus:border-primary transition-all text-center sm:text-left" />
               </div>
-              <ShimmerButton
-                type="submit"
-                className="px-4 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-semibold rounded-xl w-full sm:w-auto"
-              >
+              <ShimmerButton type="submit" className="px-4 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-semibold rounded-xl w-full sm:w-auto">
                 <span className="flex items-center gap-2">
                   Rejoindre
                   <ArrowRight className="h-4 w-4" />
                 </span>
               </ShimmerButton>
             </div>
-            <p className="text-sm text-muted-foreground text-center mt-3">
-              Soyez parmi les premiers à découvrir Aura Pro
-            </p>
+            
           </form>
         </div>
 
         {/* Before/After Comparison */}
         <div className="mt-16 relative max-w-5xl mx-auto">
           <div className="rounded-3xl border border-border shadow-float overflow-hidden">
-            <BeforeAfterSlider
-              beforeImage={heroProfessional}
-              afterImage={heroAfter}
-              beforeAlt="Avant Aura PRO"
-              afterAlt="Avec Aura PRO"
-            />
+            <BeforeAfterSlider beforeImage={heroProfessional} afterImage={heroAfter} beforeAlt="Avant Aura PRO" afterAlt="Avec Aura PRO" />
           </div>
         </div>
       </section>
@@ -291,45 +238,9 @@ export default function Landing() {
             Les problèmes qui ralentissent votre productivité au quotidien.
           </p>
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-            <BentoCard
-              eyebrow="Problème"
-              title="Communication fragmentée"
-              description="Emails perdus, messages dispersés et informations difficiles à retrouver entre clients et promoteurs."
-              graphic={
-                <img 
-                  src={problemCommunication} 
-                  alt="Communication fragmentée" 
-                  className="absolute inset-0 w-full h-full object-cover"
-                />
-              }
-              className="lg:col-span-1"
-            />
-            <BentoCard
-              eyebrow="Problème"
-              title="Manque de visibilité"
-              description="Impossible de suivre l'avancement réel des projets sans multiplier les appels et réunions."
-              graphic={
-                <img 
-                  src={problemVisibility} 
-                  alt="Manque de visibilité" 
-                  className="absolute inset-0 w-full h-full object-cover"
-                />
-              }
-              className="lg:col-span-1"
-            />
-            <BentoCard
-              eyebrow="Problème"
-              title="Gestion manuelle inefficace"
-              description="Retards, erreurs et perte de temps causés par des processus administratifs obsolètes."
-              graphic={
-                <img 
-                  src={problemAdmin} 
-                  alt="Gestion manuelle inefficace" 
-                  className="absolute inset-0 w-full h-full object-cover"
-                />
-              }
-              className="lg:col-span-1"
-            />
+            <BentoCard eyebrow="Problème" title="Communication fragmentée" description="Emails perdus, messages dispersés et informations difficiles à retrouver entre clients et promoteurs." graphic={<img src={problemCommunication} alt="Communication fragmentée" className="absolute inset-0 w-full h-full object-cover" />} className="lg:col-span-1" />
+            <BentoCard eyebrow="Problème" title="Manque de visibilité" description="Impossible de suivre l'avancement réel des projets sans multiplier les appels et réunions." graphic={<img src={problemVisibility} alt="Manque de visibilité" className="absolute inset-0 w-full h-full object-cover" />} className="lg:col-span-1" />
+            <BentoCard eyebrow="Problème" title="Gestion manuelle inefficace" description="Retards, erreurs et perte de temps causés par des processus administratifs obsolètes." graphic={<img src={problemAdmin} alt="Gestion manuelle inefficace" className="absolute inset-0 w-full h-full object-cover" />} className="lg:col-span-1" />
           </div>
         </div>
       </section>
@@ -342,43 +253,39 @@ export default function Landing() {
           </h2>
           
           <div className="space-y-8 mb-16">
-            {[
-              "Où en est mon projet exactement ?",
-              "Pourquoi ce retard n'a pas été signalé ?",
-              "Quand recevrai-je le prochain paiement ?",
-              "Où sont les documents signés ?",
-              "Qui s'occupe de cette partie du chantier ?",
-              "Pourquoi les équipes ne sont pas alignées ?",
-              "Comment je peux suivre l'avancement en temps réel ?"
-            ].map((question, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
-                whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                transition={{ 
-                  duration: 0.8, 
-                  delay: index * 0.5,
-                  ease: [0.16, 1, 0.3, 1]
-                }}
-                viewport={{ once: true, margin: "-100px" }}
-                className="text-2xl md:text-3xl font-light text-background/80 text-center"
-              >
+            {["Où en est mon projet exactement ?", "Pourquoi ce retard n'a pas été signalé ?", "Quand recevrai-je le prochain paiement ?", "Où sont les documents signés ?", "Qui s'occupe de cette partie du chantier ?", "Pourquoi les équipes ne sont pas alignées ?", "Comment je peux suivre l'avancement en temps réel ?"].map((question, index) => <motion.div key={index} initial={{
+            opacity: 0,
+            y: 20,
+            filter: "blur(10px)"
+          }} whileInView={{
+            opacity: 1,
+            y: 0,
+            filter: "blur(0px)"
+          }} transition={{
+            duration: 0.8,
+            delay: index * 0.5,
+            ease: [0.16, 1, 0.3, 1]
+          }} viewport={{
+            once: true,
+            margin: "-100px"
+          }} className="text-2xl md:text-3xl font-light text-background/80 text-center">
                 {question}
-              </motion.div>
-            ))}
+              </motion.div>)}
           </div>
 
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ 
-              duration: 0.8, 
-              delay: 3.5,
-              ease: [0.16, 1, 0.3, 1]
-            }}
-            viewport={{ once: true }}
-            className="text-center"
-          >
+          <motion.div initial={{
+          opacity: 0,
+          scale: 0.95
+        }} whileInView={{
+          opacity: 1,
+          scale: 1
+        }} transition={{
+          duration: 0.8,
+          delay: 3.5,
+          ease: [0.16, 1, 0.3, 1]
+        }} viewport={{
+          once: true
+        }} className="text-center">
             <p className="text-3xl md:text-4xl font-bold text-background">
               Avec Aura PRO, <span className="font-medium">vous avez toutes les réponses.</span>
             </p>
@@ -419,10 +326,10 @@ export default function Landing() {
                 </div>
               </div>
               <div className="pt-2">
-                <ShimmerButton
-                  onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                  className="px-6 py-3 text-base font-semibold rounded-xl"
-                >
+                <ShimmerButton onClick={() => window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+              })} className="px-6 py-3 text-base font-semibold rounded-xl">
                   <span className="flex items-center gap-2">
                     Rejoindre la liste d'attente
                     <ArrowRight className="h-4 w-4" />
@@ -432,11 +339,7 @@ export default function Landing() {
             </div>
             <div className="relative">
               <div className="aspect-square rounded-3xl border border-border shadow-float overflow-hidden">
-                <img 
-                  src={solutionDashboard} 
-                  alt="Tableau de bord Aura PRO" 
-                  className="w-full h-full object-cover"
-                />
+                <img src={solutionDashboard} alt="Tableau de bord Aura PRO" className="w-full h-full object-cover" />
               </div>
             </div>
           </div>
@@ -485,38 +388,50 @@ export default function Landing() {
             </p>
           </div>
 
-          <SinglePricingCard
-            badge="Offre Premium"
-            title="Aura Pro"
-            subtitle="La plateforme tout-en-un pour les professionnels de l'immobilier"
-            price="À partir de 299€/mois*"
-            benefits={[
-              { icon: 'check', text: 'Projets et clients illimités' },
-              { icon: 'shield', text: 'Sécurité et conformité garanties' },
-              { icon: 'heart', text: 'Support premium 7j/7' }
-            ]}
-            priceNote="*Le tarif varie selon le type de propriété et vos besoins spécifiques"
-            features={[
-              { text: 'Tableau de bord temps réel avec analytics avancés' },
-              { text: 'Gestion complète des projets et des équipes' },
-              { text: 'Suivi financier détaillé et rapports automatiques' },
-              { text: 'Communication client intégrée et portail dédié' },
-              { text: 'Espace documentaire sécurisé avec versioning' },
-              { text: 'Notifications intelligentes et alertes personnalisées' },
-              { text: 'Calendrier de projet et gestion des échéances' },
-              { text: 'Gestion des paiements et factures automatisées' },
-              { text: 'Création de site internet dernière génération automatique pour vos projets' },
-              { text: 'Application mobile iOS et Android' },
-              { text: 'Intégrations avec vos outils favoris' },
-              { text: 'Mises à jour régulières et nouvelles fonctionnalités' },
-              { text: 'Formation et onboarding personnalisé' },
-              { text: 'Bénéficier d\'une réduction de 50% sur les 3 premiers mois' }
-            ]}
-            primaryButton={{
-              text: 'Contactez-nous',
-              onClick: () => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })
-            }}
-          />
+          <SinglePricingCard badge="Offre Premium" title="Aura Pro" subtitle="La plateforme tout-en-un pour les professionnels de l'immobilier" price="À partir de 299€/mois*" benefits={[{
+          icon: 'check',
+          text: 'Projets et clients illimités'
+        }, {
+          icon: 'shield',
+          text: 'Sécurité et conformité garanties'
+        }, {
+          icon: 'heart',
+          text: 'Support premium 7j/7'
+        }]} priceNote="*Le tarif varie selon le type de propriété et vos besoins spécifiques" features={[{
+          text: 'Tableau de bord temps réel avec analytics avancés'
+        }, {
+          text: 'Gestion complète des projets et des équipes'
+        }, {
+          text: 'Suivi financier détaillé et rapports automatiques'
+        }, {
+          text: 'Communication client intégrée et portail dédié'
+        }, {
+          text: 'Espace documentaire sécurisé avec versioning'
+        }, {
+          text: 'Notifications intelligentes et alertes personnalisées'
+        }, {
+          text: 'Calendrier de projet et gestion des échéances'
+        }, {
+          text: 'Gestion des paiements et factures automatisées'
+        }, {
+          text: 'Création de site internet dernière génération automatique pour vos projets'
+        }, {
+          text: 'Application mobile iOS et Android'
+        }, {
+          text: 'Intégrations avec vos outils favoris'
+        }, {
+          text: 'Mises à jour régulières et nouvelles fonctionnalités'
+        }, {
+          text: 'Formation et onboarding personnalisé'
+        }, {
+          text: 'Bénéficier d\'une réduction de 50% sur les 3 premiers mois'
+        }]} primaryButton={{
+          text: 'Contactez-nous',
+          onClick: () => window.scrollTo({
+            top: document.body.scrollHeight,
+            behavior: 'smooth'
+          })
+        }} />
         </div>
       </section>
 
@@ -524,11 +439,7 @@ export default function Landing() {
       <section className="relative h-[400px] md:h-[500px] overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0">
-          <img 
-            src={earlyAdoptersBanner} 
-            alt="Early Adopters Recognition" 
-            className="w-full h-full object-cover"
-          />
+          <img src={earlyAdoptersBanner} alt="Early Adopters Recognition" className="w-full h-full object-cover" />
           {/* Overlay for better text readability */}
           <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent"></div>
         </div>
@@ -543,10 +454,10 @@ export default function Landing() {
               Vous êtes les premiers à nous faire confiance, et nous n'oublierons jamais cela. Votre soutien façonne l'avenir d'Aura PRO, et nous serons toujours généreux avec ceux qui croient en notre vision dès le premier jour.
             </p>
             <div className="pt-2">
-              <ShimmerButton
-                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                className="px-6 py-3 text-base font-semibold rounded-xl"
-              >
+              <ShimmerButton onClick={() => window.scrollTo({
+              top: 0,
+              behavior: 'smooth'
+            })} className="px-6 py-3 text-base font-semibold rounded-xl">
                 <span className="flex items-center gap-2">
                   Rejoindre la liste d'attente
                   <ArrowRight className="h-4 w-4" />
@@ -628,13 +539,19 @@ export default function Landing() {
       {/* Testimonials Section */}
       <section id="testimonials" className="py-20 px-6 bg-background relative">
         <div className="container z-10 mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            viewport={{ once: true }}
-            className="flex flex-col items-center justify-center max-w-[540px] mx-auto"
-          >
+          <motion.div initial={{
+          opacity: 0,
+          y: 20
+        }} whileInView={{
+          opacity: 1,
+          y: 0
+        }} transition={{
+          duration: 0.8,
+          delay: 0.1,
+          ease: [0.16, 1, 0.3, 1]
+        }} viewport={{
+          once: true
+        }} className="flex flex-col items-center justify-center max-w-[540px] mx-auto">
             <div className="flex justify-center">
               <div className="border py-1 px-4 rounded-lg text-sm">Témoignages</div>
             </div>
@@ -735,11 +652,7 @@ export default function Landing() {
           </div>
           {/* Dashboard Laptop Image */}
           <div className="mt-12 relative">
-            <img 
-              src={dashboardLaptop} 
-              alt="Aura PRO Dashboard" 
-              className="w-full max-w-5xl mx-auto rounded-lg"
-            />
+            <img src={dashboardLaptop} alt="Aura PRO Dashboard" className="w-full max-w-5xl mx-auto rounded-lg" />
           </div>
         </div>
       </section>
@@ -760,11 +673,7 @@ export default function Landing() {
             {/* Article 1 */}
             <div className="bg-card rounded-3xl border border-border overflow-hidden hover:shadow-float transition-all duration-300 group cursor-pointer">
               <div className="aspect-video overflow-hidden">
-                <img 
-                  src={articleAnalytics} 
-                  alt="Analytics immobilier" 
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                />
+                <img src={articleAnalytics} alt="Analytics immobilier" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
               </div>
               <div className="p-8 space-y-4">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -787,11 +696,7 @@ export default function Landing() {
             {/* Article 2 */}
             <div className="bg-card rounded-3xl border border-border overflow-hidden hover:shadow-float transition-all duration-300 group cursor-pointer">
               <div className="aspect-video overflow-hidden">
-                <img 
-                  src={articleConstruction} 
-                  alt="Construction immobilière" 
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                />
+                <img src={articleConstruction} alt="Construction immobilière" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
               </div>
               <div className="p-8 space-y-4">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -814,11 +719,7 @@ export default function Landing() {
             {/* Article 3 */}
             <div className="bg-card rounded-3xl border border-border overflow-hidden hover:shadow-float transition-all duration-300 group cursor-pointer">
               <div className="aspect-video overflow-hidden">
-                <img 
-                  src={articleDigital} 
-                  alt="Transformation digitale" 
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                />
+                <img src={articleDigital} alt="Transformation digitale" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
               </div>
               <div className="p-8 space-y-4">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -861,6 +762,5 @@ export default function Landing() {
         </div>
       </footer>
 
-    </div>
-  );
+    </div>;
 }
