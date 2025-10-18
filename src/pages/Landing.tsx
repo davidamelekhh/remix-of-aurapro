@@ -417,6 +417,7 @@ export default function Landing() {
               { text: 'Notifications intelligentes et alertes personnalisées' },
               { text: 'Calendrier de projet et gestion des échéances' },
               { text: 'Gestion des paiements et factures automatisées' },
+              { text: 'Création de site internet dernière génération automatique pour vos projets' },
               { text: 'Application mobile iOS et Android' },
               { text: 'Intégrations avec vos outils favoris' },
               { text: 'Mises à jour régulières et nouvelles fonctionnalités' },
