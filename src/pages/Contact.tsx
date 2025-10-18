@@ -104,7 +104,7 @@ export default function Contact() {
             <button onClick={() => navigate('/')} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
               <ArrowLeft className="h-5 w-5" />
               <span className="text-lg font-semibold">Aura PRO</span>
-              <span className="text-sm text-muted-foreground">• worldwide</span>
+              <span className="text-sm text-muted-foreground">•   worldwide</span>
             </button>
           </div>
         </div>
