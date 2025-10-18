@@ -6,6 +6,7 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { SinglePricingCard } from '@/components/ui/single-pricing-card';
 import auraLogo from '@/assets/aura-pro-logo.png';
+import neonLogo from '@/assets/neon-logo.png';
 import heroProfessional from '@/assets/hero-professional.png';
 import heroAfter from '@/assets/hero-after.png';
 import problemCommunication from '@/assets/problem-communication.png';
@@ -142,6 +143,18 @@ export default function Landing() {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/50 to-background"></div>
         
         <div className="max-w-5xl mx-auto text-center space-y-8 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.1, duration: 0.6 }}
+            className="mb-12 flex justify-center"
+          >
+            <img 
+              src={neonLogo} 
+              alt="Aura PRO" 
+              className="w-32 h-32 md:w-40 md:h-40 rounded-full object-cover"
+            />
+          </motion.div>
           <h1 className="text-6xl md:text-7xl font-bold tracking-tight leading-[1.1]">
             La gestion immobilière
             <br />
