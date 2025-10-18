@@ -57,7 +57,7 @@ export function SinglePricingCard({
     >
       <div className="relative grid md:grid-cols-2 gap-12 bg-black rounded-2xl p-10 md:p-12 overflow-hidden">
         {/* Shiny metal border effect */}
-        <div className="absolute inset-0 rounded-2xl p-[2px] bg-gradient-to-br from-gray-400 via-gray-100 to-gray-400 animate-[spin_3s_linear_infinite]">
+        <div className="absolute inset-0 rounded-2xl p-[2px] bg-gradient-to-br from-gray-400 via-gray-100 to-gray-400 animate-[spin_2s_linear_forwards]">
           <div className="absolute inset-[2px] bg-black rounded-2xl"></div>
         </div>
         
