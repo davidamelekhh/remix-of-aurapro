@@ -125,7 +125,6 @@ export default function Landing() {
       <nav className="fixed top-0 w-full bg-background/80 backdrop-blur-xl border-b border-border z-50">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <img src={auraLogo} alt="Aura PRO" className="h-8 w-8 object-contain" />
             <span className="text-lg font-semibold">Aura PRO</span>
           </div>
           <div className="hidden md:flex items-center gap-8">
