@@ -382,17 +382,6 @@ export default function Landing() {
             <p className="text-3xl md:text-4xl font-bold text-background">
               Avec Aura PRO, <span className="font-medium">vous avez toutes les réponses.</span>
             </p>
-            <div className="mt-8">
-              <ShimmerButton
-                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                className="px-6 py-3 text-base font-semibold rounded-xl"
-              >
-                <span className="flex items-center gap-2">
-                  Rejoindre la liste d'attente
-                  <ArrowRight className="h-4 w-4" />
-                </span>
-              </ShimmerButton>
-            </div>
           </motion.div>
         </div>
       </section>
