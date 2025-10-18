@@ -152,20 +152,20 @@ export default function Landing() {
             <img 
               src={neonLogo} 
               alt="Aura PRO" 
-              className="w-32 h-32 md:w-40 md:h-40 rounded-full object-cover"
+              className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full object-cover mx-auto"
             />
           </motion.div>
-          <h1 className="text-6xl md:text-7xl font-bold tracking-tight leading-[1.1]">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1] text-center px-4">
             La gestion immobilière
             <br />
             <span className="text-muted-foreground">réinventée.</span>
           </h1>
-          <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto font-light leading-relaxed">
+          <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto font-light leading-relaxed text-center px-4">
             Suivez chaque projet. Simplifiez chaque étape.
-            <br />
-            La plateforme qui transforme votre manière de gérer l'immobilier.
+            <br className="hidden sm:block" />
+            <span className="sm:inline"> </span>La plateforme qui transforme votre manière de gérer l'immobilier.
           </p>
-          <form onSubmit={handleWaitlistSubmit} className="max-w-md mx-auto pt-4">
+          <form onSubmit={handleWaitlistSubmit} className="max-w-md mx-auto pt-4 px-4">
             <div className="flex flex-col sm:flex-row gap-3">
               <Input
                 type="email"
@@ -173,12 +173,12 @@ export default function Landing() {
                 value={waitlistEmail}
                 onChange={(e) => setWaitlistEmail(e.target.value)}
                 required
-                className="flex-1 px-6 py-6 text-lg rounded-xl border-2 focus:border-primary transition-all"
+                className="flex-1 px-4 sm:px-6 py-4 sm:py-6 text-base sm:text-lg rounded-xl border-2 focus:border-primary transition-all text-center sm:text-left"
               />
               <Button 
                 type="submit"
                 size="lg" 
-                className="group relative overflow-hidden bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-6 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 whitespace-nowrap"
+                className="group relative overflow-hidden bg-primary text-primary-foreground hover:bg-primary/90 px-6 sm:px-8 py-4 sm:py-6 text-base sm:text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 w-full sm:w-auto justify-center"
               >
                 <span className="relative z-10 flex items-center gap-2">
                   Rejoindre
