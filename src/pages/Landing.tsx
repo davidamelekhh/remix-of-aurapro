@@ -89,6 +89,7 @@ export default function Landing() {
   const [waitlistEmail, setWaitlistEmail] = useState('');
   const [selectedLanguage, setSelectedLanguage] = useState<'fr' | 'en' | 'es' | 'ar'>('fr');
   const [languageMenuOpen, setLanguageMenuOpen] = useState(false);
+  const [contactType, setContactType] = useState<'email' | 'phone'>('email');
 
   const languages = {
     fr: { flag: '🇫🇷', name: 'Français' },
@@ -216,14 +217,40 @@ export default function Landing() {
                 )}
               </div>
 
-              <Input
-                type="email"
-                placeholder="Votre email professionnel"
-                value={waitlistEmail}
-                onChange={(e) => setWaitlistEmail(e.target.value)}
-                required
-                className="flex-1 px-4 sm:px-6 py-4 sm:py-6 text-base sm:text-lg rounded-xl border-2 focus:border-primary transition-all text-center sm:text-left"
-              />
+              <div className="flex-1 relative">
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 z-10 flex gap-1 bg-muted/50 backdrop-blur-sm rounded-lg p-1">
+                  <button
+                    type="button"
+                    onClick={() => setContactType('email')}
+                    className={`px-2 py-1 text-xs rounded transition-all ${
+                      contactType === 'email' 
+                        ? 'bg-background text-foreground shadow-sm' 
+                        : 'text-muted-foreground hover:text-foreground'
+                    }`}
+                  >
+                    Email
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setContactType('phone')}
+                    className={`px-2 py-1 text-xs rounded transition-all ${
+                      contactType === 'phone' 
+                        ? 'bg-background text-foreground shadow-sm' 
+                        : 'text-muted-foreground hover:text-foreground'
+                    }`}
+                  >
+                    Tél
+                  </button>
+                </div>
+                <Input
+                  type={contactType === 'email' ? 'email' : 'tel'}
+                  placeholder={contactType === 'email' ? 'Votre email professionnel' : 'Votre numéro de téléphone'}
+                  value={waitlistEmail}
+                  onChange={(e) => setWaitlistEmail(e.target.value)}
+                  required
+                  className="w-full pl-28 pr-4 py-4 sm:py-6 text-base sm:text-lg rounded-xl border-2 focus:border-primary transition-all text-center sm:text-left"
+                />
+              </div>
               <Button 
                 type="submit"
                 size="lg" 
