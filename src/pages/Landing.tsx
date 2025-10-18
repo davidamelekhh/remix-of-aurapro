@@ -6,7 +6,7 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { SinglePricingCard } from '@/components/ui/single-pricing-card';
 import auraLogo from '@/assets/aura-pro-logo.png';
-import neonLogo from '@/assets/neon-logo.png';
+import heroBackground from '@/assets/hero-background.png';
 import heroProfessional from '@/assets/hero-professional.png';
 import heroAfter from '@/assets/hero-after.png';
 import problemCommunication from '@/assets/problem-communication.png';
@@ -138,23 +138,14 @@ export default function Landing() {
 
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-6 relative overflow-hidden">
-        {/* Grid Background */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/50 to-background"></div>
+        {/* Background Image */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url(${heroBackground})` }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/60 to-background"></div>
         
         <div className="max-w-5xl mx-auto text-center space-y-8 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.1, duration: 0.6 }}
-            className="mb-12 flex justify-center"
-          >
-            <img 
-              src={neonLogo} 
-              alt="Aura PRO" 
-              className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full object-cover mx-auto"
-            />
-          </motion.div>
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1] text-center px-4">
             La gestion immobilière
             <br />
