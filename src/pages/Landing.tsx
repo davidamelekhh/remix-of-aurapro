@@ -460,6 +460,27 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* Early Adopters Banner */}
+      <section className="relative h-[400px] overflow-hidden">
+        {/* Background Image Placeholder */}
+        <div className="absolute inset-0 bg-gradient-to-r from-gray-400 to-gray-500"></div>
+        
+        {/* Content */}
+        <div className="relative z-10 h-full max-w-7xl mx-auto px-6 flex items-center">
+          <div className="max-w-2xl space-y-6">
+            <h2 className="text-4xl md:text-5xl font-bold text-white leading-tight">
+              Notre reconnaissance envers <span className="font-medium">nos pionniers</span>
+            </h2>
+            <p className="text-xl text-white/90 leading-relaxed">
+              Vous êtes les premiers à nous faire confiance, et nous n'oublierons jamais cela. Votre soutien façonne l'avenir d'Aura PRO, et nous serons toujours généreux avec ceux qui croient en notre vision dès le premier jour.
+            </p>
+            <p className="text-lg text-white/80 leading-relaxed">
+              Rejoignez la liste d'attente maintenant et bénéficiez d'avantages exclusifs réservés à nos early adopters.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Features Section */}
       <section id="features" className="py-32 px-6">
         <div className="max-w-7xl mx-auto">
