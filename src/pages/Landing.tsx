@@ -88,9 +88,9 @@ const thirdColumn = testimonials.slice(6, 9);
 export default function Landing() {
   const { toast } = useToast();
   const [waitlistEmail, setWaitlistEmail] = useState('');
+  const [waitlistPhone, setWaitlistPhone] = useState('');
   const [selectedLanguage, setSelectedLanguage] = useState<'fr' | 'en' | 'es' | 'ar'>('fr');
   const [languageMenuOpen, setLanguageMenuOpen] = useState(false);
-  const [contactType, setContactType] = useState<'email' | 'phone'>('email');
 
   const languages = {
     fr: { flag: '🇫🇷', name: 'Français' },
@@ -107,6 +107,7 @@ export default function Landing() {
         .from('waitlist')
         .insert([{ 
           email: waitlistEmail,
+          phone: waitlistPhone,
           language: selectedLanguage
         }]);
 
@@ -129,6 +130,7 @@ export default function Landing() {
       });
       
       setWaitlistEmail('');
+      setWaitlistPhone('');
     } catch (error) {
       console.error('Error joining waitlist:', error);
       toast({
@@ -187,80 +189,67 @@ export default function Landing() {
             <span className="sm:inline"> </span>La plateforme qui transforme votre manière de gérer l'immobilier.
           </p>
           <form onSubmit={handleWaitlistSubmit} className="max-w-3xl mx-auto pt-4 px-4">
-            <div className="flex flex-col sm:flex-row gap-3">
-              {/* Language Selector */}
-              <div className="relative">
-                <button
-                  type="button"
-                  onClick={() => setLanguageMenuOpen(!languageMenuOpen)}
-                  className="h-[56px] px-4 rounded-xl border-2 bg-background hover:bg-secondary transition-all flex items-center justify-center text-4xl"
-                >
-                  {languages[selectedLanguage].flag}
-                </button>
-                
-                {languageMenuOpen && (
-                  <div className="absolute top-full mt-2 bg-card border-2 border-border rounded-xl shadow-lg overflow-hidden z-50 min-w-[160px]">
-                    {Object.entries(languages).map(([code, lang]) => (
-                      <button
-                        key={code}
-                        type="button"
-                        onClick={() => {
-                          setSelectedLanguage(code as 'fr' | 'en' | 'es' | 'ar');
-                          setLanguageMenuOpen(false);
-                        }}
-                        className="w-full px-4 py-3 text-left hover:bg-secondary transition-colors flex items-center gap-3 bg-card"
-                      >
-                        <span className="text-2xl">{lang.flag}</span>
-                        <span className="text-sm font-medium">{lang.name}</span>
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              <div className="flex-1 relative">
-                <div className="absolute left-3 top-1/2 -translate-y-1/2 z-10 flex gap-1 bg-muted/50 backdrop-blur-sm rounded-lg p-1">
+            <div className="flex flex-col gap-3">
+              <div className="flex flex-col sm:flex-row gap-3">
+                {/* Language Selector */}
+                <div className="relative">
                   <button
                     type="button"
-                    onClick={() => setContactType('email')}
-                    className={`px-2 py-1 text-xs rounded transition-all ${
-                      contactType === 'email' 
-                        ? 'bg-background text-foreground shadow-sm' 
-                        : 'text-muted-foreground hover:text-foreground'
-                    }`}
+                    onClick={() => setLanguageMenuOpen(!languageMenuOpen)}
+                    className="h-[56px] px-4 rounded-xl border-2 bg-background hover:bg-secondary transition-all flex items-center justify-center text-4xl"
                   >
-                    Email
+                    {languages[selectedLanguage].flag}
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => setContactType('phone')}
-                    className={`px-2 py-1 text-xs rounded transition-all ${
-                      contactType === 'phone' 
-                        ? 'bg-background text-foreground shadow-sm' 
-                        : 'text-muted-foreground hover:text-foreground'
-                    }`}
-                  >
-                    Tél
-                  </button>
+                  
+                  {languageMenuOpen && (
+                    <div className="absolute top-full mt-2 bg-card border-2 border-border rounded-xl shadow-lg overflow-hidden z-50 min-w-[160px]">
+                      {Object.entries(languages).map(([code, lang]) => (
+                        <button
+                          key={code}
+                          type="button"
+                          onClick={() => {
+                            setSelectedLanguage(code as 'fr' | 'en' | 'es' | 'ar');
+                            setLanguageMenuOpen(false);
+                          }}
+                          className="w-full px-4 py-3 text-left hover:bg-secondary transition-colors flex items-center gap-3 bg-card"
+                        >
+                          <span className="text-2xl">{lang.flag}</span>
+                          <span className="text-sm font-medium">{lang.name}</span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
+
                 <Input
-                  type={contactType === 'email' ? 'email' : 'tel'}
-                  placeholder={contactType === 'email' ? 'Votre email professionnel' : 'Votre numéro de téléphone'}
+                  type="email"
+                  placeholder="Votre email professionnel"
                   value={waitlistEmail}
                   onChange={(e) => setWaitlistEmail(e.target.value)}
                   required
-                  className="w-full pl-28 pr-4 py-4 sm:py-6 text-base sm:text-lg rounded-xl border-2 focus:border-primary transition-all text-center sm:text-left"
+                  className="flex-1 px-4 py-4 sm:py-6 text-base sm:text-lg rounded-xl border-2 focus:border-primary transition-all"
                 />
               </div>
-              <ShimmerButton
-                type="submit"
-                className="px-4 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-semibold rounded-xl w-full sm:w-auto"
-              >
-                <span className="flex items-center gap-2">
-                  Rejoindre
-                  <ArrowRight className="h-4 w-4" />
-                </span>
-              </ShimmerButton>
+              
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Input
+                  type="tel"
+                  placeholder="Votre numéro de téléphone"
+                  value={waitlistPhone}
+                  onChange={(e) => setWaitlistPhone(e.target.value)}
+                  required
+                  className="flex-1 px-4 py-4 sm:py-6 text-base sm:text-lg rounded-xl border-2 focus:border-primary transition-all"
+                />
+                <ShimmerButton
+                  type="submit"
+                  className="px-4 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-semibold rounded-xl w-full sm:w-auto"
+                >
+                  <span className="flex items-center gap-2">
+                    Rejoindre
+                    <ArrowRight className="h-4 w-4" />
+                  </span>
+                </ShimmerButton>
+              </div>
             </div>
             <p className="text-sm text-muted-foreground text-center mt-3">
               Soyez parmi les premiers à découvrir Aura Pro
