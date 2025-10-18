@@ -77,7 +77,7 @@ export function SinglePricingCard({
           {/* Price */}
           <div className="py-2">
             <p className="text-4xl font-medium text-foreground">
-              {price}
+              <span className="font-bold">À partir de</span> {price.replace('À partir de ', '')}
             </p>
             {priceNote && (
               <p className="text-xs text-muted-foreground mt-2 leading-relaxed">
