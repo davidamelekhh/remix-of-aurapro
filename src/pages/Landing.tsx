@@ -128,11 +128,13 @@ export default function Landing() {
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <span className="text-lg font-semibold">Aura PRO</span>
+            <span className="text-sm text-muted-foreground">• worldwide</span>
           </div>
           <div className="hidden md:flex items-center gap-8">
             <a href="#solution" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Solution</a>
             <a href="#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Fonctionnalités</a>
             <a href="#testimonials" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Témoignages</a>
+            <a href="/contact" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Contact</a>
           </div>
         </div>
       </nav>

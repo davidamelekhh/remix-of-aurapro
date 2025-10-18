@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Portal from "./pages/Portal";
 import Landing from "./pages/Landing";
+import Contact from "./pages/Contact";
 import ProAuth from "./pages/auth/ProAuth";
 import ClientAuth from "./pages/auth/ClientAuth";
 import ProDashboard from "./pages/pro/ProDashboard";
@@ -32,6 +33,7 @@ const App = () => (
         <Routes>
           {/* Landing & Portal Routes */}
           <Route path="/" element={<Landing />} />
+          <Route path="/contact" element={<Contact />} />
           <Route path="/portal" element={<Portal />} />
           
           {/* Auth Routes */}
