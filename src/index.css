@@ -126,5 +126,6 @@ Luxury-inspired colors, gradients, and styles. All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    letter-spacing: -0.04em;
   }
 }
