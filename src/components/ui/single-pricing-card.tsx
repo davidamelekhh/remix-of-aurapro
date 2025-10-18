@@ -104,7 +104,9 @@ export function SinglePricingCard({
                   transition={{ delay: index * 0.1 }}
                   className="flex items-center gap-2.5"
                 >
-                  <Icon className="h-4 w-4 text-primary flex-shrink-0" strokeWidth={2} />
+                  <div className="flex items-center justify-center w-6 h-6 rounded-full border-2 border-white flex-shrink-0">
+                    <Icon className="h-3 w-3 text-white" strokeWidth={3} />
+                  </div>
                   <p className="text-sm text-white">
                     {benefit.text}
                   </p>
@@ -154,7 +156,9 @@ export function SinglePricingCard({
                 transition={{ delay: index * 0.03 }}
                 className="flex items-start gap-2.5"
               >
-                <Check className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" strokeWidth={2} />
+                <div className="flex items-center justify-center w-6 h-6 rounded-full border-2 border-white flex-shrink-0 mt-0.5">
+                  <Check className="h-3 w-3 text-white" strokeWidth={3} />
+                </div>
                 <p className="text-sm text-white leading-relaxed">
                   {feature.text}
                 </p>
