@@ -83,7 +83,7 @@ export default function Landing() {
   const [selectedLanguage, setSelectedLanguage] = useState<'fr' | 'en' | 'es' | 'ar'>('fr');
   const [languageMenuOpen, setLanguageMenuOpen] = useState(false);
   const [contactType, setContactType] = useState<'email' | 'phone'>('email');
-  const [selectedCurrency, setSelectedCurrency] = useState<'EUR' | 'USD' | 'MAD'>('EUR');
+  const [selectedCurrency, setSelectedCurrency] = useState<'EUR' | 'USD' | 'CAD' | 'MAD'>('EUR');
   const languages = {
     fr: {
       flag: '🇫🇷',
@@ -106,6 +106,7 @@ export default function Landing() {
   const currencies = {
     EUR: { symbol: '€', rate: 1, name: 'EUR' },
     USD: { symbol: '$', rate: 1.1, name: 'USD' },
+    CAD: { symbol: 'C$', rate: 1.5, name: 'CAD' },
     MAD: { symbol: 'DH', rate: 11, name: 'MAD' }
   };
   
@@ -463,7 +464,7 @@ export default function Landing() {
                   <button
                     key={code}
                     type="button"
-                    onClick={() => setSelectedCurrency(code as 'EUR' | 'USD' | 'MAD')}
+                    onClick={() => setSelectedCurrency(code as 'EUR' | 'USD' | 'CAD' | 'MAD')}
                     className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
                       selectedCurrency === code
                         ? 'bg-foreground text-background shadow-sm'
