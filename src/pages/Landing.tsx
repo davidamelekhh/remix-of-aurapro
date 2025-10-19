@@ -25,6 +25,7 @@ import { BentoCard } from '@/components/ui/bento';
 import { TestimonialsColumn } from '@/components/ui/testimonials-columns';
 import { BeforeAfterSlider } from '@/components/ui/before-after-slider';
 import { motion } from 'motion/react';
+import { EarlyAdopterDialog } from '@/components/landing/EarlyAdopterDialog';
 const testimonials = [{
   text: "Aura PRO a complètement transformé notre manière de gérer nos projets immobiliers. La transparence et la communication avec nos clients n'ont jamais été aussi fluides.",
   image: "https://randomuser.me/api/portraits/men/1.jpg",
@@ -84,6 +85,7 @@ export default function Landing() {
   const [languageMenuOpen, setLanguageMenuOpen] = useState(false);
   const [contactType, setContactType] = useState<'email' | 'phone'>('email');
   const [selectedCurrency, setSelectedCurrency] = useState<'EUR' | 'USD' | 'CAD' | 'MAD'>('EUR');
+  const [dialogOpen, setDialogOpen] = useState(false);
   const languages = {
     fr: {
       flag: '🇫🇷',
@@ -116,8 +118,7 @@ export default function Landing() {
   };
   
   const waitlistSchema = z.object({
-    email: z.string().trim().email({ message: "Adresse email invalide" }).max(255, { message: "Email trop long" }),
-    language: z.enum(['fr', 'en', 'es', 'ar'])
+    email: z.string().trim().email({ message: "Adresse email invalide" }).max(255, { message: "Email trop long" })
   });
 
   const handleWaitlistSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -125,33 +126,11 @@ export default function Landing() {
     try {
       // Validate input
       const validated = waitlistSchema.parse({
-        email: waitlistEmail,
-        language: selectedLanguage
+        email: waitlistEmail
       });
 
-      const {
-        error
-      } = await supabase.from('waitlist').insert([{
-        email: validated.email,
-        language: validated.language
-      }]);
-      if (error) {
-        if (error.code === '23505') {
-          toast({
-            title: "Déjà inscrit",
-            description: "Cet email est déjà sur la liste d'attente.",
-            variant: "destructive"
-          });
-        } else {
-          throw error;
-        }
-        return;
-      }
-      toast({
-        title: "Inscription réussie !",
-        description: "Vous êtes maintenant sur la liste d'attente. Nous vous contacterons bientôt."
-      });
-      setWaitlistEmail('');
+      // Open dialog with the email
+      setDialogOpen(true);
     } catch (error) {
       if (error instanceof z.ZodError) {
         toast({
@@ -159,17 +138,17 @@ export default function Landing() {
           description: error.errors[0].message,
           variant: "destructive"
         });
-      } else {
-        console.error('Error joining waitlist:', error);
-        toast({
-          title: "Erreur",
-          description: "Une erreur s'est produite. Veuillez réessayer.",
-          variant: "destructive"
-        });
       }
     }
   };
   return <div className="min-h-screen bg-background text-foreground">
+      <EarlyAdopterDialog 
+        open={dialogOpen} 
+        onOpenChange={setDialogOpen}
+        initialEmail={waitlistEmail}
+        language={selectedLanguage}
+      />
+      
       {/* Navigation */}
       <nav className="fixed top-0 w-full bg-background/80 backdrop-blur-xl border-b border-border z-50">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
