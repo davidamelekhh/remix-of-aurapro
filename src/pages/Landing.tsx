@@ -210,7 +210,7 @@ export default function Landing() {
             <div className="flex flex-col sm:flex-row gap-3">
               {/* Language Selector */}
               <div className="relative">
-                <button type="button" onClick={() => setLanguageMenuOpen(!languageMenuOpen)} className="h-[56px] px-4 rounded-xl border-2 bg-background hover:bg-secondary transition-all flex items-center justify-center text-4xl">
+                <button type="button" onClick={() => setLanguageMenuOpen(!languageMenuOpen)} className="h-[56px] w-[56px] rounded-xl border-2 bg-background hover:bg-secondary transition-all flex items-center justify-center text-2xl">
                   {languages[selectedLanguage].flag}
                 </button>
                 
@@ -219,7 +219,7 @@ export default function Landing() {
                   setSelectedLanguage(code as 'fr' | 'en' | 'es' | 'ar');
                   setLanguageMenuOpen(false);
                 }} className="w-full px-4 py-3 text-left hover:bg-secondary transition-colors flex items-center gap-3 bg-card">
-                        <span className="text-2xl">{lang.flag}</span>
+                        <span className="text-xl">{lang.flag}</span>
                         <span className="text-sm font-medium">{lang.name}</span>
                       </button>)}
                   </div>}
