@@ -416,6 +416,74 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* Features Section */}
+      <section id="features" className="py-32 px-6">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-4">
+            Une plateforme <span className="font-medium">complète</span>
+          </h2>
+          <p className="text-xl text-muted-foreground text-center mb-16">
+            pour les professionnels de l'immobilier
+          </p>
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="bg-card rounded-3xl p-8 border border-border space-y-4 hover:shadow-float transition-all duration-300">
+              <div className="h-12 w-12 bg-primary text-primary-foreground rounded-2xl flex items-center justify-center">
+                <FolderOpen className="h-6 w-6" />
+              </div>
+              <h3 className="text-xl font-semibold">Gestion des projets</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Créez, organisez et suivez vos projets immobiliers avec une vue d'ensemble claire et des étapes détaillées.
+              </p>
+            </div>
+            <div className="bg-card rounded-3xl p-8 border border-border space-y-4 hover:shadow-float transition-all duration-300">
+              <div className="h-12 w-12 bg-primary text-primary-foreground rounded-2xl flex items-center justify-center">
+                <Users className="h-6 w-6" />
+              </div>
+              <h3 className="text-xl font-semibold">Suivi client automatisé</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Gardez vos clients informés automatiquement à chaque étape, avec notifications et mises à jour en temps réel.
+              </p>
+            </div>
+            <div className="bg-card rounded-3xl p-8 border border-border space-y-4 hover:shadow-float transition-all duration-300">
+              <div className="h-12 w-12 bg-primary text-primary-foreground rounded-2xl flex items-center justify-center">
+                <Bell className="h-6 w-6" />
+              </div>
+              <h3 className="text-xl font-semibold">Notifications intelligentes</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Recevez uniquement les alertes importantes grâce à notre système de notifications piloté par IA.
+              </p>
+            </div>
+            <div className="bg-card rounded-3xl p-8 border border-border space-y-4 hover:shadow-float transition-all duration-300">
+              <div className="h-12 w-12 bg-primary text-primary-foreground rounded-2xl flex items-center justify-center">
+                <MessageSquare className="h-6 w-6" />
+              </div>
+              <h3 className="text-xl font-semibold">Interface collaborative</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Communiquez facilement avec vos équipes et vos clients depuis une seule plateforme centralisée.
+              </p>
+            </div>
+            <div className="bg-card rounded-3xl p-8 border border-border space-y-4 hover:shadow-float transition-all duration-300">
+              <div className="h-12 w-12 bg-primary text-primary-foreground rounded-2xl flex items-center justify-center">
+                <TrendingUp className="h-6 w-6" />
+              </div>
+              <h3 className="text-xl font-semibold">Analytics en temps réel</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Analysez vos performances avec des tableaux de bord détaillés et prenez des décisions éclairées.
+              </p>
+            </div>
+            <div className="bg-card rounded-3xl p-8 border border-border space-y-4 hover:shadow-float transition-all duration-300">
+              <div className="h-12 w-12 bg-primary text-primary-foreground rounded-2xl flex items-center justify-center">
+                <Shield className="h-6 w-6" />
+              </div>
+              <h3 className="text-xl font-semibold">Espace documentaire sécurisé</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Stockez et partagez vos documents en toute sécurité avec un accès contrôlé et une traçabilité complète.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Results Section */}
       <section className="py-20 px-6 bg-secondary/30">
         <div className="max-w-7xl mx-auto">
@@ -558,76 +626,8 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section id="features" className="py-32 px-6">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-4">
-            Une plateforme <span className="font-medium">complète</span>
-          </h2>
-          <p className="text-xl text-muted-foreground text-center mb-16">
-            pour les professionnels de l'immobilier
-          </p>
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-card rounded-3xl p-8 border border-border space-y-4 hover:shadow-float transition-all duration-300">
-              <div className="h-12 w-12 bg-primary text-primary-foreground rounded-2xl flex items-center justify-center">
-                <FolderOpen className="h-6 w-6" />
-              </div>
-              <h3 className="text-xl font-semibold">Gestion des projets</h3>
-              <p className="text-muted-foreground leading-relaxed">
-                Créez, organisez et suivez vos projets immobiliers avec une vue d'ensemble claire et des étapes détaillées.
-              </p>
-            </div>
-            <div className="bg-card rounded-3xl p-8 border border-border space-y-4 hover:shadow-float transition-all duration-300">
-              <div className="h-12 w-12 bg-primary text-primary-foreground rounded-2xl flex items-center justify-center">
-                <Users className="h-6 w-6" />
-              </div>
-              <h3 className="text-xl font-semibold">Suivi client automatisé</h3>
-              <p className="text-muted-foreground leading-relaxed">
-                Gardez vos clients informés automatiquement à chaque étape, avec notifications et mises à jour en temps réel.
-              </p>
-            </div>
-            <div className="bg-card rounded-3xl p-8 border border-border space-y-4 hover:shadow-float transition-all duration-300">
-              <div className="h-12 w-12 bg-primary text-primary-foreground rounded-2xl flex items-center justify-center">
-                <Bell className="h-6 w-6" />
-              </div>
-              <h3 className="text-xl font-semibold">Notifications intelligentes</h3>
-              <p className="text-muted-foreground leading-relaxed">
-                Recevez uniquement les alertes importantes grâce à notre système de notifications piloté par IA.
-              </p>
-            </div>
-            <div className="bg-card rounded-3xl p-8 border border-border space-y-4 hover:shadow-float transition-all duration-300">
-              <div className="h-12 w-12 bg-primary text-primary-foreground rounded-2xl flex items-center justify-center">
-                <MessageSquare className="h-6 w-6" />
-              </div>
-              <h3 className="text-xl font-semibold">Interface collaborative</h3>
-              <p className="text-muted-foreground leading-relaxed">
-                Communiquez facilement avec vos équipes et vos clients depuis une seule plateforme centralisée.
-              </p>
-            </div>
-            <div className="bg-card rounded-3xl p-8 border border-border space-y-4 hover:shadow-float transition-all duration-300">
-              <div className="h-12 w-12 bg-primary text-primary-foreground rounded-2xl flex items-center justify-center">
-                <TrendingUp className="h-6 w-6" />
-              </div>
-              <h3 className="text-xl font-semibold">Analytics en temps réel</h3>
-              <p className="text-muted-foreground leading-relaxed">
-                Analysez vos performances avec des tableaux de bord détaillés et prenez des décisions éclairées.
-              </p>
-            </div>
-            <div className="bg-card rounded-3xl p-8 border border-border space-y-4 hover:shadow-float transition-all duration-300">
-              <div className="h-12 w-12 bg-primary text-primary-foreground rounded-2xl flex items-center justify-center">
-                <Shield className="h-6 w-6" />
-              </div>
-              <h3 className="text-xl font-semibold">Espace documentaire sécurisé</h3>
-              <p className="text-muted-foreground leading-relaxed">
-                Stockez et partagez vos documents en toute sécurité avec un accès contrôlé et une traçabilité complète.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials Section */}
-      <section id="testimonials" className="py-20 px-6 bg-background relative">
+      {/* Results Section */}
+      <section className="py-20 px-6 bg-secondary/30">
         <div className="container z-10 mx-auto">
           <motion.div initial={{
           opacity: 0,
