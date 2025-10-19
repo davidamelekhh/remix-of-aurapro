@@ -99,7 +99,7 @@ export default function Landing() {
       name: 'English'
     },
     ar: {
-      flag: '🇦🇪',
+      flag: '🇲🇦',
       name: 'العربية'
     }
   };
