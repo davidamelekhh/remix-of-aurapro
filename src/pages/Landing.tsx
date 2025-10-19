@@ -463,28 +463,28 @@ export default function Landing() {
       </section>
 
       {/* Early Adopters Banner */}
-      <section className="relative h-[400px] md:h-[500px] overflow-hidden">
+      <section className="relative min-h-[500px] md:h-[500px] overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0">
-          <img src={earlyAdoptersBanner} alt="Early Adopters Recognition" className="w-full h-full object-cover" />
+          <img src={earlyAdoptersBanner} alt="Early Adopters Recognition" className="w-full h-full object-cover object-center" />
           {/* Overlay for better text readability */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/40 md:bg-gradient-to-r md:from-black/70 md:via-black/50 md:to-transparent"></div>
         </div>
         
         {/* Content */}
-        <div className="relative z-10 h-full max-w-7xl mx-auto px-6 flex items-center">
-          <div className="max-w-2xl space-y-6">
-            <h2 className="text-4xl md:text-5xl font-bold text-white leading-tight">
+        <div className="relative z-10 h-full max-w-7xl mx-auto px-4 sm:px-6 py-12 md:py-0 flex items-center">
+          <div className="max-w-2xl space-y-4 md:space-y-6">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight">
               Notre reconnaissance envers <span className="font-medium">nos pionniers</span>
             </h2>
-            <p className="text-xl text-white/90 leading-relaxed">
+            <p className="text-base sm:text-lg md:text-xl text-white/90 leading-relaxed">
               Vous êtes les premiers à nous faire confiance, et nous n'oublierons jamais cela. Votre soutien façonne l'avenir d'Aura PRO, et nous serons toujours généreux avec ceux qui croient en notre vision dès le premier jour.
             </p>
             <div className="pt-2">
               <ShimmerButton onClick={() => window.scrollTo({
               top: 0,
               behavior: 'smooth'
-            })} className="px-6 py-3 text-base font-semibold rounded-xl">
+            })} className="px-4 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-semibold rounded-xl">
                 <span className="flex items-center gap-2">
                   Rejoindre la liste d'attente
                   <ArrowRight className="h-4 w-4" />
