@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { ArrowRight, CheckCircle2, BarChart3, Bell, FolderOpen, Users, Shield, Clock, TrendingUp, MessageSquare, ChevronDown } from 'lucide-react';
+import { ArrowRight, CheckCircle2, BarChart3, Bell, FolderOpen, Users, Shield, Clock, TrendingUp, MessageSquare, ChevronDown, Instagram } from 'lucide-react';
 import { ShimmerButton } from '@/components/ui/shimmer-button';
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
@@ -167,7 +167,12 @@ export default function Landing() {
             <a href="#solution" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Solution</a>
             <a href="#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Fonctionnalités</a>
             <a href="#testimonials" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Témoignages</a>
-            <a href="/contact" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Contact</a>
+            <div className="flex items-center gap-2">
+              <a href="/contact" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Contact</a>
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground/60 hover:text-muted-foreground transition-colors">
+                <Instagram className="h-4 w-4" />
+              </a>
+            </div>
           </div>
         </div>
       </nav>
@@ -784,7 +789,12 @@ export default function Landing() {
             <div className="flex items-center gap-8 text-sm text-muted-foreground">
               <a href="#" className="hover:text-foreground transition-colors">Mentions légales</a>
               <a href="#" className="hover:text-foreground transition-colors">Confidentialité</a>
-              <a href="#" className="hover:text-foreground transition-colors">Contact</a>
+              <div className="flex items-center gap-2">
+                <a href="#" className="hover:text-foreground transition-colors">Contact</a>
+                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground/60 hover:text-muted-foreground transition-colors">
+                  <Instagram className="h-4 w-4" />
+                </a>
+              </div>
             </div>
             <div className="text-sm text-muted-foreground">
               © 2025 Aura PRO. Tous droits réservés.
