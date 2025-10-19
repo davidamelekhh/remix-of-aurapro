@@ -607,25 +607,37 @@ export type Database = {
       }
       waitlist: {
         Row: {
+          company: string | null
           created_at: string
           email: string
+          first_name: string | null
           id: string
           language: string
+          last_name: string | null
           phone: string | null
+          project_count: string | null
         }
         Insert: {
+          company?: string | null
           created_at?: string
           email: string
+          first_name?: string | null
           id?: string
           language?: string
+          last_name?: string | null
           phone?: string | null
+          project_count?: string | null
         }
         Update: {
+          company?: string | null
           created_at?: string
           email?: string
+          first_name?: string | null
           id?: string
           language?: string
+          last_name?: string | null
           phone?: string | null
+          project_count?: string | null
         }
         Relationships: []
       }
