@@ -27,6 +27,7 @@ import { BeforeAfterSlider } from '@/components/ui/before-after-slider';
 import { motion } from 'motion/react';
 import { EarlyAdopterDialog } from '@/components/landing/EarlyAdopterDialog';
 import { getTranslation, type Language } from '@/lib/translations';
+import { DottedSurface } from '@/components/ui/dotted-surface';
 
 const testimonials = [{
   text: "Aura PRO a complètement transformé notre manière de gérer nos projets immobiliers. La transparence et la communication avec nos clients n'ont jamais été aussi fluides.",
@@ -297,7 +298,8 @@ export default function Landing() {
 
       {/* Questions Section */}
       <section className="py-32 px-6 bg-foreground text-background relative overflow-hidden">
-        <div className="max-w-4xl mx-auto">
+        <DottedSurface className="absolute inset-0" />
+        <div className="max-w-4xl mx-auto relative z-10">
           <h2 className="text-4xl md:text-5xl font-bold text-center mb-20">
             {t.questions.title} <span className="font-medium">{t.questions.titleAccent}</span>
           </h2>
