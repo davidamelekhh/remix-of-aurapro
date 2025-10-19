@@ -174,6 +174,22 @@ export default function Landing() {
               </a>
             </div>
           </div>
+          {/* Language Selector - Mobile */}
+          <div className="md:hidden relative">
+            <button type="button" onClick={() => setLanguageMenuOpen(!languageMenuOpen)} className="h-10 w-10 rounded-lg border bg-background hover:bg-secondary transition-all flex items-center justify-center text-xl">
+              {languages[selectedLanguage].flag}
+            </button>
+            
+            {languageMenuOpen && <div className="absolute top-full right-0 mt-2 bg-card border-2 border-border rounded-xl shadow-lg overflow-hidden z-50 min-w-[160px]">
+                {Object.entries(languages).map(([code, lang]) => <button key={code} type="button" onClick={() => {
+              setSelectedLanguage(code as 'fr' | 'en' | 'es' | 'ar');
+              setLanguageMenuOpen(false);
+            }} className="w-full px-4 py-3 text-left hover:bg-secondary transition-colors flex items-center gap-3 bg-card">
+                    <span className="text-xl">{lang.flag}</span>
+                    <span className="text-sm font-medium">{lang.name}</span>
+                  </button>)}
+              </div>}
+          </div>
         </div>
       </nav>
 
@@ -208,8 +224,8 @@ export default function Landing() {
           </p>
           <form onSubmit={handleWaitlistSubmit} className="max-w-3xl mx-auto pt-4 px-4">
             <div className="flex flex-col sm:flex-row gap-3">
-              {/* Language Selector */}
-              <div className="relative">
+              {/* Language Selector - Desktop only */}
+              <div className="relative hidden md:block">
                 <button type="button" onClick={() => setLanguageMenuOpen(!languageMenuOpen)} className="h-[56px] w-[56px] rounded-xl border-2 bg-background hover:bg-secondary transition-all flex items-center justify-center text-2xl">
                   {languages[selectedLanguage].flag}
                 </button>
