@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { z } from 'zod';
 import { SinglePricingCard } from '@/components/ui/single-pricing-card';
 import { useNavigate } from 'react-router-dom';
 import auraLogo from '@/assets/aura-pro-logo.png';
@@ -100,14 +101,25 @@ export default function Landing() {
       name: 'العربية'
     }
   };
+  const waitlistSchema = z.object({
+    email: z.string().trim().email({ message: "Adresse email invalide" }).max(255, { message: "Email trop long" }),
+    language: z.enum(['fr', 'en', 'es', 'ar'])
+  });
+
   const handleWaitlistSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
+      // Validate input
+      const validated = waitlistSchema.parse({
+        email: waitlistEmail,
+        language: selectedLanguage
+      });
+
       const {
         error
       } = await supabase.from('waitlist').insert([{
-        email: waitlistEmail,
-        language: selectedLanguage
+        email: validated.email,
+        language: validated.language
       }]);
       if (error) {
         if (error.code === '23505') {
@@ -127,12 +139,20 @@ export default function Landing() {
       });
       setWaitlistEmail('');
     } catch (error) {
-      console.error('Error joining waitlist:', error);
-      toast({
-        title: "Erreur",
-        description: "Une erreur s'est produite. Veuillez réessayer.",
-        variant: "destructive"
-      });
+      if (error instanceof z.ZodError) {
+        toast({
+          title: "Validation échouée",
+          description: error.errors[0].message,
+          variant: "destructive"
+        });
+      } else {
+        console.error('Error joining waitlist:', error);
+        toast({
+          title: "Erreur",
+          description: "Une erreur s'est produite. Veuillez réessayer.",
+          variant: "destructive"
+        });
+      }
     }
   };
   return <div className="min-h-screen bg-background text-foreground">
