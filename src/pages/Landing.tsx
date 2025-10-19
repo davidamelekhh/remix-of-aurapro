@@ -26,6 +26,8 @@ import { TestimonialsColumn } from '@/components/ui/testimonials-columns';
 import { BeforeAfterSlider } from '@/components/ui/before-after-slider';
 import { motion } from 'motion/react';
 import { EarlyAdopterDialog } from '@/components/landing/EarlyAdopterDialog';
+import { getTranslation, type Language } from '@/lib/translations';
+
 const testimonials = [{
   text: "Aura PRO a complètement transformé notre manière de gérer nos projets immobiliers. La transparence et la communication avec nos clients n'ont jamais été aussi fluides.",
   image: "https://randomuser.me/api/portraits/men/1.jpg",
@@ -81,7 +83,7 @@ export default function Landing() {
     toast
   } = useToast();
   const [waitlistEmail, setWaitlistEmail] = useState('');
-  const [selectedLanguage, setSelectedLanguage] = useState<'fr' | 'en' | 'es' | 'ar'>('fr');
+  const [selectedLanguage, setSelectedLanguage] = useState<Language>('fr');
   const [languageMenuOpen, setLanguageMenuOpen] = useState(false);
   const [contactType, setContactType] = useState<'email' | 'phone'>('email');
   const [selectedCurrency, setSelectedCurrency] = useState<'EUR' | 'USD' | 'CAD' | 'MAD'>('EUR');
@@ -94,10 +96,6 @@ export default function Landing() {
     en: {
       flag: '🇬🇧',
       name: 'English'
-    },
-    es: {
-      flag: '🇪🇸',
-      name: 'Español'
     },
     ar: {
       flag: '🇦🇪',
@@ -141,6 +139,9 @@ export default function Landing() {
       }
     }
   };
+
+  const t = getTranslation(selectedLanguage);
+
   return <div className="min-h-screen bg-background text-foreground">
       <EarlyAdopterDialog 
         open={dialogOpen} 
@@ -157,11 +158,11 @@ export default function Landing() {
             <span className="text-sm text-muted-foreground">•   worldwide</span>
           </div>
           <div className="hidden md:flex items-center gap-8">
-            <a href="#solution" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Solution</a>
-            <a href="#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Fonctionnalités</a>
-            <a href="#testimonials" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Témoignages</a>
+            <a href="#solution" className="text-sm text-muted-foreground hover:text-foreground transition-colors">{t.nav.solution}</a>
+            <a href="#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">{t.nav.features}</a>
+            <a href="#testimonials" className="text-sm text-muted-foreground hover:text-foreground transition-colors">{t.nav.testimonials}</a>
             <div className="flex items-center gap-2">
-              <a href="/contact" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Contact</a>
+              <a href="/contact" className="text-sm text-muted-foreground hover:text-foreground transition-colors">{t.nav.contact}</a>
               <a href="https://www.instagram.com/aura.pro.ai?igsh=MXF1ZHRncDB1eWthZQ%3D%3D&utm_source=qr" target="_blank" rel="noopener noreferrer" className="text-muted-foreground/60 hover:text-muted-foreground transition-colors">
                 <Instagram className="h-4 w-4" />
               </a>
@@ -175,7 +176,7 @@ export default function Landing() {
             
             {languageMenuOpen && <div className="absolute top-full right-0 mt-2 bg-card border-2 border-border rounded-xl shadow-lg overflow-hidden z-50 min-w-[160px]">
                 {Object.entries(languages).map(([code, lang]) => <button key={code} type="button" onClick={() => {
-              setSelectedLanguage(code as 'fr' | 'en' | 'es' | 'ar');
+              setSelectedLanguage(code as Language);
               setLanguageMenuOpen(false);
             }} className="w-full px-4 py-3 text-left hover:bg-secondary transition-colors flex items-center gap-3 bg-card">
                     <span className="text-xl">{lang.flag}</span>
@@ -206,24 +207,24 @@ export default function Landing() {
             <img src={neonLogo} alt="Aura PRO" className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full object-cover mx-auto" />
           </motion.div>
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1] text-center px-4">
-            La gestion immobilière
+            {t.hero.title}
             <br />
-            <span className="font-medium text-muted-foreground">réinventée.</span>
+            <span className="font-medium text-muted-foreground">{t.hero.titleAccent}</span>
           </h1>
           <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto font-light leading-relaxed text-center px-4">
-            Suivez chaque projet. Simplifiez chaque étape.
+            {t.hero.subtitle}
             <br className="hidden sm:block" />
-            <span className="sm:inline"> </span>La plateforme qui transforme votre manière de gérer l'immobilier.
+            <span className="sm:inline"> </span>{t.hero.subtitleContinued}
           </p>
           <form onSubmit={handleWaitlistSubmit} className="max-w-3xl mx-auto pt-4 px-4">
             {/* Email/Tél selector - Mobile only, centered above input */}
             <div className="flex justify-center mb-3 sm:hidden">
               <div className="flex gap-1 bg-muted/50 backdrop-blur-sm rounded-lg p-1">
                 <button type="button" onClick={() => setContactType('email')} className={`px-3 py-1.5 text-xs rounded transition-all ${contactType === 'email' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>
-                  Email
+                  {t.hero.email}
                 </button>
                 <button type="button" onClick={() => setContactType('phone')} className={`px-3 py-1.5 text-xs rounded transition-all ${contactType === 'phone' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>
-                  Tél
+                  {t.hero.phone}
                 </button>
               </div>
             </div>
@@ -237,7 +238,7 @@ export default function Landing() {
                 
                 {languageMenuOpen && <div className="absolute top-full mt-2 bg-card border-2 border-border rounded-xl shadow-lg overflow-hidden z-50 min-w-[160px]">
                     {Object.entries(languages).map(([code, lang]) => <button key={code} type="button" onClick={() => {
-                  setSelectedLanguage(code as 'fr' | 'en' | 'es' | 'ar');
+                  setSelectedLanguage(code as Language);
                   setLanguageMenuOpen(false);
                 }} className="w-full px-4 py-3 text-left hover:bg-secondary transition-colors flex items-center gap-3 bg-card">
                         <span className="text-xl">{lang.flag}</span>
@@ -250,17 +251,17 @@ export default function Landing() {
                 {/* Email/Tél selector - Desktop only, inside input */}
                 <div className="hidden sm:flex absolute left-3 top-1/2 -translate-y-1/2 z-10 gap-1 bg-muted/50 backdrop-blur-sm rounded-lg p-1">
                   <button type="button" onClick={() => setContactType('email')} className={`px-2 py-1 text-xs rounded transition-all ${contactType === 'email' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>
-                    Email
+                    {t.hero.email}
                   </button>
                   <button type="button" onClick={() => setContactType('phone')} className={`px-2 py-1 text-xs rounded transition-all ${contactType === 'phone' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>
-                    Tél
+                    {t.hero.phone}
                   </button>
                 </div>
-                <Input type={contactType === 'email' ? 'email' : 'tel'} placeholder={contactType === 'email' ? 'Votre email professionnel' : 'Votre numéro de téléphone'} value={waitlistEmail} onChange={e => setWaitlistEmail(e.target.value)} required className="w-full pl-4 sm:pl-28 pr-4 py-4 sm:py-6 text-base sm:text-lg rounded-xl border-2 focus:border-primary transition-all text-center sm:text-left" />
+                <Input type={contactType === 'email' ? 'email' : 'tel'} placeholder={contactType === 'email' ? t.hero.emailPlaceholder : t.hero.phonePlaceholder} value={waitlistEmail} onChange={e => setWaitlistEmail(e.target.value)} required className="w-full pl-4 sm:pl-28 pr-4 py-4 sm:py-6 text-base sm:text-lg rounded-xl border-2 focus:border-primary transition-all text-center sm:text-left" />
               </div>
               <ShimmerButton type="submit" className="px-4 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-semibold rounded-xl w-full sm:w-auto">
                 <span className="flex items-center gap-2">
-                  Rejoindre
+                  {t.hero.joinButton}
                   <ArrowRight className="h-4 w-4" />
                 </span>
               </ShimmerButton>
@@ -272,7 +273,7 @@ export default function Landing() {
         {/* Before/After Comparison */}
         <div className="mt-16 relative max-w-5xl mx-auto">
           <div className="rounded-3xl border border-border shadow-float overflow-hidden">
-            <BeforeAfterSlider beforeImage={heroProfessional} afterImage={heroAfter} beforeAlt="Avant Aura PRO" afterAlt="Avec Aura PRO" />
+            <BeforeAfterSlider beforeImage={heroProfessional} afterImage={heroAfter} beforeAlt={t.hero.beforeAlt} afterAlt={t.hero.afterAlt} />
           </div>
         </div>
       </section>
@@ -281,15 +282,15 @@ export default function Landing() {
       <section className="py-20 px-6 bg-background">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Les défis <span className="font-medium">du secteur immobilier</span>
+            {t.problems.title} <span className="font-medium">{t.problems.titleAccent}</span>
           </h2>
           <p className="max-w-3xl text-xl text-muted-foreground mb-16">
-            Les problèmes qui ralentissent votre productivité au quotidien.
+            {t.problems.subtitle}
           </p>
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-            <BentoCard eyebrow="Problème" title="Communication fragmentée" description="Emails perdus, messages dispersés et informations difficiles à retrouver entre clients et promoteurs." graphic={<img src={problemCommunication} alt="Communication fragmentée" className="absolute inset-0 w-full h-full object-cover" />} className="lg:col-span-1" />
-            <BentoCard eyebrow="Problème" title="Manque de visibilité" description="Impossible de suivre l'avancement réel des projets sans multiplier les appels et réunions." graphic={<img src={problemVisibility} alt="Manque de visibilité" className="absolute inset-0 w-full h-full object-cover" />} className="lg:col-span-1" />
-            <BentoCard eyebrow="Problème" title="Gestion manuelle inefficace" description="Retards, erreurs et perte de temps causés par des processus administratifs obsolètes." graphic={<img src={problemAdmin} alt="Gestion manuelle inefficace" className="absolute inset-0 w-full h-full object-cover" />} className="lg:col-span-1" />
+            <BentoCard eyebrow={t.problems.eyebrow} title={t.problems.problem1Title} description={t.problems.problem1Desc} graphic={<img src={problemCommunication} alt={t.problems.problem1Title} className="absolute inset-0 w-full h-full object-cover" />} className="lg:col-span-1" />
+            <BentoCard eyebrow={t.problems.eyebrow} title={t.problems.problem2Title} description={t.problems.problem2Desc} graphic={<img src={problemVisibility} alt={t.problems.problem2Title} className="absolute inset-0 w-full h-full object-cover" />} className="lg:col-span-1" />
+            <BentoCard eyebrow={t.problems.eyebrow} title={t.problems.problem3Title} description={t.problems.problem3Desc} graphic={<img src={problemAdmin} alt={t.problems.problem3Title} className="absolute inset-0 w-full h-full object-cover" />} className="lg:col-span-1" />
           </div>
         </div>
       </section>
@@ -298,11 +299,11 @@ export default function Landing() {
       <section className="py-32 px-6 bg-foreground text-background relative overflow-hidden">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-4xl md:text-5xl font-bold text-center mb-20">
-            Les questions que vous entendez <span className="font-medium">chaque jour</span>
+            {t.questions.title} <span className="font-medium">{t.questions.titleAccent}</span>
           </h2>
           
           <div className="space-y-8 mb-16">
-            {["Où en est mon projet exactement ?", "Pourquoi ce retard n'a pas été signalé ?", "Quand recevrai-je le prochain paiement ?", "Où sont les documents signés ?", "Qui s'occupe de cette partie du chantier ?", "Pourquoi les équipes ne sont pas alignées ?", "Comment je peux suivre l'avancement en temps réel ?"].map((question, index) => <motion.div key={index} initial={{
+            {[t.questions.q1, t.questions.q2, t.questions.q3, t.questions.q4, t.questions.q5, t.questions.q6, t.questions.q7].map((question, index) => <motion.div key={index} initial={{
             opacity: 0,
             y: 20,
             filter: "blur(10px)"
@@ -336,7 +337,7 @@ export default function Landing() {
           once: true
         }} className="text-center">
             <p className="text-3xl md:text-4xl font-bold text-background">
-              Avec Aura PRO, <span className="font-medium">vous avez toutes les réponses.</span>
+              {t.questions.answer} <span className="font-medium">{t.questions.answerAccent}</span>
             </p>
           </motion.div>
         </div>
@@ -348,30 +349,30 @@ export default function Landing() {
           <div className="grid md:grid-cols-2 gap-16 items-center">
             <div className="space-y-6">
               <h2 className="text-5xl md:text-6xl font-bold leading-tight">
-                Imaginez ne plus jamais perdre <span className="font-medium">le contrôle d'un projet.</span>
+                {t.solution.title} <span className="font-medium">{t.solution.titleAccent}</span>
               </h2>
               <p className="text-xl text-muted-foreground leading-relaxed">
-                Aura PRO centralise toutes vos interactions, automatise vos tâches répétitives et clarifie chaque étape de vos projets immobiliers.
+                {t.solution.description1}
               </p>
               <p className="text-lg text-muted-foreground leading-relaxed">
-                Une plateforme unique où promoteurs et clients collaborent en temps réel, avec une visibilité totale et une communication fluide.
+                {t.solution.description2}
               </p>
               <div className="grid grid-cols-2 gap-3 pt-4">
                 <div className="flex items-center gap-2 text-sm font-medium">
                   <CheckCircle2 className="h-5 w-5 text-success" />
-                  Tableau de bord
+                  {t.solution.feature1}
                 </div>
                 <div className="flex items-center gap-2 text-sm font-medium">
                   <CheckCircle2 className="h-5 w-5 text-success" />
-                  Notifications IA
+                  {t.solution.feature2}
                 </div>
                 <div className="flex items-center gap-2 text-sm font-medium">
                   <CheckCircle2 className="h-5 w-5 text-success" />
-                  Documents partagés
+                  {t.solution.feature3}
                 </div>
                 <div className="flex items-center gap-2 text-sm font-medium">
                   <CheckCircle2 className="h-5 w-5 text-success" />
-                  Suivi en temps réel
+                  {t.solution.feature4}
                 </div>
               </div>
               <div className="pt-2">
@@ -380,7 +381,7 @@ export default function Landing() {
                 behavior: 'smooth'
               })} className="px-6 py-3 text-base font-semibold rounded-xl">
                   <span className="flex items-center gap-2">
-                    Rejoindre la liste d'attente
+                    {t.solution.cta}
                     <ArrowRight className="h-4 w-4" />
                   </span>
                 </ShimmerButton>
@@ -388,7 +389,7 @@ export default function Landing() {
             </div>
             <div className="relative">
               <div className="aspect-square rounded-3xl border border-border shadow-float overflow-hidden">
-                <img src={solutionDashboard} alt="Tableau de bord Aura PRO" className="w-full h-full object-cover" />
+                <img src={solutionDashboard} alt={t.solution.imageAlt} className="w-full h-full object-cover" />
               </div>
             </div>
           </div>
@@ -399,64 +400,64 @@ export default function Landing() {
       <section id="features" className="py-32 px-6">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-4xl md:text-5xl font-bold text-center mb-4">
-            Une plateforme <span className="font-medium">complète</span>
+            {t.features.title} <span className="font-medium">{t.features.titleAccent}</span>
           </h2>
           <p className="text-xl text-muted-foreground text-center mb-16">
-            pour les professionnels de l'immobilier
+            {t.features.subtitle}
           </p>
           <div className="grid md:grid-cols-3 gap-8">
             <div className="bg-card rounded-3xl p-8 border border-border space-y-4 hover:shadow-float transition-all duration-300">
               <div className="h-12 w-12 bg-primary text-primary-foreground rounded-2xl flex items-center justify-center">
                 <FolderOpen className="h-6 w-6" />
               </div>
-              <h3 className="text-xl font-semibold">Gestion des projets</h3>
+              <h3 className="text-xl font-semibold">{t.features.feature1Title}</h3>
               <p className="text-muted-foreground leading-relaxed">
-                Créez, organisez et suivez vos projets immobiliers avec une vue d'ensemble claire et des étapes détaillées.
+                {t.features.feature1Desc}
               </p>
             </div>
             <div className="bg-card rounded-3xl p-8 border border-border space-y-4 hover:shadow-float transition-all duration-300">
               <div className="h-12 w-12 bg-primary text-primary-foreground rounded-2xl flex items-center justify-center">
                 <Users className="h-6 w-6" />
               </div>
-              <h3 className="text-xl font-semibold">Suivi client automatisé</h3>
+              <h3 className="text-xl font-semibold">{t.features.feature2Title}</h3>
               <p className="text-muted-foreground leading-relaxed">
-                Gardez vos clients informés automatiquement à chaque étape, avec notifications et mises à jour en temps réel.
+                {t.features.feature2Desc}
               </p>
             </div>
             <div className="bg-card rounded-3xl p-8 border border-border space-y-4 hover:shadow-float transition-all duration-300">
               <div className="h-12 w-12 bg-primary text-primary-foreground rounded-2xl flex items-center justify-center">
                 <Bell className="h-6 w-6" />
               </div>
-              <h3 className="text-xl font-semibold">Notifications intelligentes</h3>
+              <h3 className="text-xl font-semibold">{t.features.feature3Title}</h3>
               <p className="text-muted-foreground leading-relaxed">
-                Recevez uniquement les alertes importantes grâce à notre système de notifications piloté par IA.
+                {t.features.feature3Desc}
               </p>
             </div>
             <div className="bg-card rounded-3xl p-8 border border-border space-y-4 hover:shadow-float transition-all duration-300">
               <div className="h-12 w-12 bg-primary text-primary-foreground rounded-2xl flex items-center justify-center">
                 <MessageSquare className="h-6 w-6" />
               </div>
-              <h3 className="text-xl font-semibold">Interface collaborative</h3>
+              <h3 className="text-xl font-semibold">{t.features.feature4Title}</h3>
               <p className="text-muted-foreground leading-relaxed">
-                Communiquez facilement avec vos équipes et vos clients depuis une seule plateforme centralisée.
+                {t.features.feature4Desc}
               </p>
             </div>
             <div className="bg-card rounded-3xl p-8 border border-border space-y-4 hover:shadow-float transition-all duration-300">
               <div className="h-12 w-12 bg-primary text-primary-foreground rounded-2xl flex items-center justify-center">
                 <TrendingUp className="h-6 w-6" />
               </div>
-              <h3 className="text-xl font-semibold">Analytics en temps réel</h3>
+              <h3 className="text-xl font-semibold">{t.features.feature5Title}</h3>
               <p className="text-muted-foreground leading-relaxed">
-                Analysez vos performances avec des tableaux de bord détaillés et prenez des décisions éclairées.
+                {t.features.feature5Desc}
               </p>
             </div>
             <div className="bg-card rounded-3xl p-8 border border-border space-y-4 hover:shadow-float transition-all duration-300">
               <div className="h-12 w-12 bg-primary text-primary-foreground rounded-2xl flex items-center justify-center">
                 <Shield className="h-6 w-6" />
               </div>
-              <h3 className="text-xl font-semibold">Espace documentaire sécurisé</h3>
+              <h3 className="text-xl font-semibold">{t.features.feature6Title}</h3>
               <p className="text-muted-foreground leading-relaxed">
-                Stockez et partagez vos documents en toute sécurité avec un accès contrôlé et une traçabilité complète.
+                {t.features.feature6Desc}
               </p>
             </div>
           </div>
@@ -467,24 +468,24 @@ export default function Landing() {
       <section className="py-20 px-6 bg-secondary/30">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-4xl md:text-5xl font-bold text-center mb-16">
-            Des résultats <span className="font-medium">concrets</span>
+            {t.results.title} <span className="font-medium">{t.results.titleAccent}</span>
           </h2>
           <div className="grid md:grid-cols-4 gap-6">
             <div className="bg-card rounded-3xl p-8 border border-border text-center space-y-2">
               <div className="text-5xl font-bold">+60%</div>
-              <p className="text-muted-foreground">de productivité</p>
+              <p className="text-muted-foreground">{t.results.result1}</p>
             </div>
             <div className="bg-card rounded-3xl p-8 border border-border text-center space-y-2">
               <div className="text-5xl font-bold">0</div>
-              <p className="text-muted-foreground">email perdu</p>
+              <p className="text-muted-foreground">{t.results.result2}</p>
             </div>
             <div className="bg-card rounded-3xl p-8 border border-border text-center space-y-2">
               <div className="text-5xl font-bold">100%</div>
-              <p className="text-muted-foreground">de transparence client</p>
+              <p className="text-muted-foreground">{t.results.result3}</p>
             </div>
             <div className="bg-card rounded-3xl p-8 border border-border text-center space-y-2">
               <div className="text-5xl font-bold">2x</div>
-              <p className="text-muted-foreground">plus de satisfaction</p>
+              <p className="text-muted-foreground">{t.results.result4}</p>
             </div>
           </div>
         </div>
@@ -498,10 +499,10 @@ export default function Landing() {
         <div className="relative z-10 max-w-7xl mx-auto space-y-12">
           <div className="text-center space-y-4">
             <h2 className="text-4xl md:text-5xl font-bold">
-              Investissez dans <span className="font-medium">votre réussite</span>
+              {t.pricing.title} <span className="font-medium">{t.pricing.titleAccent}</span>
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Une solution complète pour transformer votre gestion immobilière
+              {t.pricing.subtitle}
             </p>
             
             {/* Currency Selector */}
@@ -525,16 +526,16 @@ export default function Landing() {
             </div>
           </div>
 
-          <SinglePricingCard badge="Offre Premium" title="Aura Pro" subtitle="La plateforme tout-en-un pour les professionnels de l'immobilier" price={`À partir de ${getPriceInCurrency(299)}/mois*`} benefits={[{
+          <SinglePricingCard badge={t.pricing.badge} title={t.pricing.cardTitle} subtitle={t.pricing.cardSubtitle} price={`${t.pricing.pricePrefix} ${getPriceInCurrency(299)}${t.pricing.priceSuffix}`} benefits={[{
           icon: 'check',
-          text: 'Projets et clients illimités'
+          text: t.pricing.benefit1
         }, {
           icon: 'shield',
-          text: 'Sécurité et conformité garanties'
+          text: t.pricing.benefit2
         }, {
           icon: 'heart',
-          text: 'Support premium 7j/7'
-        }]} priceNote="*Le tarif varie selon le type de propriété et vos besoins spécifiques" features={[{
+          text: t.pricing.benefit3
+        }]} priceNote={t.pricing.priceNote} features={[{
           text: 'Tableau de bord temps réel avec analytics avancés'
         }, {
           text: 'Gestion complète des projets et des équipes'
@@ -562,8 +563,8 @@ export default function Landing() {
           text: 'Formation et onboarding personnalisé'
         }, {
           text: 'Bénéficier d\'une réduction de 50% sur les 3 premiers mois'
-}]} primaryButton={{
-          text: 'Démarrer',
+        }]} primaryButton={{
+          text: t.pricing.ctaButton,
           onClick: () => window.scrollTo({
             top: 0,
             behavior: 'smooth'
@@ -585,10 +586,10 @@ export default function Landing() {
         <div className="relative z-10 h-full max-w-7xl mx-auto px-4 sm:px-6 py-12 md:py-0 flex items-center">
           <div className="max-w-2xl space-y-4 md:space-y-6">
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight">
-              Notre reconnaissance envers <span className="font-medium">nos pionniers</span>
+              {t.earlyAdopters.title} <span className="font-medium">{t.earlyAdopters.titleAccent}</span>
             </h2>
             <p className="text-base sm:text-lg md:text-xl text-white/90 leading-relaxed">
-              Vous êtes les premiers à nous faire confiance, et nous n'oublierons jamais cela. Votre soutien façonne l'avenir d'Aura PRO, et nous serons toujours généreux avec ceux qui croient en notre vision dès le premier jour.
+              {t.earlyAdopters.description}
             </p>
             <div className="pt-2">
               <ShimmerButton onClick={() => window.scrollTo({
@@ -596,7 +597,7 @@ export default function Landing() {
               behavior: 'smooth'
             })} className="px-4 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-semibold rounded-xl">
                 <span className="flex items-center gap-2">
-                  Rejoindre la liste d'attente
+                  {t.earlyAdopters.cta}
                   <ArrowRight className="h-4 w-4" />
                 </span>
               </ShimmerButton>
@@ -622,14 +623,14 @@ export default function Landing() {
           once: true
         }} className="flex flex-col items-center justify-center max-w-[540px] mx-auto">
             <div className="flex justify-center">
-              <div className="border py-1 px-4 rounded-lg text-sm">Témoignages</div>
+              <div className="border py-1 px-4 rounded-lg text-sm">{t.testimonials.badge}</div>
             </div>
 
             <h2 className="text-4xl md:text-5xl font-bold tracking-tight mt-5 text-center">
-              Ils utilisent déjà <span className="font-medium">Aura PRO</span>
+              {t.testimonials.title} <span className="font-medium">{t.testimonials.titleAccent}</span>
             </h2>
             <p className="text-center mt-5 text-muted-foreground text-lg">
-              Découvrez ce que nos clients disent de nous.
+              {t.testimonials.subtitle}
             </p>
           </motion.div>
 
@@ -646,39 +647,39 @@ export default function Landing() {
         <div className="max-w-4xl mx-auto">
           <div className="text-center space-y-4 mb-16">
             <h2 className="text-4xl md:text-5xl font-bold">
-              Questions <span className="font-medium">fréquentes</span>
+              {t.faq.title} <span className="font-medium">{t.faq.titleAccent}</span>
             </h2>
             <p className="text-xl text-muted-foreground">
-              Tout ce que vous devez savoir sur Aura PRO
+              {t.faq.subtitle}
             </p>
           </div>
           
           <div className="space-y-4">
             <div className="bg-card rounded-2xl border border-border p-6 hover:shadow-float transition-all duration-300">
-              <h3 className="text-lg font-semibold mb-2">Comment fonctionne Aura PRO ?</h3>
+              <h3 className="text-lg font-semibold mb-2">{t.faq.q1Title}</h3>
               <p className="text-muted-foreground leading-relaxed">
-                Aura PRO est une plateforme complète qui centralise tous les aspects de vos projets immobiliers : gestion de projet, communication client, suivi financier, et bien plus encore. Tout est accessible depuis un tableau de bord unique et intuitif.
+                {t.faq.q1Answer}
               </p>
             </div>
             
             <div className="bg-card rounded-2xl border border-border p-6 hover:shadow-float transition-all duration-300">
-              <h3 className="text-lg font-semibold mb-2">Combien de temps faut-il pour mettre en place Aura PRO ?</h3>
+              <h3 className="text-lg font-semibold mb-2">{t.faq.q2Title}</h3>
               <p className="text-muted-foreground leading-relaxed">
-                La mise en place est simple et rapide. Après votre inscription, notre équipe vous accompagne avec une formation personnalisée. Vous pouvez commencer à utiliser la plateforme dès le premier jour.
+                {t.faq.q2Answer}
               </p>
             </div>
             
             <div className="bg-card rounded-2xl border border-border p-6 hover:shadow-float transition-all duration-300">
-              <h3 className="text-lg font-semibold mb-2">Mes données sont-elles sécurisées ?</h3>
+              <h3 className="text-lg font-semibold mb-2">{t.faq.q3Title}</h3>
               <p className="text-muted-foreground leading-relaxed">
-                Absolument. Nous utilisons les dernières technologies de chiffrement et nos serveurs sont conformes aux normes RGPD. Vos données sont hébergées en Europe et sauvegardées quotidiennement.
+                {t.faq.q3Answer}
               </p>
             </div>
             
             <div className="bg-card rounded-2xl border border-border p-6 hover:shadow-float transition-all duration-300">
-              <h3 className="text-lg font-semibold mb-2">Puis-je personnaliser l'interface pour mes clients ?</h3>
+              <h3 className="text-lg font-semibold mb-2">{t.faq.q4Title}</h3>
               <p className="text-muted-foreground leading-relaxed">
-                Oui ! Vous pouvez personnaliser le portail client avec votre logo, vos couleurs et même créer des sites web automatiques pour chaque projet avec votre propre identité visuelle.
+                {t.faq.q4Answer}
               </p>
             </div>
             

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import * as React from "react";
+import type { Language } from "@/lib/translations";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,7 +24,7 @@ interface EarlyAdopterDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   initialEmail: string;
-  language: 'fr' | 'en' | 'es' | 'ar';
+  language: Language;
 }
 
 export function EarlyAdopterDialog({ open, onOpenChange, initialEmail, language }: EarlyAdopterDialogProps) {
