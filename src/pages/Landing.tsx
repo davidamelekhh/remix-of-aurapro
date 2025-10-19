@@ -183,7 +183,7 @@ export default function Landing() {
             <a href="#testimonials" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Témoignages</a>
             <div className="flex items-center gap-2">
               <a href="/contact" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Contact</a>
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground/60 hover:text-muted-foreground transition-colors">
+              <a href="https://www.instagram.com/aura.pro.ai?igsh=MXF1ZHRncDB1eWthZQ%3D%3D&utm_source=qr" target="_blank" rel="noopener noreferrer" className="text-muted-foreground/60 hover:text-muted-foreground transition-colors">
                 <Instagram className="h-4 w-4" />
               </a>
             </div>
@@ -854,7 +854,7 @@ export default function Landing() {
               <a href="#" className="hover:text-foreground transition-colors">Confidentialité</a>
               <div className="flex items-center gap-2">
                 <a href="#" className="hover:text-foreground transition-colors">Contact</a>
-                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground/60 hover:text-muted-foreground transition-colors">
+                <a href="https://www.instagram.com/aura.pro.ai?igsh=MXF1ZHRncDB1eWthZQ%3D%3D&utm_source=qr" target="_blank" rel="noopener noreferrer" className="text-muted-foreground/60 hover:text-muted-foreground transition-colors">
                   <Instagram className="h-4 w-4" />
                 </a>
               </div>
