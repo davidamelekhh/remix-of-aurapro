@@ -83,6 +83,7 @@ export default function Landing() {
   const [selectedLanguage, setSelectedLanguage] = useState<'fr' | 'en' | 'es' | 'ar'>('fr');
   const [languageMenuOpen, setLanguageMenuOpen] = useState(false);
   const [contactType, setContactType] = useState<'email' | 'phone'>('email');
+  const [selectedCurrency, setSelectedCurrency] = useState<'EUR' | 'USD' | 'MAD'>('EUR');
   const languages = {
     fr: {
       flag: '🇫🇷',
@@ -101,6 +102,18 @@ export default function Landing() {
       name: 'العربية'
     }
   };
+  
+  const currencies = {
+    EUR: { symbol: '€', rate: 1, name: 'EUR' },
+    USD: { symbol: '$', rate: 1.1, name: 'USD' },
+    MAD: { symbol: 'DH', rate: 11, name: 'MAD' }
+  };
+  
+  const getPriceInCurrency = (basePrice: number) => {
+    const converted = Math.round(basePrice * currencies[selectedCurrency].rate);
+    return `${converted}${currencies[selectedCurrency].symbol}`;
+  };
+  
   const waitlistSchema = z.object({
     email: z.string().trim().email({ message: "Adresse email invalide" }).max(255, { message: "Email trop long" }),
     language: z.enum(['fr', 'en', 'es', 'ar'])
@@ -442,9 +455,29 @@ export default function Landing() {
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Une solution complète pour transformer votre gestion immobilière
             </p>
+            
+            {/* Currency Selector */}
+            <div className="flex justify-center pt-4">
+              <div className="flex gap-2 bg-card border-2 border-border rounded-xl p-1">
+                {Object.entries(currencies).map(([code, currency]) => (
+                  <button
+                    key={code}
+                    type="button"
+                    onClick={() => setSelectedCurrency(code as 'EUR' | 'USD' | 'MAD')}
+                    className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
+                      selectedCurrency === code
+                        ? 'bg-foreground text-background shadow-sm'
+                        : 'text-muted-foreground hover:text-foreground'
+                    }`}
+                  >
+                    {currency.name}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
 
-          <SinglePricingCard badge="Offre Premium" title="Aura Pro" subtitle="La plateforme tout-en-un pour les professionnels de l'immobilier" price="À partir de 299€/mois*" benefits={[{
+          <SinglePricingCard badge="Offre Premium" title="Aura Pro" subtitle="La plateforme tout-en-un pour les professionnels de l'immobilier" price={`À partir de ${getPriceInCurrency(299)}/mois*`} benefits={[{
           icon: 'check',
           text: 'Projets et clients illimités'
         }, {
