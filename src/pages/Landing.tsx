@@ -224,7 +224,7 @@ export default function Landing() {
           delay: 0.1,
           duration: 0.6
         }} className="mb-12 flex justify-center">
-            <img src={neonLogo} alt="Aura PRO" className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full object-cover mx-auto" />
+            <img src={neonLogo} alt="Aura PRO" className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full object-cover mx-auto" />
           </motion.div>
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1] text-center px-4">
             La gestion immobilière
