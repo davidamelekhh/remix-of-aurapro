@@ -223,6 +223,18 @@ export default function Landing() {
             <span className="sm:inline"> </span>La plateforme qui transforme votre manière de gérer l'immobilier.
           </p>
           <form onSubmit={handleWaitlistSubmit} className="max-w-3xl mx-auto pt-4 px-4">
+            {/* Email/Tél selector - Mobile only, centered above input */}
+            <div className="flex justify-center mb-3 sm:hidden">
+              <div className="flex gap-1 bg-muted/50 backdrop-blur-sm rounded-lg p-1">
+                <button type="button" onClick={() => setContactType('email')} className={`px-3 py-1.5 text-xs rounded transition-all ${contactType === 'email' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>
+                  Email
+                </button>
+                <button type="button" onClick={() => setContactType('phone')} className={`px-3 py-1.5 text-xs rounded transition-all ${contactType === 'phone' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>
+                  Tél
+                </button>
+              </div>
+            </div>
+
             <div className="flex flex-col sm:flex-row gap-3">
               {/* Language Selector - Desktop only */}
               <div className="relative hidden md:block">
@@ -242,7 +254,8 @@ export default function Landing() {
               </div>
 
               <div className="flex-1 relative">
-                <div className="absolute left-3 top-1/2 -translate-y-1/2 z-10 flex gap-1 bg-muted/50 backdrop-blur-sm rounded-lg p-1">
+                {/* Email/Tél selector - Desktop only, inside input */}
+                <div className="hidden sm:flex absolute left-3 top-1/2 -translate-y-1/2 z-10 gap-1 bg-muted/50 backdrop-blur-sm rounded-lg p-1">
                   <button type="button" onClick={() => setContactType('email')} className={`px-2 py-1 text-xs rounded transition-all ${contactType === 'email' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>
                     Email
                   </button>
@@ -250,7 +263,7 @@ export default function Landing() {
                     Tél
                   </button>
                 </div>
-                <Input type={contactType === 'email' ? 'email' : 'tel'} placeholder={contactType === 'email' ? 'Votre email professionnel' : 'Votre numéro de téléphone'} value={waitlistEmail} onChange={e => setWaitlistEmail(e.target.value)} required className="w-full pl-28 pr-4 py-4 sm:py-6 text-base sm:text-lg rounded-xl border-2 focus:border-primary transition-all text-center sm:text-left" />
+                <Input type={contactType === 'email' ? 'email' : 'tel'} placeholder={contactType === 'email' ? 'Votre email professionnel' : 'Votre numéro de téléphone'} value={waitlistEmail} onChange={e => setWaitlistEmail(e.target.value)} required className="w-full pl-4 sm:pl-28 pr-4 py-4 sm:py-6 text-base sm:text-lg rounded-xl border-2 focus:border-primary transition-all text-center sm:text-left" />
               </div>
               <ShimmerButton type="submit" className="px-4 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-semibold rounded-xl w-full sm:w-auto">
                 <span className="flex items-center gap-2">
