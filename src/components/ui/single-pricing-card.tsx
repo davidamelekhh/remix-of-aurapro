@@ -55,14 +55,14 @@ export function SinglePricingCard({
       transition={{ duration: 0.5 }}
       className="w-full max-w-4xl mx-auto"
     >
-      <div className="relative grid md:grid-cols-2 gap-12 bg-black rounded-2xl p-10 md:p-12 overflow-hidden">
+      <div className="relative grid md:grid-cols-2 gap-8 md:gap-12 bg-black rounded-2xl p-6 sm:p-8 md:p-12 overflow-hidden">
         {/* Shiny metal border effect */}
         <div className="absolute inset-0 rounded-2xl p-[2px] bg-gradient-to-br from-gray-400 via-gray-100 to-gray-400 animate-[spin_2s_linear_forwards]">
           <div className="absolute inset-[2px] bg-black rounded-2xl"></div>
         </div>
         
         {/* Left Column */}
-        <div className="space-y-6 relative z-10">
+        <div className="space-y-5 md:space-y-6 relative z-10">
           {/* Badge */}
           <Badge variant="secondary" className="gap-1.5 px-3 py-1.5 text-xs font-medium border border-white/20 bg-white/10">
             <Crown className="h-3.5 w-3.5 text-primary" />
@@ -71,17 +71,17 @@ export function SinglePricingCard({
 
           {/* Title */}
           <div className="space-y-2">
-            <h3 className="text-4xl font-bold text-white">
+            <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white leading-tight">
               {title}
             </h3>
-            <p className="text-sm text-white/70 leading-relaxed">
+            <p className="text-xs sm:text-sm text-white/70 leading-relaxed">
               {subtitle}
             </p>
           </div>
 
           {/* Price */}
           <div className="py-2">
-            <p className="text-4xl font-medium text-white">
+            <p className="text-2xl sm:text-3xl md:text-4xl font-medium text-white">
               <span className="font-bold">À partir de</span> {price.replace('À partir de ', '')}
             </p>
             {priceNote && (
@@ -102,12 +102,12 @@ export function SinglePricingCard({
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
-                  className="flex items-center gap-2.5"
+                  className="flex items-start gap-2.5"
                 >
-                  <div className="flex items-center justify-center w-6 h-6 rounded-full border-2 border-white flex-shrink-0">
+                  <div className="flex items-center justify-center w-6 h-6 rounded-full border-2 border-white flex-shrink-0 mt-0.5">
                     <Icon className="h-3 w-3 text-white" strokeWidth={3} />
                   </div>
-                  <p className="text-sm text-white">
+                  <p className="text-sm text-white leading-relaxed">
                     {benefit.text}
                   </p>
                 </motion.div>
@@ -119,7 +119,7 @@ export function SinglePricingCard({
           <div className="flex flex-col gap-3 pt-2">
             <Button
               onClick={primaryButton.onClick}
-              className="group bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-5 text-sm font-medium rounded-xl transition-all duration-300"
+              className="group bg-primary hover:bg-primary/90 text-primary-foreground px-4 sm:px-6 py-4 sm:py-5 text-sm font-medium rounded-xl transition-all duration-300"
             >
               <MessageSquare className="h-4 w-4 mr-2" />
               {primaryButton.text}
@@ -129,7 +129,7 @@ export function SinglePricingCard({
               <Button
                 onClick={secondaryButton.onClick}
                 variant="outline"
-                className="border border-white/20 bg-white/5 hover:bg-white/10 text-white px-6 py-5 text-sm font-medium rounded-xl transition-all duration-300"
+                className="border border-white/20 bg-white/5 hover:bg-white/10 text-white px-4 sm:px-6 py-4 sm:py-5 text-sm font-medium rounded-xl transition-all duration-300"
               >
                 {secondaryButton.text}
                 <ExternalLink className="h-4 w-4 ml-2" />
@@ -139,9 +139,9 @@ export function SinglePricingCard({
         </div>
 
         {/* Right Column */}
-        <div className="space-y-5 relative z-10">
+        <div className="space-y-4 md:space-y-5 relative z-10">
           {/* Features Header */}
-          <h4 className="text-lg font-semibold text-white">
+          <h4 className="text-base sm:text-lg font-semibold text-white">
             Included Features
           </h4>
 
