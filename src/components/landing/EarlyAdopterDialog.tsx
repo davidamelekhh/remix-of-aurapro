@@ -1,4 +1,5 @@
 import { useState } from "react";
+import * as React from "react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -35,6 +36,11 @@ export function EarlyAdopterDialog({ open, onOpenChange, initialEmail, language 
     project_count: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Update email when initialEmail changes
+  React.useEffect(() => {
+    setFormData(prev => ({ ...prev, email: initialEmail }));
+  }, [initialEmail]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
