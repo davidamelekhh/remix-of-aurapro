@@ -84,6 +84,20 @@ export default function ProClients() {
       <ProNavigation />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-3xl font-bold">Clients</h1>
+            <p className="text-muted-foreground mt-1">Gérez vos clients et leurs informations</p>
+          </div>
+          <Link to="/pro/clients/new">
+            <Button>
+              <UserPlus className="mr-2 h-4 w-4" />
+              Nouveau Client
+            </Button>
+          </Link>
+        </div>
+
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <Card>
