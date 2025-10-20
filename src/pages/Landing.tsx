@@ -218,6 +218,9 @@ export default function Landing() {
             <span className="sm:inline"> </span>{t.hero.subtitleContinued}
           </p>
           <form onSubmit={handleWaitlistSubmit} className="max-w-3xl mx-auto pt-4 px-4">
+            <p className="text-center text-sm font-medium text-muted-foreground mb-3">
+              Rejoignez la liste d'attente
+            </p>
             {/* Email/Tél selector - Mobile only, centered above input */}
             <div className="flex justify-center mb-3 sm:hidden">
               <div className="flex gap-1 bg-muted/50 backdrop-blur-sm rounded-lg p-1">
