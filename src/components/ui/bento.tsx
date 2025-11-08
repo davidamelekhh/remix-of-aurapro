@@ -28,7 +28,7 @@ export function BentoCard({
       className={clsx(
         className,
         "group relative flex flex-col overflow-hidden rounded-lg",
-        "bg-black dark:bg-transparent transform-gpu dark:[border:1px_solid_rgba(255,255,255,.1)] dark:[box-shadow:0_-20px_80px_-20px_#8686f01f_inset] bg-black shadow-sm ring-1 ring-white/10",
+        "bg-black dark:bg-transparent transform-gpu dark:[border:1px_solid_rgba(255,255,255,.1)] dark:[box-shadow:0_-20px_80px_-20px_#8686f01f_inset] bg-black ring-1 ring-white/10",
         "data-[dark]:bg-gray-800 data-[dark]:ring-white/15"
       )}
     >
@@ -41,12 +41,12 @@ export function BentoCard({
           <div className="absolute inset-0 bg-gradient-to-t from-white to-50% group-data-[dark]:from-gray-800 group-data-[dark]:from-[-25%] opacity-25" />
         )}
       </div>
-      <div className="relative p-10 z-20 isolate mt-[-110px] h-[14rem] backdrop-blur-xl text-white">
-        <h1>{eyebrow}</h1>
-        <p className="mt-1 text-2xl/8 font-medium tracking-tight dark:text-gray-100 text-gray-150 group-data-[dark]:text-white">
+      <div className="relative p-10 z-20 isolate mt-[-110px] h-[14rem] backdrop-blur-xl">
+        <h1 className="text-black dark:text-white">{eyebrow}</h1>
+        <p className="mt-1 text-2xl/8 font-medium tracking-tight text-black dark:text-white">
           {title}
         </p>
-        <p className="mt-2 max-w-[600px] text-sm/6 text-gray-100 dark:text-gray-300 group-data-[dark]:text-gray-400">
+        <p className="mt-2 max-w-[600px] text-sm/6 text-black/80 dark:text-white/80">
           {description}
         </p>
       </div>
