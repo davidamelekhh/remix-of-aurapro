@@ -1055,6 +1055,8 @@ export default function ProProjectDetail() {
           <TabsList>
             <TabsTrigger value="overview">Vue d'ensemble</TabsTrigger>
             <TabsTrigger value="units">Lots ({units.length})</TabsTrigger>
+            <TabsTrigger value="milestones">Étapes</TabsTrigger>
+            <TabsTrigger value="payments">Paiements</TabsTrigger>
             <TabsTrigger value="updates">Mises à jour ({updates.length})</TabsTrigger>
             <TabsTrigger value="stakeholders">Intervenants</TabsTrigger>
             <TabsTrigger value="documents">Documents ({documents.length})</TabsTrigger>
@@ -1316,18 +1318,11 @@ export default function ProProjectDetail() {
             </Card>
           </TabsContent>
 
-          <TabsContent value="updates" className="space-y-6">
-            <div className="flex justify-end mb-4">
-              <Button onClick={() => setShowPaymentDialog(true)}>
-                <Plus className="mr-2 h-4 w-4" />
-                Ajouter un paiement
-              </Button>
-            </div>
-
+          <TabsContent value="milestones" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Étapes de construction et paiements</CardTitle>
-                <CardDescription>Suivez les étapes du projet et l'échéancier des paiements</CardDescription>
+                <CardTitle>Étapes d'élaboration du projet de la conception à la livraison</CardTitle>
+                <CardDescription>Suivez les différentes étapes du projet</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
@@ -1538,6 +1533,104 @@ export default function ProProjectDetail() {
               </DialogContent>
             </Dialog>
 
+          </TabsContent>
+
+          <TabsContent value="payments" className="space-y-6">
+            <div className="flex justify-end mb-4">
+              <Button onClick={() => setShowPaymentDialog(true)}>
+                <Plus className="mr-2 h-4 w-4" />
+                Ajouter un paiement
+              </Button>
+            </div>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Échéancier des paiements</CardTitle>
+                <CardDescription>Gérez les paiements du projet</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {payments.length === 0 ? (
+                  <p className="text-center text-muted-foreground py-8">
+                    Aucun paiement programmé
+                  </p>
+                ) : (
+                  <div className="space-y-3">
+                    {payments.map((payment) => (
+                      <div key={payment.id} className="p-4 rounded-md border">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <span className="font-medium">{payment.title}</span>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => {
+                                  setSelectedPayment(payment);
+                                  setShowPaymentEditDialog(true);
+                                }}
+                              >
+                                <Edit className="h-3 w-3" />
+                              </Button>
+                            </div>
+                            {payment.description && (
+                              <p className="text-sm text-muted-foreground mt-1">{payment.description}</p>
+                            )}
+                            <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
+                              <span className="font-semibold text-foreground">{payment.amount.toLocaleString()} MAD</span>
+                              {payment.payment_percentage && (
+                                <span>({payment.payment_percentage}%)</span>
+                              )}
+                              <span>Échéance: {new Date(payment.due_date).toLocaleDateString('fr-FR')}</span>
+                            </div>
+                          </div>
+                          <Badge variant={
+                            payment.status === 'paid' ? 'default' : 
+                            payment.status === 'overdue' ? 'destructive' : 
+                            'secondary'
+                          }>
+                            {payment.status === 'paid' ? 'Payé' : 
+                             payment.status === 'overdue' ? 'En retard' : 
+                             'En attente'}
+                          </Badge>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="updates" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Mises à jour du projet</CardTitle>
+                <CardDescription>Historique des mises à jour</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {updates.filter(u => u.update_type !== 'milestone').length === 0 ? (
+                  <p className="text-center text-muted-foreground py-8">
+                    Aucune mise à jour générale
+                  </p>
+                ) : (
+                  <div className="space-y-4">
+                    {updates.filter(u => u.update_type !== 'milestone').map((update) => (
+                      <div key={update.id} className="p-4 rounded-md border">
+                        <div className="flex justify-between items-start mb-2">
+                          <h4 className="font-semibold">{update.title}</h4>
+                          <span className="text-sm text-muted-foreground">
+                            {new Date(update.created_at).toLocaleDateString('fr-FR')}
+                          </span>
+                        </div>
+                        {update.description && (
+                          <p className="text-sm text-muted-foreground">{update.description}</p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
           </TabsContent>
 
           <TabsContent value="stakeholders" className="space-y-6">
