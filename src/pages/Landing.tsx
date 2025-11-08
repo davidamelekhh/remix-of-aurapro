@@ -13,9 +13,6 @@ import neonLogo from '@/assets/neon-logo.png';
 import heroProfessional from '@/assets/hero-professional.png';
 import heroAfter from '@/assets/hero-after.png';
 import dashboardLaptop from '@/assets/dashboard-laptop.png';
-import problemCommunication from '@/assets/problem-communication.png';
-import problemVisibility from '@/assets/problem-visibility.png';
-import problemAdmin from '@/assets/problem-admin.png';
 import solutionDashboard from '@/assets/solution-dashboard.png';
 import articleAnalytics from '@/assets/article-analytics.jpg';
 import articleConstruction from '@/assets/article-construction.jpg';
@@ -292,9 +289,9 @@ export default function Landing() {
             {t.problems.subtitle}
           </p>
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-            <BentoCard eyebrow={t.problems.eyebrow} title={t.problems.problem1Title} description={t.problems.problem1Desc} graphic={<img src={problemCommunication} alt={t.problems.problem1Title} className="absolute inset-0 w-full h-full object-cover" />} className="lg:col-span-1" />
-            <BentoCard eyebrow={t.problems.eyebrow} title={t.problems.problem2Title} description={t.problems.problem2Desc} graphic={<img src={problemVisibility} alt={t.problems.problem2Title} className="absolute inset-0 w-full h-full object-cover" />} className="lg:col-span-1" />
-            <BentoCard eyebrow={t.problems.eyebrow} title={t.problems.problem3Title} description={t.problems.problem3Desc} graphic={<img src={problemAdmin} alt={t.problems.problem3Title} className="absolute inset-0 w-full h-full object-cover" />} className="lg:col-span-1" />
+            <BentoCard eyebrow={t.problems.eyebrow} title={t.problems.problem1Title} description={t.problems.problem1Desc} graphic={<div className="absolute inset-0 bg-foreground" />} className="lg:col-span-1" />
+            <BentoCard eyebrow={t.problems.eyebrow} title={t.problems.problem2Title} description={t.problems.problem2Desc} graphic={<div className="absolute inset-0 bg-background" />} className="lg:col-span-1" />
+            <BentoCard eyebrow={t.problems.eyebrow} title={t.problems.problem3Title} description={t.problems.problem3Desc} graphic={<div className="absolute inset-0 bg-foreground" />} className="lg:col-span-1" />
           </div>
         </div>
       </section>
