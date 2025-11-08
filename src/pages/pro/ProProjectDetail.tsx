@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, Users, Calendar, MapPin, Edit, Trash2, Plus, Home, UserPlus, FileText, MessageSquare, Upload, Download, Send, Clock, Check, X, UserCog, Building2, Phone, Mail } from 'lucide-react';
+import { ArrowLeft, Users, Calendar, MapPin, Edit, Trash2, Plus, Home, UserPlus, FileText, MessageSquare, Upload, Download, Send, Clock, Check, X, UserCog, Building2, Phone, Mail, ChevronDown, ChevronRight } from 'lucide-react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { PaymentDialog } from '@/components/project/PaymentDialog';
 import { PaymentEditDialog } from '@/components/project/PaymentEditDialog';
 import { StakeholderAssignDialog } from '@/components/project/StakeholderAssignDialog';
 import { ProjectScheduleCalendar } from '@/components/project/ProjectScheduleCalendar';
+import { MilestonesList } from '@/components/project/MilestonesList';
+import { NEW_MILESTONES } from '@/lib/milestones-config';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
@@ -136,6 +138,8 @@ export default function ProProjectDetail() {
   const [uploadingImage, setUploadingImage] = useState(false);
   const [uploadingMedia, setUploadingMedia] = useState(false);
   const [newMessage, setNewMessage] = useState('');
+  const [projectConfig, setProjectConfig] = useState<any>(null);
+  const [expandedMilestones, setExpandedMilestones] = useState<Set<string>>(new Set(['structural_work']));
   const [milestoneForm, setMilestoneForm] = useState({
     description: '',
     mediaFiles: [] as File[],
@@ -160,19 +164,13 @@ export default function ProProjectDetail() {
     floor: '',
     description: '',
   });
-
-  // Defined milestones
-  const milestoneDefinitions = [
-    { key: 'foundation', label: 'Fondations', progress: 10 },
-    { key: 'structure', label: 'Structure', progress: 25 },
-    { key: 'walls', label: 'Murs et cloisons', progress: 40 },
-    { key: 'roof', label: 'Toiture', progress: 55 },
-    { key: 'plumbing', label: 'Plomberie', progress: 65 },
-    { key: 'electricity', label: 'Électricité', progress: 75 },
-    { key: 'finishes', label: 'Finitions', progress: 85 },
-    { key: 'exterior', label: 'Aménagements extérieurs', progress: 95 },
-    { key: 'delivery', label: 'Livraison', progress: 100 },
-  ];
+  const [stakeholderForm, setStakeholderForm] = useState({
+    name: '',
+    role: '',
+    company: '',
+    phone: '',
+    email: '',
+  });
   
   const [projectMilestones, setProjectMilestones] = useState<any[]>([]);
 
@@ -333,22 +331,57 @@ export default function ProProjectDetail() {
       if (stakeholdersError) throw stakeholdersError;
       setStakeholders(stakeholdersData || []);
 
-      // Fetch or create project milestones
+      // Fetch or create project configuration
+      let { data: configData, error: configError } = await supabase
+        .from('project_configurations')
+        .select('*')
+        .eq('project_id', id)
+        .maybeSingle();
+
+      if (configError && configError.code !== 'PGRST116') throw configError;
+
+      if (!configData) {
+        const { data: newConfig, error: createConfigError } = await supabase
+          .from('project_configurations')
+          .insert({ project_id: id })
+          .select()
+          .single();
+
+        if (createConfigError) throw createConfigError;
+        setProjectConfig(newConfig);
+      } else {
+        setProjectConfig(configData);
+      }
+
+      // Fetch or create project milestones with new system
       const { data: existingMilestones, error: milestonesError } = await supabase
         .from('project_milestones')
         .select('*')
         .eq('project_id', id)
-        .order('progress_percentage');
+        .order('order_index');
 
       if (milestonesError) throw milestonesError;
 
-      // If no milestones exist, create them
-      if (!existingMilestones || existingMilestones.length === 0) {
-        const milestonesToCreate = milestoneDefinitions.map(m => ({
+      // If no milestones exist or if they're using old system, create new ones
+      if (!existingMilestones || existingMilestones.length === 0 || !existingMilestones[0].order_index) {
+        // Delete old milestones if any
+        if (existingMilestones && existingMilestones.length > 0) {
+          await supabase
+            .from('project_milestones')
+            .delete()
+            .eq('project_id', id);
+        }
+
+        // Create new milestones
+        const milestonesToCreate = NEW_MILESTONES.map((m: any) => ({
           project_id: id,
-          milestone_key: m.key,
+          milestone_key: m.milestone_key,
           label: m.label,
-          progress_percentage: m.progress,
+          progress_percentage: m.progress_percentage,
+          order_index: m.order_index,
+          is_conditional: m.is_conditional,
+          is_enabled: m.is_enabled,
+          condition_type: m.condition_type,
           status: 'pending'
         }));
 
@@ -358,7 +391,37 @@ export default function ProProjectDetail() {
           .select();
 
         if (createError) throw createError;
-        setProjectMilestones(createdMilestones || []);
+        
+        // Link sub-milestones to parent
+        if (createdMilestones) {
+          const parentMilestone = createdMilestones.find((m: any) => m.milestone_key === 'structural_work');
+          const subMilestones = createdMilestones.filter((m: any) => 
+            ['structural_work_foundation', 'structural_work_structure', 'structural_work_walls'].includes(m.milestone_key)
+          );
+
+          if (parentMilestone && subMilestones.length > 0) {
+            const updates = subMilestones.map((sm: any) => ({
+              id: sm.id,
+              parent_milestone_id: parentMilestone.id
+            }));
+
+            for (const update of updates) {
+              await supabase
+                .from('project_milestones')
+                .update({ parent_milestone_id: update.parent_milestone_id })
+                .eq('id', update.id);
+            }
+          }
+
+          // Re-fetch updated milestones
+          const { data: updatedMilestones } = await supabase
+            .from('project_milestones')
+            .select('*')
+            .eq('project_id', id)
+            .order('order_index');
+
+          setProjectMilestones(updatedMilestones || []);
+        }
       } else {
         setProjectMilestones(existingMilestones);
       }
@@ -1325,144 +1388,20 @@ export default function ProProjectDetail() {
                 <CardDescription>Suivez les différentes étapes du projet</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-3">
-                  {projectMilestones.map((milestone, index) => {
-                    const isCompleted = milestone.status === 'completed';
-                    const milestoneUpdate = updates.find(
-                      u => u.update_type === 'milestone' && u.progress_percentage === milestone.progress_percentage
-                    );
-                    
-                    // Trouver les paiements associés à cette étape (basé sur la progression)
-                    const relatedPayments = payments.filter(payment => {
-                      const currentProgress = milestone.progress_percentage;
-                      const prevProgress = index > 0 ? projectMilestones[index - 1].progress_percentage : 0;
-                      return payment.payment_percentage && 
-                             payment.payment_percentage > prevProgress && 
-                             payment.payment_percentage <= currentProgress;
-                    });
-                    
-                    return (
-                      <div key={milestone.id} className="flex items-start gap-4">
-                        <div className="flex flex-col items-center">
-                          <button
-                            onClick={() => {
-                              if (!isCompleted) {
-                                setSelectedMilestoneId(milestone.id);
-                                setShowMilestoneDialog(true);
-                              }
-                            }}
-                            disabled={isCompleted}
-                            className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
-                              isCompleted 
-                                ? 'bg-success text-success-foreground cursor-default' 
-                                : 'bg-muted text-muted-foreground hover:bg-primary hover:text-primary-foreground cursor-pointer'
-                            }`}
-                          >
-                            {isCompleted ? <Check className="h-5 w-5" /> : <Plus className="h-5 w-5" />}
-                          </button>
-                          {index < projectMilestones.length - 1 && (
-                            <div className={`w-0.5 h-16 ${isCompleted ? 'bg-success' : 'bg-border'}`} />
-                          )}
-                        </div>
-                        <div className="flex-1 pb-8">
-                          <div className="flex items-start justify-between">
-                            <div className="flex-1">
-                              <div className="flex items-center justify-between mb-2">
-                                <p className={`font-medium text-lg ${isCompleted ? 'text-foreground' : 'text-muted-foreground'}`}>
-                                  {milestone.label}
-                                </p>
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  onClick={() => {
-                                    setSelectedMilestoneId(milestone.id);
-                                    setShowStakeholderDialog(true);
-                                  }}
-                                >
-                                  <UserCog className="h-4 w-4 mr-2" />
-                                  Intervenants
-                                </Button>
-                              </div>
-                              {milestoneUpdate && (
-                                <>
-                                  <p className="text-sm text-muted-foreground mt-1">
-                                    <Clock className="h-3 w-3 inline mr-1" />
-                                    {new Date(milestoneUpdate.created_at).toLocaleDateString('fr-FR', { 
-                                      day: 'numeric', 
-                                      month: 'long', 
-                                      year: 'numeric' 
-                                    })}
-                                  </p>
-                                  {milestoneUpdate.description && (
-                                    <p className="text-sm mt-2 text-foreground">{milestoneUpdate.description}</p>
-                                  )}
-                                  {milestoneUpdate.media_urls && milestoneUpdate.media_urls.length > 0 && (
-                                    <div className="grid grid-cols-3 gap-2 mt-3">
-                                      {milestoneUpdate.media_urls.map((url, idx) => (
-                                        <div key={idx} className="relative aspect-video rounded-lg overflow-hidden bg-muted">
-                                          {url.match(/\.(mp4|webm|ogg)$/i) ? (
-                                            <video src={url} controls className="w-full h-full object-cover" />
-                                          ) : (
-                                            <img src={url} alt="" className="w-full h-full object-cover" />
-                                          )}
-                                        </div>
-                                      ))}
-                                    </div>
-                                  )}
-                                </>
-                              )}
-                              
-                              {/* Afficher les paiements liés à cette étape */}
-                              {relatedPayments.length > 0 && (
-                                <div className="mt-3 space-y-2">
-                                  <p className="text-sm font-medium text-muted-foreground">💰 Paiements associés :</p>
-                                  {relatedPayments.map((payment) => (
-                                    <div key={payment.id} className="ml-4 p-2 rounded-md bg-muted/50 text-sm">
-                                      <div className="flex items-center justify-between">
-                                        <div className="flex items-center gap-2">
-                                          <span className="font-medium">{payment.title}</span>
-                                          <Button
-                                            variant="ghost"
-                                            size="sm"
-                                            onClick={() => {
-                                              setSelectedPayment(payment);
-                                              setShowPaymentEditDialog(true);
-                                            }}
-                                          >
-                                            <Edit className="h-3 w-3" />
-                                          </Button>
-                                        </div>
-                                        <Badge variant={
-                                          payment.status === 'paid' ? 'default' : 
-                                          payment.status === 'overdue' ? 'destructive' : 
-                                          'secondary'
-                                        }>
-                                          {payment.status === 'paid' ? 'Payé' : 
-                                           payment.status === 'overdue' ? 'En retard' : 
-                                           'En attente'}
-                                        </Badge>
-                                      </div>
-                                      <div className="flex items-center gap-4 mt-1 text-muted-foreground">
-                                        <span>{payment.amount.toLocaleString()} MAD</span>
-                                        {payment.payment_percentage && (
-                                          <span>({payment.payment_percentage}%)</span>
-                                        )}
-                                        <span>Échéance: {new Date(payment.due_date).toLocaleDateString('fr-FR')}</span>
-                                      </div>
-                                    </div>
-                                  ))}
-                                </div>
-                              )}
-                            </div>
-                            <Badge variant={isCompleted ? 'default' : 'outline'}>
-                              {milestone.progress}%
-                            </Badge>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
+                <MilestonesList
+                  projectMilestones={projectMilestones}
+                  projectConfig={projectConfig}
+                  projectId={id!}
+                  onMilestoneClick={(milestoneId) => {
+                    setSelectedMilestoneId(milestoneId);
+                    setShowMilestoneDialog(true);
+                  }}
+                  onStakeholderClick={(milestoneId) => {
+                    setSelectedMilestoneId(milestoneId);
+                    setShowStakeholderDialog(true);
+                  }}
+                  onRefresh={fetchProjectData}
+                />
               </CardContent>
             </Card>
 

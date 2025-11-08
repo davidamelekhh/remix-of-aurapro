@@ -22,6 +22,7 @@ type Milestone = {
   start_date: string | null;
   end_date: string | null;
   completed_at: string | null;
+  is_enabled?: boolean;
 };
 
 type Message = {
@@ -278,7 +279,9 @@ export default function ClientProjectDetail() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {milestones.map((milestone) => (
+                  {milestones
+                    .filter(m => m.is_enabled !== false)
+                    .map((milestone) => (
                     <div key={milestone.id} className="flex gap-4 pb-4 border-b last:border-0">
                       <div className="flex-shrink-0 mt-1">
                         {milestone.status === 'completed' ? (
@@ -330,7 +333,7 @@ export default function ClientProjectDetail() {
                     </div>
                   ))}
                   
-                  {milestones.length === 0 && (
+                  {milestones.filter(m => m.is_enabled !== false).length === 0 && (
                     <p className="text-center text-muted-foreground py-8">
                       Aucune étape définie pour le moment
                     </p>

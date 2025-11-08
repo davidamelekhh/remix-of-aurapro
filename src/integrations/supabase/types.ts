@@ -223,6 +223,41 @@ export type Database = {
           },
         ]
       }
+      project_configurations: {
+        Row: {
+          created_at: string | null
+          has_existing_building: boolean | null
+          id: string
+          project_id: string
+          requires_destruction_authorization: boolean | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          has_existing_building?: boolean | null
+          id?: string
+          project_id: string
+          requires_destruction_authorization?: boolean | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          has_existing_building?: boolean | null
+          id?: string
+          project_id?: string
+          requires_destruction_authorization?: boolean | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_configurations_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       project_documents: {
         Row: {
           created_at: string
@@ -305,12 +340,17 @@ export type Database = {
       project_milestones: {
         Row: {
           completed_at: string | null
+          condition_type: string | null
           created_at: string
           description: string | null
           end_date: string | null
           id: string
+          is_conditional: boolean | null
+          is_enabled: boolean | null
           label: string
           milestone_key: string
+          order_index: number | null
+          parent_milestone_id: string | null
           progress_percentage: number
           project_id: string
           start_date: string | null
@@ -319,12 +359,17 @@ export type Database = {
         }
         Insert: {
           completed_at?: string | null
+          condition_type?: string | null
           created_at?: string
           description?: string | null
           end_date?: string | null
           id?: string
+          is_conditional?: boolean | null
+          is_enabled?: boolean | null
           label: string
           milestone_key: string
+          order_index?: number | null
+          parent_milestone_id?: string | null
           progress_percentage?: number
           project_id: string
           start_date?: string | null
@@ -333,12 +378,17 @@ export type Database = {
         }
         Update: {
           completed_at?: string | null
+          condition_type?: string | null
           created_at?: string
           description?: string | null
           end_date?: string | null
           id?: string
+          is_conditional?: boolean | null
+          is_enabled?: boolean | null
           label?: string
           milestone_key?: string
+          order_index?: number | null
+          parent_milestone_id?: string | null
           progress_percentage?: number
           project_id?: string
           start_date?: string | null
@@ -346,6 +396,13 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "project_milestones_parent_milestone_id_fkey"
+            columns: ["parent_milestone_id"]
+            isOneToOne: false
+            referencedRelation: "project_milestones"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "project_milestones_project_id_fkey"
             columns: ["project_id"]
@@ -646,10 +703,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      get_current_user_client_id: {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
+      get_current_user_client_id: { Args: never; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
