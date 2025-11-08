@@ -262,8 +262,9 @@ export default function ClientProjectDetail() {
 
         {/* Tabs */}
         <Tabs defaultValue="progress" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="progress">Avancement</TabsTrigger>
+            <TabsTrigger value="payments">Paiements</TabsTrigger>
             <TabsTrigger value="updates">Actualités</TabsTrigger>
             <TabsTrigger value="messages">Messages</TabsTrigger>
             <TabsTrigger value="documents">Documents</TabsTrigger>
@@ -273,7 +274,7 @@ export default function ClientProjectDetail() {
           <TabsContent value="progress" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Étapes du projet</CardTitle>
+                <CardTitle>Étapes d'élaboration du projet de la conception à la livraison</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -335,6 +336,20 @@ export default function ClientProjectDetail() {
                     </p>
                   )}
                 </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Payments Tab */}
+          <TabsContent value="payments" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Paiements</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-center text-muted-foreground py-8">
+                  Aucun paiement pour le moment
+                </p>
               </CardContent>
             </Card>
           </TabsContent>
