@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, Users, Calendar, MapPin, Edit, Trash2, Plus, Home, UserPlus, FileText, MessageSquare, Upload, Download, Send, Clock, Check, X, UserCog, Building2, Phone, Mail, ChevronDown, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Users, Calendar, MapPin, Edit, Trash2, Plus, Home, UserPlus, FileText, MessageSquare, Upload, Download, Send, Clock, Check, X, UserCog, Building2, Phone, Mail, ChevronDown, ChevronRight, Image as ImageIcon } from 'lucide-react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { PaymentDialog } from '@/components/project/PaymentDialog';
 import { PaymentEditDialog } from '@/components/project/PaymentEditDialog';
@@ -1126,35 +1126,103 @@ export default function ProProjectDetail() {
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6">
-            {/* Image */}
-            {project.image_url && (
-              <Card>
-                <CardContent className="p-0">
-                  <img
-                    src={project.image_url}
-                    alt={project.name}
-                    className="w-full h-64 object-cover rounded-t-lg"
-                  />
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Details */}
+            {/* Vue d'ensemble avec design professionnel */}
             <Card>
-              <CardHeader>
-                <CardTitle>Détails du projet</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <Label className="text-muted-foreground">Phase actuelle</Label>
-                  <p className="font-medium">{project.phase}</p>
-                </div>
-                {project.description && (
-                  <div>
-                    <Label className="text-muted-foreground">Description</Label>
-                    <p className="font-medium">{project.description}</p>
+              <CardContent className="p-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  {/* Colonne gauche - Informations */}
+                  <div className="space-y-6">
+                    <div>
+                      <h2 className="text-3xl font-bold mb-2">{project.name}</h2>
+                      <div className="flex items-center text-muted-foreground mb-4">
+                        <MapPin className="h-4 w-4 mr-2" />
+                        <span>{project.location}</span>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div className="p-4 rounded-lg bg-primary/5 border border-primary/20">
+                        <Label className="text-sm text-muted-foreground mb-1 block">Phase actuelle</Label>
+                        <p className="text-lg font-semibold text-primary">{project.phase}</p>
+                      </div>
+
+                      <div className="p-4 rounded-lg bg-secondary/20 border">
+                        <Label className="text-sm text-muted-foreground mb-1 block">Statut</Label>
+                        <Badge className="text-base px-3 py-1">
+                          {project.status}
+                        </Badge>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="p-4 rounded-lg border bg-card">
+                          <Label className="text-sm text-muted-foreground mb-1 block">Date de début</Label>
+                          <p className="font-medium">
+                            {new Date(project.start_date).toLocaleDateString('fr-FR')}
+                          </p>
+                        </div>
+                        <div className="p-4 rounded-lg border bg-card">
+                          <Label className="text-sm text-muted-foreground mb-1 block">Date de fin</Label>
+                          <p className="font-medium">
+                            {new Date(project.end_date).toLocaleDateString('fr-FR')}
+                          </p>
+                        </div>
+                      </div>
+
+                      {project.estimated_revenue && (
+                        <div className="p-4 rounded-lg border bg-accent/10">
+                          <Label className="text-sm text-muted-foreground mb-1 block">Revenu estimé</Label>
+                          <p className="text-2xl font-bold">
+                            {project.estimated_revenue.toLocaleString()} MAD
+                          </p>
+                        </div>
+                      )}
+
+                      {project.description && (
+                        <div className="space-y-2">
+                          <Label className="text-sm font-semibold">Description</Label>
+                          <p className="text-muted-foreground leading-relaxed">
+                            {project.description}
+                          </p>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                )}
+
+                  {/* Colonne droite - Images */}
+                  <div className="space-y-4">
+                    {project.image_url ? (
+                      <div className="relative group rounded-lg overflow-hidden border shadow-lg">
+                        <img
+                          src={project.image_url}
+                          alt={project.name}
+                          className="w-full h-[500px] object-cover transition-transform group-hover:scale-105 duration-300"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                          <div className="absolute bottom-4 left-4 text-white">
+                            <p className="text-sm font-medium">Image principale du projet</p>
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-center h-[500px] rounded-lg border-2 border-dashed bg-muted/20">
+                        <div className="text-center">
+                          <ImageIcon className="h-12 w-12 mx-auto text-muted-foreground mb-2" />
+                          <p className="text-sm text-muted-foreground">Aucune image</p>
+                        </div>
+                      </div>
+                    )}
+                    
+                    <div className="grid grid-cols-2 gap-3">
+                      {/* Placeholder pour images supplémentaires */}
+                      <div className="aspect-video rounded-lg border bg-muted/20 flex items-center justify-center">
+                        <Plus className="h-6 w-6 text-muted-foreground" />
+                      </div>
+                      <div className="aspect-video rounded-lg border bg-muted/20 flex items-center justify-center">
+                        <Plus className="h-6 w-6 text-muted-foreground" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
