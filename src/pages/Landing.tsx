@@ -18,6 +18,9 @@ import articleAnalytics from '@/assets/article-analytics.jpg';
 import articleConstruction from '@/assets/article-construction.jpg';
 import articleDigital from '@/assets/article-digital.jpg';
 import earlyAdoptersBanner from '@/assets/early-adopters-banner.png';
+import networkProblemImg from '@/assets/problem-network.png';
+import visibilityProblemImg from '@/assets/problem-visibility-new.png';
+import gearProblemImg from '@/assets/problem-gear.png';
 import { BentoCard } from '@/components/ui/bento';
 import { TestimonialsColumn } from '@/components/ui/testimonials-columns';
 import { BeforeAfterSlider } from '@/components/ui/before-after-slider';
@@ -289,9 +292,27 @@ export default function Landing() {
             {t.problems.subtitle}
           </p>
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-            <BentoCard eyebrow={t.problems.eyebrow} title={t.problems.problem1Title} description={t.problems.problem1Desc} graphic={<div className="absolute inset-0 bg-black" />} className="lg:col-span-1 [&_h1]:!text-white [&_p]:!text-white" />
-            <BentoCard eyebrow={t.problems.eyebrow} title={t.problems.problem2Title} description={t.problems.problem2Desc} graphic={<div className="absolute inset-0 bg-black" />} className="lg:col-span-1 [&_h1]:!text-white [&_p]:!text-white" />
-            <BentoCard eyebrow={t.problems.eyebrow} title={t.problems.problem3Title} description={t.problems.problem3Desc} graphic={<div className="absolute inset-0 bg-black" />} className="lg:col-span-1 [&_h1]:!text-white [&_p]:!text-white" />
+            <BentoCard 
+              eyebrow={t.problems.eyebrow} 
+              title={t.problems.problem1Title} 
+              description={t.problems.problem1Desc} 
+              graphic={<img src={networkProblemImg} alt="" className="absolute inset-0 w-full h-full object-cover" />} 
+              className="lg:col-span-1 [&_h1]:!text-white [&_p]:!text-white" 
+            />
+            <BentoCard 
+              eyebrow={t.problems.eyebrow} 
+              title={t.problems.problem2Title} 
+              description={t.problems.problem2Desc} 
+              graphic={<img src={visibilityProblemImg} alt="" className="absolute inset-0 w-full h-full object-cover" />} 
+              className="lg:col-span-1 [&_h1]:!text-white [&_p]:!text-white" 
+            />
+            <BentoCard 
+              eyebrow={t.problems.eyebrow} 
+              title={t.problems.problem3Title} 
+              description={t.problems.problem3Desc} 
+              graphic={<img src={gearProblemImg} alt="" className="absolute inset-0 w-full h-full object-cover" />} 
+              className="lg:col-span-1 [&_h1]:!text-white [&_p]:!text-white" 
+            />
           </div>
         </div>
       </section>
