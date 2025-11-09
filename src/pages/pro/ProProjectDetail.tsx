@@ -902,230 +902,269 @@ export default function ProProjectDetail() {
     <div className="min-h-screen bg-background">
       <ProNavigation />
       
-      {/* Header */}
-      <div className="border-b border-border bg-card">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between mb-4">
-            <Link to="/pro/projects">
-              <Button variant="ghost" size="sm">
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Retour aux projets
-              </Button>
-            </Link>
-          </div>
-          
-          <div className="flex items-start justify-between">
-            <div>
-              <div className="flex items-center gap-3 mb-2">
-                <h1 className="text-3xl font-bold">{project.name}</h1>
-                <Badge>{project.status}</Badge>
+      {/* Navigation sticky avec informations du projet */}
+      <div className="sticky top-0 z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Header compact avec infos du projet */}
+          <div className="flex items-center justify-between py-4">
+            <div className="flex items-center gap-6">
+              <Link to="/pro/projects" className="flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <ArrowLeft className="h-4 w-4 mr-1" />
+                Retour
+              </Link>
+              
+              <div className="flex items-center gap-4">
+                <h1 className="text-xl font-bold">{project.name}</h1>
+                <Badge variant={project.status === 'En cours' ? 'default' : 'secondary'}>
+                  {project.status}
+                </Badge>
               </div>
-              <div className="flex items-center gap-4 text-sm text-muted-foreground">
+
+              <div className="hidden lg:flex items-center gap-4 text-sm text-muted-foreground">
                 <div className="flex items-center">
                   <MapPin className="h-4 w-4 mr-1" />
                   {project.location}
                 </div>
                 <div className="flex items-center">
                   <Calendar className="h-4 w-4 mr-1" />
-                  {new Date(project.start_date).toLocaleDateString('fr-FR')} - {new Date(project.end_date).toLocaleDateString('fr-FR')}
+                  {new Date(project.start_date).toLocaleDateString('fr-FR', { month: 'short', year: 'numeric' })}
                 </div>
               </div>
             </div>
-            <Dialog open={showEditProjectDialog} onOpenChange={setShowEditProjectDialog}>
-              <DialogTrigger asChild>
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setProjectForm({
-                      name: project.name,
-                      location: project.location,
-                      description: project.description || '',
-                      phase: project.phase,
-                      status: project.status,
-                      start_date: project.start_date,
-                      end_date: project.end_date,
-                      progress: String(project.progress),
-                      estimated_revenue: String(project.estimated_revenue || 0),
-                    });
-                  }}
-                >
-                  <Edit className="h-4 w-4 mr-2" />
-                  Modifier
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-2xl">
-                <DialogHeader>
-                  <DialogTitle>Modifier le projet</DialogTitle>
-                  <DialogDescription>
-                    Modifiez les informations du projet
-                  </DialogDescription>
-                </DialogHeader>
-                <form onSubmit={handleEditProject} className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
+
+            <div className="flex items-center gap-4">
+              <div className="hidden md:flex items-center gap-2">
+                <span className="text-sm text-muted-foreground">Progression</span>
+                <div className="w-24">
+                  <Progress value={project.progress} className="h-2" />
+                </div>
+                <span className="text-sm font-semibold">{project.progress}%</span>
+              </div>
+
+              <Dialog open={showEditProjectDialog} onOpenChange={setShowEditProjectDialog}>
+                <DialogTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      setProjectForm({
+                        name: project.name,
+                        location: project.location,
+                        description: project.description || '',
+                        phase: project.phase,
+                        status: project.status,
+                        start_date: project.start_date,
+                        end_date: project.end_date,
+                        progress: String(project.progress),
+                        estimated_revenue: String(project.estimated_revenue || 0),
+                      });
+                    }}
+                  >
+                    <Edit className="h-4 w-4 mr-2" />
+                    Modifier
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl">
+                  <DialogHeader>
+                    <DialogTitle>Modifier le projet</DialogTitle>
+                    <DialogDescription>
+                      Modifiez les informations du projet
+                    </DialogDescription>
+                  </DialogHeader>
+                  <form onSubmit={handleEditProject} className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="edit_name">Nom du projet *</Label>
+                        <Input
+                          id="edit_name"
+                          required
+                          value={projectForm.name}
+                          onChange={(e) => setProjectForm({ ...projectForm, name: e.target.value })}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="edit_location">Localisation *</Label>
+                        <Input
+                          id="edit_location"
+                          required
+                          value={projectForm.location}
+                          onChange={(e) => setProjectForm({ ...projectForm, location: e.target.value })}
+                        />
+                      </div>
+                    </div>
+
                     <div className="space-y-2">
-                      <Label htmlFor="edit_name">Nom du projet *</Label>
-                      <Input
-                        id="edit_name"
-                        required
-                        value={projectForm.name}
-                        onChange={(e) => setProjectForm({ ...projectForm, name: e.target.value })}
+                      <Label htmlFor="edit_description">Description</Label>
+                      <Textarea
+                        id="edit_description"
+                        value={projectForm.description}
+                        onChange={(e) => setProjectForm({ ...projectForm, description: e.target.value })}
+                        rows={3}
                       />
                     </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="edit_phase">Phase *</Label>
+                        <Select
+                          value={projectForm.phase}
+                          onValueChange={(value) => setProjectForm({ ...projectForm, phase: value })}
+                        >
+                          <SelectTrigger id="edit_phase">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="Étude">Étude</SelectItem>
+                            <SelectItem value="Construction">Construction</SelectItem>
+                            <SelectItem value="Finitions">Finitions</SelectItem>
+                            <SelectItem value="Livraison">Livraison</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="edit_status">Statut *</Label>
+                        <Select
+                          value={projectForm.status}
+                          onValueChange={(value) => setProjectForm({ ...projectForm, status: value })}
+                        >
+                          <SelectTrigger id="edit_status">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="En cours">En cours</SelectItem>
+                            <SelectItem value="Terminé">Terminé</SelectItem>
+                            <SelectItem value="En pause">En pause</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="edit_start_date">Date de début *</Label>
+                        <Input
+                          id="edit_start_date"
+                          type="date"
+                          required
+                          value={projectForm.start_date}
+                          onChange={(e) => setProjectForm({ ...projectForm, start_date: e.target.value })}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="edit_end_date">Date de fin *</Label>
+                        <Input
+                          id="edit_end_date"
+                          type="date"
+                          required
+                          value={projectForm.end_date}
+                          onChange={(e) => setProjectForm({ ...projectForm, end_date: e.target.value })}
+                        />
+                      </div>
+                    </div>
+
                     <div className="space-y-2">
-                      <Label htmlFor="edit_location">Localisation *</Label>
+                      <Label htmlFor="edit_progress">Progression (%)</Label>
                       <Input
-                        id="edit_location"
-                        required
-                        value={projectForm.location}
-                        onChange={(e) => setProjectForm({ ...projectForm, location: e.target.value })}
+                        id="edit_progress"
+                        type="number"
+                        min="0"
+                        max="100"
+                        value={projectForm.progress}
+                        onChange={(e) => setProjectForm({ ...projectForm, progress: e.target.value })}
                       />
                     </div>
-                  </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="edit_description">Description</Label>
-                    <Textarea
-                      id="edit_description"
-                      value={projectForm.description}
-                      onChange={(e) => setProjectForm({ ...projectForm, description: e.target.value })}
-                      rows={3}
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="edit_phase">Phase *</Label>
-                      <Select
-                        value={projectForm.phase}
-                        onValueChange={(value) => setProjectForm({ ...projectForm, phase: value })}
+                      <Label htmlFor="edit_estimated_revenue">Revenu estimé (MAD)</Label>
+                      <Input
+                        id="edit_estimated_revenue"
+                        type="number"
+                        min="0"
+                        step="1000"
+                        value={projectForm.estimated_revenue}
+                        onChange={(e) => setProjectForm({ ...projectForm, estimated_revenue: e.target.value })}
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="project_image">Image du projet</Label>
+                      <Input
+                        id="project_image"
+                        type="file"
+                        accept="image/*"
+                        onChange={handleUploadProjectImage}
+                        disabled={uploadingImage}
+                      />
+                      {uploadingImage && <p className="text-sm text-muted-foreground">Téléchargement...</p>}
+                    </div>
+
+                    <div className="flex gap-4 pt-4">
+                      <Button type="submit" className="flex-1">Enregistrer</Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => setShowEditProjectDialog(false)}
                       >
-                        <SelectTrigger id="edit_phase">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Étude">Étude</SelectItem>
-                          <SelectItem value="Construction">Construction</SelectItem>
-                          <SelectItem value="Finitions">Finitions</SelectItem>
-                          <SelectItem value="Livraison">Livraison</SelectItem>
-                        </SelectContent>
-                      </Select>
+                        Annuler
+                      </Button>
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="edit_status">Statut *</Label>
-                      <Select
-                        value={projectForm.status}
-                        onValueChange={(value) => setProjectForm({ ...projectForm, status: value })}
-                      >
-                        <SelectTrigger id="edit_status">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="En cours">En cours</SelectItem>
-                          <SelectItem value="Terminé">Terminé</SelectItem>
-                          <SelectItem value="En pause">En pause</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="edit_start_date">Date de début *</Label>
-                      <Input
-                        id="edit_start_date"
-                        type="date"
-                        required
-                        value={projectForm.start_date}
-                        onChange={(e) => setProjectForm({ ...projectForm, start_date: e.target.value })}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="edit_end_date">Date de fin *</Label>
-                      <Input
-                        id="edit_end_date"
-                        type="date"
-                        required
-                        value={projectForm.end_date}
-                        onChange={(e) => setProjectForm({ ...projectForm, end_date: e.target.value })}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="edit_progress">Progression (%)</Label>
-                    <Input
-                      id="edit_progress"
-                      type="number"
-                      min="0"
-                      max="100"
-                      value={projectForm.progress}
-                      onChange={(e) => setProjectForm({ ...projectForm, progress: e.target.value })}
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="edit_estimated_revenue">Revenu estimé (MAD)</Label>
-                    <Input
-                      id="edit_estimated_revenue"
-                      type="number"
-                      min="0"
-                      step="1000"
-                      value={projectForm.estimated_revenue}
-                      onChange={(e) => setProjectForm({ ...projectForm, estimated_revenue: e.target.value })}
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="project_image">Image du projet</Label>
-                    <Input
-                      id="project_image"
-                      type="file"
-                      accept="image/*"
-                      onChange={handleUploadProjectImage}
-                      disabled={uploadingImage}
-                    />
-                    {uploadingImage && <p className="text-sm text-muted-foreground">Téléchargement...</p>}
-                  </div>
-
-                  <div className="flex gap-4 pt-4">
-                    <Button type="submit" className="flex-1">Enregistrer</Button>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => setShowEditProjectDialog(false)}
-                    >
-                      Annuler
-                    </Button>
-                  </div>
-                </form>
-              </DialogContent>
-            </Dialog>
-          </div>
-
-          {/* Progress */}
-          <div className="mt-6">
-            <div className="flex justify-between items-center mb-2">
-              <span className="text-sm font-medium">Progression globale</span>
-              <span className="text-sm font-bold">{project.progress}%</span>
+                  </form>
+                </DialogContent>
+              </Dialog>
             </div>
-            <Progress value={project.progress} className="h-2" />
           </div>
+
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList>
-            <TabsTrigger value="overview">Vue d'ensemble</TabsTrigger>
-            <TabsTrigger value="units">Lots ({units.length})</TabsTrigger>
-            <TabsTrigger value="milestones">Étapes</TabsTrigger>
-            <TabsTrigger value="payments">Paiements</TabsTrigger>
-            <TabsTrigger value="stakeholders">Intervenants</TabsTrigger>
-            <TabsTrigger value="documents">Documents ({documents.length})</TabsTrigger>
-            <TabsTrigger value="chat">Chat</TabsTrigger>
-          </TabsList>
+        <Tabs defaultValue="overview" className="w-full space-y-6">
+            <TabsList className="w-full justify-start h-auto p-0 bg-transparent border-b-0 rounded-none">
+              <TabsTrigger 
+                value="overview" 
+                className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent"
+              >
+                Vue d'ensemble
+              </TabsTrigger>
+              <TabsTrigger 
+                value="units"
+                className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent"
+              >
+                Lots ({units.length})
+              </TabsTrigger>
+              <TabsTrigger 
+                value="milestones"
+                className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent"
+              >
+                Étapes
+              </TabsTrigger>
+              <TabsTrigger 
+                value="payments"
+                className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent"
+              >
+                Paiements
+              </TabsTrigger>
+              <TabsTrigger 
+                value="stakeholders"
+                className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent"
+              >
+                Intervenants
+              </TabsTrigger>
+              <TabsTrigger 
+                value="documents"
+                className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent"
+              >
+                Documents ({documents.length})
+              </TabsTrigger>
+              <TabsTrigger 
+                value="chat"
+                className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent"
+              >
+                Chat
+              </TabsTrigger>
+            </TabsList>
 
-          <TabsContent value="overview" className="space-y-6">
+            <TabsContent value="overview" className="space-y-6 mt-6">
             {/* Vue d'ensemble avec design professionnel */}
             <Card>
               <CardContent className="p-6">
