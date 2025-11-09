@@ -1,6 +1,7 @@
 import { LayoutDashboard, FolderKanban, Users, Settings, BarChart3 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const navigation = [
   { name: 'Dashboard', href: '/pro/dashboard', icon: LayoutDashboard },
@@ -13,7 +14,50 @@ const navigation = [
 
 export function ProNavigation() {
   const location = useLocation();
+  const isMobile = useIsMobile();
 
+  // Mobile Bottom Navigation
+  if (isMobile) {
+    return (
+      <>
+        {/* Mobile Top Header */}
+        <header className="bg-background border-b border-border sticky top-0 z-50">
+          <div className="px-4 py-4">
+            <span className="text-xl font-bold text-foreground">Aura Pro</span>
+          </div>
+        </header>
+
+        {/* Mobile Bottom Navigation */}
+        <nav className="fixed bottom-0 left-0 right-0 z-50 bg-background border-t border-border">
+          <div className="grid grid-cols-5 h-16">
+            {navigation.map((item) => {
+              const isActive = location.pathname === item.href || location.pathname.startsWith(item.href + '/');
+              return (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className={cn(
+                    'flex flex-col items-center justify-center gap-1 transition-all',
+                    isActive
+                      ? 'text-foreground'
+                      : 'text-muted-foreground'
+                  )}
+                >
+                  <item.icon className={cn(
+                    'h-5 w-5',
+                    isActive && 'fill-current'
+                  )} />
+                  <span className="text-[10px] font-medium">{item.name}</span>
+                </Link>
+              );
+            })}
+          </div>
+        </nav>
+      </>
+    );
+  }
+
+  // Desktop Navigation
   return (
     <header className="bg-background border-b border-border sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-8 py-6">

@@ -104,65 +104,65 @@ export default function ProDashboard() {
         </div>
       </div>;
   }
-  return <div className="min-h-screen bg-background">
+  return <div className="min-h-screen bg-background pb-20 md:pb-0">
       <ProNavigation />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8">
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 mb-6 md:mb-8">
           {statsDisplay.map(stat => <Card key={stat.label}>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
+              <CardHeader className="flex flex-row items-center justify-between pb-2 p-3 md:p-6">
+                <CardTitle className="text-xs md:text-sm font-medium text-muted-foreground">
                   {stat.label}
                 </CardTitle>
-                <stat.icon className="h-4 w-4 text-muted-foreground" />
+                <stat.icon className="h-3 w-3 md:h-4 md:w-4 text-muted-foreground" />
               </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{stat.value}</div>
+              <CardContent className="p-3 pt-0 md:p-6 md:pt-0">
+                <div className="text-lg md:text-2xl font-bold">{stat.value}</div>
               </CardContent>
             </Card>)}
         </div>
 
         {/* Projects List */}
         <Card>
-          <CardHeader>
+          <CardHeader className="p-4 md:p-6">
             <div className="flex justify-between items-center">
               <div>
-                <CardTitle>Tous les projets</CardTitle>
-                <CardDescription>Gérez et suivez vos projets immobiliers</CardDescription>
+                <CardTitle className="text-lg md:text-2xl">Tous les projets</CardTitle>
+                <CardDescription className="text-xs md:text-sm">Gérez et suivez vos projets immobiliers</CardDescription>
               </div>
               <Link to="/pro/projects">
-                <Button variant="outline">Voir tout</Button>
+                <Button variant="outline" size="sm" className="text-xs md:text-sm">Voir tout</Button>
               </Link>
             </div>
           </CardHeader>
-          <CardContent>
-            {projects.length === 0 ? <div className="text-center py-12">
+          <CardContent className="p-4 md:p-6">
+            {projects.length === 0 ? <div className="text-center py-8 md:py-12">
                 <Building2 className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                 <p className="text-muted-foreground">Aucun projet pour le moment</p>
                 <Link to="/pro/projects/new">
                   <Button className="mt-4">Créer votre premier projet</Button>
                 </Link>
-              </div> : <div className="space-y-4">
+              </div> : <div className="space-y-3 md:space-y-4">
                 {projects.map(project => <Link key={project.id} to={`/pro/project/${project.id}`}>
                     <div className="border border-border rounded-lg overflow-hidden hover:bg-secondary/50 transition-all cursor-pointer group">
-                      <div className="flex gap-4">
-                        {project.image_url && <div className="w-32 h-32 flex-shrink-0 relative overflow-hidden">
+                      <div className="flex gap-3 md:gap-4">
+                        {project.image_url && <div className="w-20 h-20 md:w-32 md:h-32 flex-shrink-0 relative overflow-hidden">
                             <img src={project.image_url} alt={project.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                           </div>}
 
-                        <div className="flex-1 p-4">
-                          <div className="flex items-start justify-between mb-3">
+                        <div className="flex-1 p-3 md:p-4">
+                          <div className="flex items-start justify-between mb-2 md:mb-3">
                             <div>
-                              <h3 className="font-semibold text-lg">{project.name}</h3>
-                              <p className="text-sm text-muted-foreground">{project.location}</p>
+                              <h3 className="font-semibold text-sm md:text-lg">{project.name}</h3>
+                              <p className="text-xs md:text-sm text-muted-foreground">{project.location}</p>
                             </div>
-                            <Badge variant={project.status === 'Retard' ? 'destructive' : 'default'}>
+                            <Badge variant={project.status === 'Retard' ? 'destructive' : 'default'} className="text-[10px] md:text-xs">
                               {project.status}
                             </Badge>
                           </div>
                           
-                          <div className="grid grid-cols-2 gap-4 mb-3 text-sm">
+                          <div className="grid grid-cols-2 gap-2 md:gap-4 mb-2 md:mb-3 text-xs md:text-sm">
                             <div>
                               <span className="text-muted-foreground">Phase: </span>
                               <span className="font-medium">{project.phase}</span>
@@ -173,7 +173,7 @@ export default function ProDashboard() {
                             </div>
                           </div>
 
-                          <Progress value={project.progress} className="h-2" />
+                          <Progress value={project.progress} className="h-1.5 md:h-2" />
                         </div>
                       </div>
                     </div>
