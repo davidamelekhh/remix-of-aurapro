@@ -289,9 +289,9 @@ export default function Landing() {
             {t.problems.subtitle}
           </p>
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-            <BentoCard eyebrow={t.problems.eyebrow} title={t.problems.problem1Title} description={t.problems.problem1Desc} graphic={<div className="absolute inset-0 bg-foreground" />} className="lg:col-span-1" />
-            <BentoCard eyebrow={t.problems.eyebrow} title={t.problems.problem2Title} description={t.problems.problem2Desc} graphic={<div className="absolute inset-0 bg-background" />} className="lg:col-span-1" />
-            <BentoCard eyebrow={t.problems.eyebrow} title={t.problems.problem3Title} description={t.problems.problem3Desc} graphic={<div className="absolute inset-0 bg-foreground" />} className="lg:col-span-1" />
+            <BentoCard eyebrow={t.problems.eyebrow} title={t.problems.problem1Title} description={t.problems.problem1Desc} graphic={<div className="absolute inset-0 bg-black" />} className="lg:col-span-1 [&_h1]:!text-white [&_p]:!text-white" />
+            <BentoCard eyebrow={t.problems.eyebrow} title={t.problems.problem2Title} description={t.problems.problem2Desc} graphic={<div className="absolute inset-0 bg-black" />} className="lg:col-span-1 [&_h1]:!text-white [&_p]:!text-white" />
+            <BentoCard eyebrow={t.problems.eyebrow} title={t.problems.problem3Title} description={t.problems.problem3Desc} graphic={<div className="absolute inset-0 bg-black" />} className="lg:col-span-1 [&_h1]:!text-white [&_p]:!text-white" />
           </div>
         </div>
       </section>
