@@ -1,7 +1,6 @@
 import { LayoutDashboard, FolderKanban, Users, Settings, BarChart3 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { LiquidButton } from '@/components/ui/liquid-glass-button';
 
 const navigation = [
   { name: 'Dashboard', href: '/pro/dashboard', icon: LayoutDashboard },
@@ -24,17 +23,18 @@ export function ProNavigation() {
             {navigation.slice(0, 2).map((item) => {
               const isActive = location.pathname === item.href || location.pathname.startsWith(item.href + '/');
               return (
-                <Link key={item.name} to={item.href}>
-                  <LiquidButton
-                    size="lg"
-                    className={cn(
-                      'transition-all',
-                      isActive ? 'bg-foreground/5' : ''
-                    )}
-                  >
-                    <item.icon className="h-4 w-4" />
-                    {item.name}
-                  </LiquidButton>
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className={cn(
+                    'flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all',
+                    isActive
+                      ? 'bg-foreground text-background'
+                      : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
+                  )}
+                >
+                  <item.icon className="h-4 w-4" />
+                  {item.name}
                 </Link>
               );
             })}
@@ -50,17 +50,18 @@ export function ProNavigation() {
             {navigation.slice(2).map((item) => {
               const isActive = location.pathname === item.href || location.pathname.startsWith(item.href + '/');
               return (
-                <Link key={item.name} to={item.href}>
-                  <LiquidButton
-                    size="lg"
-                    className={cn(
-                      'transition-all',
-                      isActive ? 'bg-foreground/5' : ''
-                    )}
-                  >
-                    <item.icon className="h-4 w-4" />
-                    {item.name}
-                  </LiquidButton>
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className={cn(
+                    'flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all',
+                    isActive
+                      ? 'bg-foreground text-background'
+                      : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
+                  )}
+                >
+                  <item.icon className="h-4 w-4" />
+                  {item.name}
                 </Link>
               );
             })}
