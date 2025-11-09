@@ -91,7 +91,7 @@ export default function ProDashboard() {
     icon: TrendingUp,
     color: 'text-success'
   }, {
-    label: 'En retard',
+    label: 'Prévisionnel',
     value: stats.delayedProjects.toString(),
     icon: Clock,
     color: 'text-destructive'
