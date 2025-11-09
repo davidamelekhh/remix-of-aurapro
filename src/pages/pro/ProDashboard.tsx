@@ -110,21 +110,21 @@ export default function ProDashboard() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           {statsDisplay.map(stat => (
             <LiquidButton 
               key={stat.label}
-              size="default"
-              className="h-auto w-full p-0"
+              size="sm"
+              className="h-auto w-full p-4"
             >
-              <div className="flex flex-col items-center justify-center gap-3 py-6 px-4 w-full">
+              <div className="flex flex-col items-start gap-2 w-full">
                 <div className="flex items-center justify-between w-full">
-                  <span className="text-sm font-medium text-muted-foreground">
+                  <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
                     {stat.label}
                   </span>
-                  <stat.icon className="h-4 w-4 text-muted-foreground" />
+                  <stat.icon className="h-3.5 w-3.5 text-muted-foreground/70" />
                 </div>
-                <div className="text-3xl font-bold text-foreground w-full text-left">{stat.value}</div>
+                <div className="text-2xl font-bold text-foreground">{stat.value}</div>
               </div>
             </LiquidButton>
           ))}
