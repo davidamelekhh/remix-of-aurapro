@@ -85,8 +85,19 @@ export function MilestonesList({
     return subMilestones.filter(sm => sm.parent_milestone_id === parentId);
   };
 
+  console.log('MilestonesList - projectMilestones:', projectMilestones);
+  console.log('MilestonesList - projectConfig:', projectConfig);
+
   return (
     <div className="space-y-4">
+      {projectMilestones.length === 0 && (
+        <div className="p-4 border rounded-lg bg-muted/30 text-center">
+          <p className="text-sm text-muted-foreground">
+            Aucune étape trouvée. Veuillez rafraîchir la page pour initialiser les étapes du projet.
+          </p>
+        </div>
+      )}
+      
       {projectConfig && (
         <div className="mb-6 p-4 border rounded-lg bg-secondary/20 space-y-4">
           <h4 className="font-semibold flex items-center gap-2">
