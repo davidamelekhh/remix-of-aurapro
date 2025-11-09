@@ -363,7 +363,7 @@ export default function ProProjectDetail() {
       if (milestonesError) throw milestonesError;
 
       // If no milestones exist or if they're using old system, create new ones
-      if (!existingMilestones || existingMilestones.length === 0 || !existingMilestones[0].order_index) {
+      if (!existingMilestones || existingMilestones.length === 0 || (existingMilestones[0] && !existingMilestones[0].order_index)) {
         // Delete old milestones if any
         if (existingMilestones && existingMilestones.length > 0) {
           await supabase
