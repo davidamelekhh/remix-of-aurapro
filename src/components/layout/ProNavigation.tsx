@@ -1,7 +1,6 @@
 import { LayoutDashboard, FolderKanban, Users, Settings, BarChart3 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import auraProLogo from '@/assets/aura-pro-logo.png';
 
 const navigation = [
   { name: 'Dashboard', href: '/pro/dashboard', icon: LayoutDashboard },
@@ -42,13 +41,8 @@ export function ProNavigation() {
           </nav>
 
           {/* Center Logo */}
-          <div className="flex flex-col items-center gap-2">
-            <img 
-              src={auraProLogo} 
-              alt="Aura Pro" 
-              className="h-12 w-auto"
-            />
-            <span className="text-lg font-bold text-foreground">Aura Pro</span>
+          <div className="flex items-center">
+            <span className="text-3xl font-bold text-foreground">Aura Pro</span>
           </div>
 
           {/* Right Navigation Items */}
