@@ -1120,7 +1120,6 @@ export default function ProProjectDetail() {
             <TabsTrigger value="units">Lots ({units.length})</TabsTrigger>
             <TabsTrigger value="milestones">Étapes</TabsTrigger>
             <TabsTrigger value="payments">Paiements</TabsTrigger>
-            <TabsTrigger value="updates">Mises à jour ({updates.length})</TabsTrigger>
             <TabsTrigger value="stakeholders">Intervenants</TabsTrigger>
             <TabsTrigger value="documents">Documents ({documents.length})</TabsTrigger>
             <TabsTrigger value="chat">Chat</TabsTrigger>
@@ -1540,37 +1539,6 @@ export default function ProProjectDetail() {
             </Card>
           </TabsContent>
 
-          <TabsContent value="updates" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Mises à jour du projet</CardTitle>
-                <CardDescription>Historique des mises à jour</CardDescription>
-              </CardHeader>
-              <CardContent>
-                {updates.filter(u => u.update_type !== 'milestone').length === 0 ? (
-                  <p className="text-center text-muted-foreground py-8">
-                    Aucune mise à jour générale
-                  </p>
-                ) : (
-                  <div className="space-y-4">
-                    {updates.filter(u => u.update_type !== 'milestone').map((update) => (
-                      <div key={update.id} className="p-4 rounded-md border">
-                        <div className="flex justify-between items-start mb-2">
-                          <h4 className="font-semibold">{update.title}</h4>
-                          <span className="text-sm text-muted-foreground">
-                            {new Date(update.created_at).toLocaleDateString('fr-FR')}
-                          </span>
-                        </div>
-                        {update.description && (
-                          <p className="text-sm text-muted-foreground">{update.description}</p>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
 
           <TabsContent value="stakeholders" className="space-y-6">
             <Card>
