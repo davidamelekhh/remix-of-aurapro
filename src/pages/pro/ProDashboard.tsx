@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { ProNavigation } from '@/components/layout/ProNavigation';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { LiquidButton } from '@/components/ui/liquid-glass-button';
 type Project = {
   id: string;
   name: string;
@@ -110,17 +111,23 @@ export default function ProDashboard() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {statsDisplay.map(stat => <Card key={stat.label}>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
-                  {stat.label}
-                </CardTitle>
-                <stat.icon className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{stat.value}</div>
-              </CardContent>
-            </Card>)}
+          {statsDisplay.map(stat => (
+            <LiquidButton 
+              key={stat.label}
+              size="default"
+              className="h-auto w-full p-0"
+            >
+              <div className="flex flex-col items-center justify-center gap-3 py-6 px-4 w-full">
+                <div className="flex items-center justify-between w-full">
+                  <span className="text-sm font-medium text-muted-foreground">
+                    {stat.label}
+                  </span>
+                  <stat.icon className="h-4 w-4 text-muted-foreground" />
+                </div>
+                <div className="text-3xl font-bold text-foreground w-full text-left">{stat.value}</div>
+              </div>
+            </LiquidButton>
+          ))}
         </div>
 
         {/* Projects List */}
