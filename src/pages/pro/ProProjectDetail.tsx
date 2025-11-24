@@ -6,6 +6,8 @@ import { PaymentEditDialog } from '@/components/project/PaymentEditDialog';
 import { StakeholderAssignDialog } from '@/components/project/StakeholderAssignDialog';
 import { ProjectScheduleCalendar } from '@/components/project/ProjectScheduleCalendar';
 import { MilestonesList } from '@/components/project/MilestonesList';
+import { ExpenseDialog } from '@/components/project/ExpenseDialog';
+import { PartnerDialog } from '@/components/project/PartnerDialog';
 import { NEW_MILESTONES } from '@/lib/milestones-config';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -108,6 +110,26 @@ type Message = {
   };
 };
 
+type ProjectExpense = {
+  id: string;
+  title: string;
+  description: string | null;
+  amount: number;
+  category: string;
+  expense_date: string;
+  created_at: string;
+};
+
+type ProjectPartner = {
+  id: string;
+  name: string;
+  email: string | null;
+  phone: string | null;
+  percentage: number;
+  role: string | null;
+  created_at: string;
+};
+
 export default function ProProjectDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -121,6 +143,8 @@ export default function ProProjectDetail() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [payments, setPayments] = useState<any[]>([]);
   const [stakeholders, setStakeholders] = useState<any[]>([]);
+  const [expenses, setExpenses] = useState<ProjectExpense[]>([]);
+  const [partners, setPartners] = useState<ProjectPartner[]>([]);
   const [loading, setLoading] = useState(true);
   const [showUnitDialog, setShowUnitDialog] = useState(false);
   const [showAssignDialog, setShowAssignDialog] = useState(false);
@@ -130,6 +154,8 @@ export default function ProProjectDetail() {
   const [showPaymentEditDialog, setShowPaymentEditDialog] = useState(false);
   const [showStakeholderDialog, setShowStakeholderDialog] = useState(false);
   const [showStakeholderFormDialog, setShowStakeholderFormDialog] = useState(false);
+  const [showExpenseDialog, setShowExpenseDialog] = useState(false);
+  const [showPartnerDialog, setShowPartnerDialog] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState<any>(null);
   const [selectedUnitId, setSelectedUnitId] = useState<string>('');
   const [selectedClientId, setSelectedClientId] = useState<string>('');
@@ -425,6 +451,26 @@ export default function ProProjectDetail() {
       } else {
         setProjectMilestones(existingMilestones);
       }
+
+      // Fetch expenses
+      const { data: expensesData, error: expensesError } = await supabase
+        .from('project_expenses')
+        .select('*')
+        .eq('project_id', id)
+        .order('expense_date', { ascending: false });
+
+      if (expensesError) throw expensesError;
+      setExpenses(expensesData || []);
+
+      // Fetch partners
+      const { data: partnersData, error: partnersError } = await supabase
+        .from('project_partners')
+        .select('*')
+        .eq('project_id', id)
+        .order('name');
+
+      if (partnersError) throw partnersError;
+      setPartners(partnersData || []);
 
     } catch (error: any) {
       toast({
@@ -1145,10 +1191,22 @@ export default function ProProjectDetail() {
                 Paiements
               </TabsTrigger>
               <TabsTrigger 
+                value="expenses"
+                className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent"
+              >
+                Dépenses
+              </TabsTrigger>
+              <TabsTrigger 
                 value="stakeholders"
                 className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent"
               >
                 Intervenants
+              </TabsTrigger>
+              <TabsTrigger 
+                value="partners"
+                className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent"
+              >
+                Associés
               </TabsTrigger>
               <TabsTrigger 
                 value="documents"
@@ -1736,6 +1794,208 @@ export default function ProProjectDetail() {
             </Card>
           </TabsContent>
 
+          <TabsContent value="expenses" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <div className="flex justify-between items-center">
+                  <div>
+                    <CardTitle>Dépenses du projet</CardTitle>
+                    <CardDescription>Suivez toutes les dépenses liées au projet</CardDescription>
+                  </div>
+                  <Button onClick={() => setShowExpenseDialog(true)}>
+                    <Plus className="mr-2 h-4 w-4" />
+                    Ajouter une dépense
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                {expenses.length === 0 ? (
+                  <div className="text-center py-12">
+                    <FileText className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                    <p className="text-muted-foreground">Aucune dépense enregistrée</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    <div className="rounded-lg border p-4 bg-primary/5">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-muted-foreground">Total des dépenses</span>
+                        <span className="text-2xl font-bold">
+                          {expenses.reduce((sum, exp) => sum + Number(exp.amount), 0).toLocaleString()} MAD
+                        </span>
+                      </div>
+                    </div>
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Titre</TableHead>
+                          <TableHead>Catégorie</TableHead>
+                          <TableHead>Date</TableHead>
+                          <TableHead className="text-right">Montant</TableHead>
+                          <TableHead className="w-[100px]">Actions</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {expenses.map((expense) => (
+                          <TableRow key={expense.id}>
+                            <TableCell>
+                              <div>
+                                <p className="font-medium">{expense.title}</p>
+                                {expense.description && (
+                                  <p className="text-sm text-muted-foreground">{expense.description}</p>
+                                )}
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <Badge variant="outline">{expense.category}</Badge>
+                            </TableCell>
+                            <TableCell>
+                              {new Date(expense.expense_date).toLocaleDateString('fr-FR')}
+                            </TableCell>
+                            <TableCell className="text-right font-medium">
+                              {Number(expense.amount).toLocaleString()} MAD
+                            </TableCell>
+                            <TableCell>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={async () => {
+                                  try {
+                                    const { error } = await supabase
+                                      .from('project_expenses')
+                                      .delete()
+                                      .eq('id', expense.id);
+
+                                    if (error) throw error;
+
+                                    toast({
+                                      title: 'Succès',
+                                      description: 'Dépense supprimée'
+                                    });
+
+                                    fetchProjectData();
+                                  } catch (error) {
+                                    console.error('Error deleting expense:', error);
+                                    toast({
+                                      title: 'Erreur',
+                                      description: 'Impossible de supprimer la dépense',
+                                      variant: 'destructive'
+                                    });
+                                  }
+                                }}
+                              >
+                                <Trash2 className="h-4 w-4 text-destructive" />
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="partners" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <div className="flex justify-between items-center">
+                  <div>
+                    <CardTitle>Associés du projet</CardTitle>
+                    <CardDescription>Gérez les associés et leurs parts</CardDescription>
+                  </div>
+                  <Button onClick={() => setShowPartnerDialog(true)}>
+                    <Plus className="mr-2 h-4 w-4" />
+                    Ajouter un associé
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                {partners.length === 0 ? (
+                  <div className="text-center py-12">
+                    <Users className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                    <p className="text-muted-foreground">Aucun associé ajouté</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    <div className="rounded-lg border p-4 bg-primary/5">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-muted-foreground">Total des parts attribuées</span>
+                        <span className="text-2xl font-bold">
+                          {partners.reduce((sum, p) => sum + Number(p.percentage), 0).toFixed(2)}%
+                        </span>
+                      </div>
+                    </div>
+                    <div className="grid gap-4 md:grid-cols-2">
+                      {partners.map((partner) => (
+                        <Card key={partner.id}>
+                          <CardHeader>
+                            <div className="flex items-start justify-between">
+                              <div>
+                                <CardTitle className="text-lg">{partner.name}</CardTitle>
+                                {partner.role && (
+                                  <Badge variant="secondary" className="mt-1">{partner.role}</Badge>
+                                )}
+                              </div>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={async () => {
+                                  try {
+                                    const { error } = await supabase
+                                      .from('project_partners')
+                                      .delete()
+                                      .eq('id', partner.id);
+
+                                    if (error) throw error;
+
+                                    toast({
+                                      title: 'Succès',
+                                      description: 'Associé supprimé'
+                                    });
+
+                                    fetchProjectData();
+                                  } catch (error) {
+                                    console.error('Error deleting partner:', error);
+                                    toast({
+                                      title: 'Erreur',
+                                      description: 'Impossible de supprimer l\'associé',
+                                      variant: 'destructive'
+                                    });
+                                  }
+                                }}
+                              >
+                                <Trash2 className="h-4 w-4 text-destructive" />
+                              </Button>
+                            </div>
+                          </CardHeader>
+                          <CardContent className="space-y-3">
+                            <div className="rounded-lg bg-accent/20 p-3">
+                              <span className="text-sm text-muted-foreground">Part attribuée</span>
+                              <p className="text-2xl font-bold text-primary">{Number(partner.percentage).toFixed(2)}%</p>
+                            </div>
+                            {partner.email && (
+                              <div className="flex items-center text-sm text-muted-foreground">
+                                <Mail className="h-4 w-4 mr-2" />
+                                {partner.email}
+                              </div>
+                            )}
+                            {partner.phone && (
+                              <div className="flex items-center text-sm text-muted-foreground">
+                                <Phone className="h-4 w-4 mr-2" />
+                                {partner.phone}
+                              </div>
+                            )}
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
           <TabsContent value="documents" className="space-y-6">
             <Card>
               <CardHeader>
@@ -1843,6 +2103,22 @@ export default function ProProjectDetail() {
             </Card>
           </TabsContent>
         </Tabs>
+
+        {/* Expense Dialog */}
+        <ExpenseDialog
+          open={showExpenseDialog}
+          onOpenChange={setShowExpenseDialog}
+          projectId={id!}
+          onExpenseAdded={fetchProjectData}
+        />
+
+        {/* Partner Dialog */}
+        <PartnerDialog
+          open={showPartnerDialog}
+          onOpenChange={setShowPartnerDialog}
+          projectId={id!}
+          onPartnerAdded={fetchProjectData}
+        />
 
         {/* Assign Client Dialog */}
         <Dialog open={showAssignDialog} onOpenChange={setShowAssignDialog}>
