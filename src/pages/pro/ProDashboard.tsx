@@ -6,8 +6,9 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { ProNavigation } from '@/components/layout/ProNavigation';
-import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { getProjects, getClients } from '@/lib/api';
+
 type Project = {
   id: string;
   name: string;
@@ -17,6 +18,7 @@ type Project = {
   phase: string;
   image_url: string | null;
 };
+
 export default function ProDashboard() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [stats, setStats] = useState({
@@ -26,42 +28,34 @@ export default function ProDashboard() {
     delayedProjects: 0
   });
   const [loading, setLoading] = useState(true);
-  const {
-    toast
-  } = useToast();
+  const { toast } = useToast();
+
   useEffect(() => {
     fetchData();
   }, []);
+
   const fetchData = async () => {
     try {
-      const {
-        data: {
-          user
-        }
-      } = await supabase.auth.getUser();
-      if (!user) return;
-      const {
-        data: projectsData,
-        error: projectsError
-      } = await supabase.from('projects').select('*').eq('owner_id', user.id).order('created_at', {
-        ascending: false
-      }).limit(5);
-      if (projectsError) throw projectsError;
-      const {
-        count: clientsCount,
-        error: clientsError
-      } = await supabase.from('clients').select('*', {
-        count: 'exact',
-        head: true
-      }).eq('owner_id', user.id);
-      if (clientsError) throw clientsError;
-      setProjects(projectsData || []);
-      const totalProjects = projectsData?.length || 0;
-      const avgCompletion = totalProjects > 0 ? Math.round(projectsData.reduce((acc, p) => acc + p.progress, 0) / totalProjects) : 0;
-      const delayedProjects = projectsData?.filter(p => p.status === 'Retard').length || 0;
+      // TODO: Replace with actual authenticated user ID from your backend
+      const mockUserId = 'mock-user-id';
+
+      // Fetch projects using API layer
+      const projectsData = await getProjects(mockUserId);
+      const clientsData = await getClients(mockUserId);
+
+      // Take first 5 projects for dashboard
+      const recentProjects = projectsData.slice(0, 5);
+      setProjects(recentProjects);
+
+      const totalProjects = projectsData.length;
+      const avgCompletion = totalProjects > 0
+        ? Math.round(projectsData.reduce((acc, p) => acc + p.progress, 0) / totalProjects)
+        : 0;
+      const delayedProjects = projectsData.filter(p => p.status === 'Retard').length;
+
       setStats({
         totalProjects,
-        totalClients: clientsCount || 0,
+        totalClients: clientsData.length,
         avgCompletion,
         delayedProjects
       });
@@ -75,6 +69,7 @@ export default function ProDashboard() {
       setLoading(false);
     }
   };
+
   const statsDisplay = [{
     label: 'Projets actifs',
     value: stats.totalProjects.toString(),
@@ -96,21 +91,30 @@ export default function ProDashboard() {
     icon: Clock,
     color: 'text-destructive'
   }];
+
   if (loading) {
-    return <div className="min-h-screen bg-background">
+    return (
+      <div className="min-h-screen bg-background">
         <ProNavigation />
         <div className="flex items-center justify-center h-96">
-          
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+            <p className="mt-4 text-muted-foreground">Chargement...</p>
+          </div>
         </div>
-      </div>;
+      </div>
+    );
   }
-  return <div className="min-h-screen bg-background pb-20 md:pb-0">
+
+  return (
+    <div className="min-h-screen bg-background pb-20 md:pb-0">
       <ProNavigation />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8">
         {/* Stats Grid */}
         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 mb-6 md:mb-8">
-          {statsDisplay.map(stat => <Card key={stat.label}>
+          {statsDisplay.map(stat => (
+            <Card key={stat.label}>
               <CardHeader className="flex flex-row items-center justify-between pb-2 p-3 md:p-6">
                 <CardTitle className="text-xs md:text-sm font-medium text-muted-foreground">
                   {stat.label}
@@ -120,7 +124,8 @@ export default function ProDashboard() {
               <CardContent className="p-3 pt-0 md:p-6 md:pt-0">
                 <div className="text-lg md:text-2xl font-bold">{stat.value}</div>
               </CardContent>
-            </Card>)}
+            </Card>
+          ))}
         </div>
 
         {/* Projects List */}
@@ -137,19 +142,25 @@ export default function ProDashboard() {
             </div>
           </CardHeader>
           <CardContent className="p-4 md:p-6">
-            {projects.length === 0 ? <div className="text-center py-8 md:py-12">
+            {projects.length === 0 ? (
+              <div className="text-center py-8 md:py-12">
                 <Building2 className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                 <p className="text-muted-foreground">Aucun projet pour le moment</p>
                 <Link to="/pro/projects/new">
                   <Button className="mt-4">Créer votre premier projet</Button>
                 </Link>
-              </div> : <div className="space-y-3 md:space-y-4">
-                {projects.map(project => <Link key={project.id} to={`/pro/project/${project.id}`}>
+              </div>
+            ) : (
+              <div className="space-y-3 md:space-y-4">
+                {projects.map(project => (
+                  <Link key={project.id} to={`/pro/project/${project.id}`}>
                     <div className="border border-border rounded-lg overflow-hidden hover:bg-secondary/50 transition-all cursor-pointer group">
                       <div className="flex gap-3 md:gap-4">
-                        {project.image_url && <div className="w-20 h-20 md:w-32 md:h-32 flex-shrink-0 relative overflow-hidden">
+                        {project.image_url && (
+                          <div className="w-20 h-20 md:w-32 md:h-32 flex-shrink-0 relative overflow-hidden">
                             <img src={project.image_url} alt={project.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                          </div>}
+                          </div>
+                        )}
 
                         <div className="flex-1 p-3 md:p-4">
                           <div className="flex items-start justify-between mb-2 md:mb-3">
@@ -177,10 +188,13 @@ export default function ProDashboard() {
                         </div>
                       </div>
                     </div>
-                  </Link>)}
-              </div>}
+                  </Link>
+                ))}
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
-    </div>;
+    </div>
+  );
 }

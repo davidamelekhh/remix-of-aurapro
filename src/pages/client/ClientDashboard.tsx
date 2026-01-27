@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardTitle, CardDescription } from '@/components/ui/card';
 import { Navigation } from '@/components/layout/Navigation';
-import { ProjectCard } from '@/components/dashboard/ProjectCard';
 import { Building2, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { mockProjects } from '@/lib/mock-data';
 
 type PropertyUnit = {
   id: string;
@@ -42,96 +41,10 @@ export default function ClientDashboard() {
 
   const fetchClientProjects = async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        console.log('No user found');
-        return;
-      }
-
-      console.log('User ID:', user.id);
-      console.log('User email:', user.email);
-
-      // Get user's email from profile
-      const { data: profile, error: profileError } = await supabase
-        .from('profiles')
-        .select('email')
-        .eq('id', user.id)
-        .single();
-
-      console.log('Profile:', profile, 'Error:', profileError);
-
-      if (!profile?.email) {
-        console.log('No email in profile');
-        return;
-      }
-
-      // Find client ID based on email (case insensitive)
-      const { data: clientData, error: clientError } = await supabase
-        .from('clients')
-        .select('id')
-        .ilike('email', profile.email)
-        .maybeSingle();
-
-      console.log('Client data:', clientData, 'Error:', clientError);
-
-      if (!clientData) {
-        console.log('No client found with email:', profile.email);
-        setProjects([]);
-        return;
-      }
-
-      console.log('Client ID:', clientData.id);
-
-      // Get project assignments with unit details
-      const { data: projectClients, error: assignmentError } = await supabase
-        .from('project_clients')
-        .select(`
-          project_id,
-          unit_id,
-          property_units (
-            id,
-            unit_number,
-            unit_type,
-            surface_area,
-            price,
-            status,
-            floor
-          )
-        `)
-        .eq('client_id', clientData.id);
-
-      console.log('Project clients:', projectClients, 'Error:', assignmentError);
-
-      if (!projectClients || projectClients.length === 0) {
-        console.log('No project assignments found');
-        setProjects([]);
-        return;
-      }
-
-      const projectIds = [...new Set(projectClients.map(pc => pc.project_id))];
-      console.log('Project IDs:', projectIds);
-
-      // Get projects
-      const { data, error } = await supabase
-        .from('projects')
-        .select('*')
-        .in('id', projectIds);
-
-      console.log('Projects:', data, 'Error:', error);
-
-      if (error) throw error;
-
-      // Map projects with their assigned units
-      const projectsWithUnits = (data || []).map(project => {
-        const assignment = projectClients.find(pc => pc.project_id === project.id);
-        return {
-          ...project,
-          assigned_unit: assignment?.property_units as PropertyUnit | undefined,
-        };
-      });
-
-      console.log('Final projects with units:', projectsWithUnits);
-      setProjects(projectsWithUnits);
+      // TODO: Replace with actual API call to fetch client's assigned projects
+      // For now, using mock data
+      const clientProjects = mockProjects.slice(0, 2); // Simulate 2 assigned projects
+      setProjects(clientProjects);
     } catch (error: any) {
       console.error('Error fetching projects:', error);
       toast({

@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Navigation } from '@/components/layout/Navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,6 +10,7 @@ import { ArrowLeft, CheckCircle, Circle, Download, Calendar, MessageCircle, File
 import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
+import { getProject, getProjectMilestones } from '@/lib/api';
 
 type Milestone = {
   id: string;
@@ -85,73 +85,18 @@ export default function ClientProjectDetail() {
 
   const fetchProjectDetails = async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
-      // Get project
-      const { data: projectData, error: projectError } = await supabase
-        .from('projects')
-        .select('*')
-        .eq('id', id)
-        .single();
-
-      if (projectError) throw projectError;
+      // TODO: Replace with actual API calls
+      const projectData = await getProject(id!);
       setProject(projectData);
 
-      // Get milestones
-      const { data: milestonesData, error: milestonesError } = await supabase
-        .from('project_milestones')
-        .select('*')
-        .eq('project_id', id)
-        .order('start_date', { ascending: true });
+      // Use mock milestones for now
+      const projectMilestones = await getProjectMilestones(id!);
+      setMilestones(projectMilestones);
 
-      if (milestonesError) throw milestonesError;
-      setMilestones(milestonesData || []);
-
-      // Get messages
-      const { data: messagesData, error: messagesError } = await supabase
-        .from('project_messages')
-        .select('*')
-        .eq('project_id', id)
-        .order('created_at', { ascending: false });
-
-      if (messagesError) throw messagesError;
-
-      // Get sender profiles
-      const senderIds = [...new Set(messagesData?.map(m => m.sender_id) || [])];
-      const { data: profiles } = await supabase
-        .from('profiles')
-        .select('id, full_name')
-        .in('id', senderIds);
-
-      const profileMap = new Map(profiles?.map(p => [p.id, p.full_name]) || []);
-      const messagesWithNames = messagesData?.map(msg => ({
-        ...msg,
-        sender_name: profileMap.get(msg.sender_id) || 'Utilisateur'
-      })) || [];
-
-      setMessages(messagesWithNames);
-
-      // Get documents
-      const { data: docsData, error: docsError } = await supabase
-        .from('project_documents')
-        .select('*')
-        .eq('project_id', id)
-        .order('created_at', { ascending: false });
-
-      if (docsError) throw docsError;
-      setDocuments(docsData || []);
-
-      // Get project updates
-      const { data: updatesData, error: updatesError } = await supabase
-        .from('project_updates')
-        .select('*')
-        .eq('project_id', id)
-        .order('created_at', { ascending: false });
-
-      if (updatesError) throw updatesError;
-      setUpdates(updatesData || []);
-
+      // TODO: Fetch messages, documents, updates from your backend
+      setMessages([]);
+      setDocuments([]);
+      setUpdates([]);
     } catch (error: any) {
       console.error('Error fetching project details:', error);
       toast({
@@ -165,28 +110,11 @@ export default function ClientProjectDetail() {
   };
 
   const downloadDocument = async (doc: Document) => {
-    try {
-      const { data, error } = await supabase.storage
-        .from('project-documents')
-        .download(doc.file_path);
-
-      if (error) throw error;
-
-      const url = URL.createObjectURL(data);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = doc.file_name;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    } catch (error: any) {
-      toast({
-        title: 'Erreur',
-        description: 'Impossible de télécharger le document',
-        variant: 'destructive',
-      });
-    }
+    // TODO: Implement document download with your storage backend
+    toast({
+      title: 'Fonctionnalité à implémenter',
+      description: 'Le téléchargement de documents nécessite une configuration backend',
+    });
   };
 
   if (loading) {
@@ -472,7 +400,7 @@ export default function ClientProjectDetail() {
                           {doc.description && (
                             <p className="text-sm text-muted-foreground">{doc.description}</p>
                           )}
-                          <p className="text-xs text-muted-foreground mt-1">
+                          <p className="text-xs text-muted-foreground">
                             {format(new Date(doc.created_at), 'dd MMM yyyy', { locale: fr })}
                           </p>
                         </div>

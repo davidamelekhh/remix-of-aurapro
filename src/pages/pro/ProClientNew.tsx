@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -8,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { ProNavigation } from '@/components/layout/ProNavigation';
 import { ArrowLeft, UserPlus } from 'lucide-react';
+import { createClient } from '@/lib/api';
 
 export default function ProClientNew() {
   const navigate = useNavigate();
@@ -25,31 +25,19 @@ export default function ProClientNew() {
     setLoading(true);
 
     try {
-      // Call edge function to create client account
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) throw new Error('Vous devez être connecté');
+      // TODO: Replace with actual authenticated user ID from your backend
+      const mockUserId = 'mock-user-id';
+      
+      // TODO: Implement actual client creation with your backend
+      const { client, error } = await createClient({
+        ownerId: mockUserId,
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+      });
 
-      const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-client-account`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${session.access_token}`,
-          },
-          body: JSON.stringify({
-            name: formData.name,
-            email: formData.email,
-            phone: formData.phone,
-            password: formData.password,
-          }),
-        }
-      );
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.error || 'Erreur lors de la création du client');
+      if (error) {
+        throw new Error(error);
       }
 
       toast({

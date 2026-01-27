@@ -6,8 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { ProNavigation } from '@/components/layout/ProNavigation';
-import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { getClients } from '@/lib/api';
 import {
   Table,
   TableBody,
@@ -38,17 +38,10 @@ export default function ProClients() {
 
   const fetchClients = async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
-      const { data, error } = await supabase
-        .from('clients')
-        .select('*')
-        .eq('owner_id', user.id)
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setClients(data || []);
+      // TODO: Replace with actual authenticated user ID from your backend
+      const mockUserId = 'mock-user-id';
+      const data = await getClients(mockUserId);
+      setClients(data);
     } catch (error: any) {
       toast({
         title: 'Erreur',
