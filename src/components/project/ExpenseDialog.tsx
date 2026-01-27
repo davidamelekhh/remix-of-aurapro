@@ -5,8 +5,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { createExpense } from '@/lib/api';
 
 interface ExpenseDialogProps {
   open: boolean;
@@ -30,22 +30,22 @@ export function ExpenseDialog({ open, onOpenChange, projectId, onExpenseAdded }:
     setLoading(true);
 
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('Non authentifié');
+      // TODO: Get actual user ID from your auth system
+      const userId = 'mock-user-id';
 
-      const { error } = await supabase
-        .from('project_expenses')
-        .insert({
-          project_id: projectId,
-          title: formData.title,
-          description: formData.description,
-          amount: parseFloat(formData.amount),
-          category: formData.category,
-          expense_date: formData.expense_date,
-          created_by: user.id,
-        });
+      const result = await createExpense({
+        project_id: projectId,
+        title: formData.title,
+        description: formData.description,
+        amount: parseFloat(formData.amount),
+        category: formData.category,
+        expense_date: formData.expense_date,
+        created_by: userId,
+      });
 
-      if (error) throw error;
+      if (result.error) {
+        throw new Error(result.error);
+      }
 
       toast.success('Dépense ajoutée avec succès');
       setFormData({

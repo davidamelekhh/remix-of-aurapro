@@ -17,8 +17,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { createPayment } from "@/lib/api";
 
 interface PaymentDialogProps {
   open: boolean;
@@ -54,27 +54,25 @@ export function PaymentDialog({
     setLoading(true);
 
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error("Non authentifié");
+      // TODO: Get actual user ID from your auth system
+      const userId = 'mock-user-id';
 
-      const { error } = await supabase.from("payment_schedules").insert([
-        {
-          project_id: projectId,
-          title: formData.title,
-          description: formData.description || null,
-          amount: parseFloat(formData.amount),
-          due_date: formData.due_date,
-          payment_percentage: formData.payment_percentage
-            ? parseInt(formData.payment_percentage)
-            : null,
-          unit_id: formData.unit_id || null,
-          client_id: formData.client_id || null,
-          status: formData.status,
-          created_by: user.id,
-        },
-      ]);
+      const result = await createPayment({
+        project_id: projectId,
+        title: formData.title,
+        description: formData.description || null,
+        amount: parseFloat(formData.amount),
+        due_date: formData.due_date,
+        payment_percentage: formData.payment_percentage ? parseInt(formData.payment_percentage) : null,
+        unit_id: formData.unit_id || null,
+        client_id: formData.client_id || null,
+        status: formData.status,
+        created_by: userId,
+      });
 
-      if (error) throw error;
+      if (result.error) {
+        throw new Error(result.error);
+      }
 
       toast.success("Paiement ajouté avec succès");
       setFormData({

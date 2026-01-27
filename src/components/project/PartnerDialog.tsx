@@ -3,8 +3,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { createPartner } from '@/lib/api';
 
 interface PartnerDialogProps {
   open: boolean;
@@ -28,18 +28,18 @@ export function PartnerDialog({ open, onOpenChange, projectId, onPartnerAdded }:
     setLoading(true);
 
     try {
-      const { error } = await supabase
-        .from('project_partners')
-        .insert({
-          project_id: projectId,
-          name: formData.name,
-          email: formData.email || null,
-          phone: formData.phone || null,
-          percentage: parseFloat(formData.percentage),
-          role: formData.role || null,
-        });
+      const result = await createPartner({
+        project_id: projectId,
+        name: formData.name,
+        email: formData.email || null,
+        phone: formData.phone || null,
+        percentage: parseFloat(formData.percentage),
+        role: formData.role || null,
+      });
 
-      if (error) throw error;
+      if (result.error) {
+        throw new Error(result.error);
+      }
 
       toast.success('Associé ajouté avec succès');
       setFormData({

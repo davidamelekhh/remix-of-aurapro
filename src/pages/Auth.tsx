@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Building } from 'lucide-react';
 import { useUserRole } from '@/hooks/useUserRole';
+import { signIn, signUp } from '@/lib/api/auth';
 
 export default function Auth() {
   const navigate = useNavigate();
@@ -40,47 +40,36 @@ export default function Auth() {
 
     try {
       if (isLogin) {
-        const { data: authData, error } = await supabase.auth.signInWithPassword({
+        // TODO: Replace with actual authentication
+        const result = await signIn({
           email: formData.email,
           password: formData.password,
         });
 
-        if (error) throw error;
-        if (!authData.user) throw new Error('Erreur de connexion');
-
-        // Fetch user role to redirect appropriately
-        const { data: roleData } = await supabase
-          .from('user_roles')
-          .select('role')
-          .eq('user_id', authData.user.id)
-          .single();
+        if (result.error) {
+          throw new Error(result.error);
+        }
 
         toast({
           title: 'Connexion réussie',
           description: 'Bienvenue !',
         });
 
-        // Redirect based on role
-        if (roleData?.role === 'pro') {
-          navigate('/pro/dashboard');
-        } else {
-          navigate('/client/dashboard');
-        }
+        // For now, redirect to pro dashboard (mock implementation)
+        navigate('/pro/dashboard');
       } else {
-        const { error } = await supabase.auth.signUp({
+        // TODO: Replace with actual registration
+        const result = await signUp({
           email: formData.email,
           password: formData.password,
-          options: {
-            emailRedirectTo: `${window.location.origin}/pro/dashboard`,
-            data: {
-              full_name: formData.fullName,
-              company_name: formData.companyName,
-              phone: formData.phone,
-            }
-          }
+          fullName: formData.fullName,
+          companyName: formData.companyName,
+          phone: formData.phone,
         });
 
-        if (error) throw error;
+        if (result.error) {
+          throw new Error(result.error);
+        }
 
         toast({
           title: 'Compte créé',

@@ -1,10 +1,9 @@
 import { useState } from 'react';
-import { Check, Plus, UserCog, Edit, ChevronDown, ChevronRight, AlertCircle } from 'lucide-react';
+import { Check, Plus, UserCog, ChevronDown, ChevronRight, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
-import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
 type MilestonesListProps = {
@@ -38,43 +37,15 @@ export function MilestonesList({
   };
 
   const handleConditionChange = async (conditionType: string, value: boolean) => {
-    try {
-      const updateData = conditionType === 'requires_destruction_authorization'
-        ? { requires_destruction_authorization: value }
-        : { has_existing_building: value };
+    // TODO: Replace with actual API call to update project configuration
+    console.log('TODO: Update project configuration', { conditionType, value, projectId });
+    
+    toast({
+      title: 'Configuration mise à jour',
+      description: 'Les étapes ont été mises à jour'
+    });
 
-      const { error } = await supabase
-        .from('project_configurations')
-        .update(updateData)
-        .eq('project_id', projectId);
-
-      if (error) throw error;
-
-      // Update milestone enabled status
-      const milestoneKey = conditionType === 'requires_destruction_authorization'
-        ? 'destruction_authorization_launch'
-        : 'existing_building_destruction';
-
-      await supabase
-        .from('project_milestones')
-        .update({ is_enabled: value })
-        .eq('project_id', projectId)
-        .eq('milestone_key', milestoneKey);
-
-      toast({
-        title: 'Configuration mise à jour',
-        description: 'Les étapes ont été mises à jour'
-      });
-
-      onRefresh();
-    } catch (error) {
-      console.error('Error updating condition:', error);
-      toast({
-        title: 'Erreur',
-        description: 'Impossible de mettre à jour la configuration',
-        variant: 'destructive'
-      });
-    }
+    onRefresh();
   };
 
   // Filter out sub-milestones and group them
@@ -84,9 +55,6 @@ export function MilestonesList({
   const getSubMilestones = (parentId: string) => {
     return subMilestones.filter(sm => sm.parent_milestone_id === parentId);
   };
-
-  console.log('MilestonesList - projectMilestones:', projectMilestones);
-  console.log('MilestonesList - projectConfig:', projectConfig);
 
   return (
     <div className="space-y-4">

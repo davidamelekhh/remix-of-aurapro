@@ -17,8 +17,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { updatePayment } from "@/lib/api";
 
 interface Payment {
   id: string;
@@ -83,23 +83,20 @@ export function PaymentEditDialog({
     setLoading(true);
 
     try {
-      const { error } = await supabase
-        .from("payment_schedules")
-        .update({
-          title: formData.title,
-          description: formData.description || null,
-          amount: parseFloat(formData.amount),
-          due_date: formData.due_date,
-          payment_percentage: formData.payment_percentage
-            ? parseInt(formData.payment_percentage)
-            : null,
-          unit_id: formData.unit_id || null,
-          client_id: formData.client_id || null,
-          status: formData.status,
-        })
-        .eq("id", payment.id);
+      const result = await updatePayment(payment.id, {
+        title: formData.title,
+        description: formData.description || null,
+        amount: parseFloat(formData.amount),
+        due_date: formData.due_date,
+        payment_percentage: formData.payment_percentage ? parseInt(formData.payment_percentage) : null,
+        unit_id: formData.unit_id || null,
+        client_id: formData.client_id || null,
+        status: formData.status,
+      });
 
-      if (error) throw error;
+      if (result.error) {
+        throw new Error(result.error);
+      }
 
       toast.success("Paiement modifié avec succès");
       onOpenChange(false);

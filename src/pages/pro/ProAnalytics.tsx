@@ -1,13 +1,11 @@
 import { useEffect, useState, useRef } from 'react';
 import { ProNavigation } from '@/components/layout/ProNavigation';
 import { Card, CardContent } from '@/components/ui/card';
-import { supabase } from '@/integrations/supabase/client';
-import { TrendingUp, DollarSign, CheckCircle2, AlertCircle, Sparkles, MapPin, BarChart3 } from 'lucide-react';
-import { isAfter, subDays } from 'date-fns';
+import { TrendingUp, DollarSign, CheckCircle2, AlertCircle, MapPin, BarChart3 } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import { getProjects } from '@/lib/api';
 
 interface AnalyticsData {
   totalProjects: number;
@@ -113,97 +111,42 @@ export default function ProAnalytics() {
 
   const fetchAnalytics = async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      // TODO: Get actual user ID from your auth system
+      const userId = 'mock-user-id';
 
-      // Fetch projects data
-      const { data: projectsData } = await supabase
-        .from('projects')
-        .select('*')
-        .eq('owner_id', user.id);
+      // Fetch projects using API
+      const projectsData = await getProjects(userId);
       
-      setProjects(projectsData?.map(p => ({
+      setProjects(projectsData.map(p => ({
         id: p.id,
         name: p.name,
         progress: p.progress,
         status: p.status,
         location: p.location,
         estimated_revenue: p.estimated_revenue || 0
-      })) || []);
+      })));
 
-      // Fetch milestones
-      const { data: milestones } = await supabase
-        .from('project_updates')
-        .select('*')
-        .eq('created_by', user.id)
-        .eq('update_type', 'milestone');
-
-      // Fetch units
-      const { data: units } = await supabase
-        .from('property_units')
-        .select('*, projects!inner(owner_id)')
-        .eq('projects.owner_id', user.id);
-
-      // Calculate weekly activity
-      const weekAgo = subDays(new Date(), 7);
-      const { data: messages } = await supabase
-        .from('project_messages')
-        .select('*, projects!inner(owner_id)')
-        .eq('projects.owner_id', user.id)
-        .gte('created_at', weekAgo.toISOString());
-
-      const { data: documents } = await supabase
-        .from('project_documents')
-        .select('*, projects!inner(owner_id)')
-        .eq('projects.owner_id', user.id)
-        .gte('created_at', weekAgo.toISOString());
-
-      // Fetch payments
-      const { data: payments } = await supabase
-        .from('payment_schedules')
-        .select('*, projects!inner(owner_id)')
-        .eq('projects.owner_id', user.id);
-
-      // Calculate analytics
-      const totalProjects = projectsData?.length || 0;
-      const avgProgress = projectsData?.reduce((sum, p) => sum + p.progress, 0) / (totalProjects || 1);
-
-      const delayedMilestones = milestones?.filter(m => {
-        if (!m.end_date) return false;
-        return isAfter(new Date(), new Date(m.end_date)) && m.progress_percentage < 100;
-      }).length || 0;
-
-      const milestonesWithDelay = milestones?.filter(m => {
-        if (!m.end_date || !m.start_date) return false;
-        return isAfter(new Date(), new Date(m.end_date)) && m.progress_percentage < 100;
-      }) || [];
-
-      const avgDelayPerStage = milestonesWithDelay.length > 0
-        ? milestonesWithDelay.reduce((sum, m) => {
-            const delay = Math.floor((new Date().getTime() - new Date(m.end_date!).getTime()) / (1000 * 60 * 60 * 24));
-            return sum + delay;
-          }, 0) / milestonesWithDelay.length
+      // Calculate analytics from mock data
+      const totalProjects = projectsData.length;
+      const avgProgress = totalProjects > 0 
+        ? Math.round(projectsData.reduce((sum, p) => sum + p.progress, 0) / totalProjects)
         : 0;
 
-      const unitsSold = units?.filter(u => u.status === 'Vendu').length || 0;
-      const unitsDelivered = units?.filter(u => u.status === 'Livré').length || 0;
-
-      // Calculate revenue
-      const totalRevenue = projectsData?.reduce((sum, p) => sum + (p.estimated_revenue || 0), 0) || 0;
-      const paidRevenue = payments?.filter(p => p.status === 'paid').reduce((sum, p) => sum + (p.amount || 0), 0) || 0;
+      // Mock analytics values - TODO: Calculate from real data
+      const totalRevenue = projectsData.reduce((sum, p) => sum + (p.estimated_revenue || 0), 0);
 
       setAnalytics({
         totalProjects,
-        avgProgress: Math.round(avgProgress),
-        delayedMilestones,
-        avgDelayPerStage: Math.round(avgDelayPerStage),
-        unitsSold,
-        unitsDelivered,
+        avgProgress,
+        delayedMilestones: 2, // Mock value
+        avgDelayPerStage: 5, // Mock value
+        unitsSold: 15, // Mock value
+        unitsDelivered: 8, // Mock value
         totalRevenue,
-        paidRevenue,
+        paidRevenue: totalRevenue * 0.4, // Mock 40% paid
         weeklyActivity: {
-          messages: messages?.length || 0,
-          documents: documents?.length || 0
+          messages: 12, // Mock value
+          documents: 5 // Mock value
         }
       });
     } catch (error) {
@@ -212,34 +155,6 @@ export default function ProAnalytics() {
       setLoading(false);
     }
   };
-
-  const getStatusColor = (progress: number) => {
-    if (progress >= 90) return 'bg-success/20 border-success/40';
-    if (progress >= 50) return 'bg-primary/20 border-primary/40';
-    if (progress >= 25) return 'bg-muted border-muted-foreground/20';
-    return 'bg-destructive/20 border-destructive/40';
-  };
-
-  const aiInsights = [
-    {
-      title: "Risque de retard détecté",
-      description: "Le projet Villa Moderne présente 15 jours de retard. Action recommandée: coordination des prestataires.",
-      icon: AlertCircle,
-      color: "text-destructive"
-    },
-    {
-      title: "Opportunité commerciale",
-      description: "3 unités similaires vendues récemment dans la zone. Ajustement de prix suggéré: +8%.",
-      icon: TrendingUp,
-      color: "text-success"
-    },
-    {
-      title: "Optimisation budgétaire",
-      description: "Potentiel d'économie de 12% sur les matériaux en consolidant les commandes de 2 projets.",
-      icon: DollarSign,
-      color: "text-primary"
-    }
-  ];
 
   return (
     <div className="min-h-screen bg-background">
