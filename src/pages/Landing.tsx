@@ -1,22 +1,14 @@
-import { Button } from '@/components/ui/button';
-import { ArrowRight, CheckCircle2, BarChart3, Bell, FolderOpen, Users, Shield, Clock, TrendingUp, MessageSquare, ChevronDown, Instagram } from 'lucide-react';
+import { ArrowRight, CheckCircle2, BarChart3, Bell, FolderOpen, Users, Shield, Clock, TrendingUp, MessageSquare, Instagram } from 'lucide-react';
 import { ShimmerButton } from '@/components/ui/shimmer-button';
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { z } from 'zod';
 import { SinglePricingCard } from '@/components/ui/single-pricing-card';
-import { useNavigate } from 'react-router-dom';
-import auraLogo from '@/assets/aura-pro-logo.png';
 import neonLogo from '@/assets/neon-logo.png';
 import heroProfessional from '@/assets/hero-professional.png';
 import heroAfter from '@/assets/hero-after.png';
-import dashboardLaptop from '@/assets/dashboard-laptop.png';
 import solutionDashboard from '@/assets/solution-dashboard.png';
-import articleAnalytics from '@/assets/article-analytics.jpg';
-import articleConstruction from '@/assets/article-construction.jpg';
-import articleDigital from '@/assets/article-digital.jpg';
-import earlyAdoptersBanner from '@/assets/early-adopters-banner.png';
 import networkProblemImg from '@/assets/problem-network.png';
 import visibilityProblemImg from '@/assets/problem-visibility-new.png';
 import gearProblemImg from '@/assets/problem-gear.png';
@@ -378,17 +370,17 @@ export default function Landing() {
               {t.solution.title} <span className="font-medium">{t.solution.titleAccent}</span>
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              {t.solution.subtitle}
+              {t.solution.description1}
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-8 items-center">
             <div className="space-y-6">
               {[
-                { icon: BarChart3, title: t.solution.feature1Title, desc: t.solution.feature1Desc },
-                { icon: Bell, title: t.solution.feature2Title, desc: t.solution.feature2Desc },
-                { icon: FolderOpen, title: t.solution.feature3Title, desc: t.solution.feature3Desc },
-                { icon: MessageSquare, title: t.solution.feature4Title, desc: t.solution.feature4Desc },
+                { icon: BarChart3, title: t.solution.feature1, desc: t.solution.description2 },
+                { icon: Bell, title: t.solution.feature2, desc: '' },
+                { icon: FolderOpen, title: t.solution.feature3, desc: '' },
+                { icon: MessageSquare, title: t.solution.feature4, desc: '' },
               ].map((feature, index) => (
                 <div key={index} className="flex gap-4 p-4 rounded-xl hover:bg-secondary/50 transition-colors">
                   <div className="h-12 w-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -422,12 +414,12 @@ export default function Landing() {
 
           <div className="grid md:grid-cols-3 gap-8">
             {[
-              { icon: Clock, title: 'feature1Title' in t.features ? (t.features as any).feature1Title : 'Gestion des projets', desc: 'feature1Desc' in t.features ? (t.features as any).feature1Desc : t.features.feature1 },
-              { icon: Shield, title: 'feature2Title' in t.features ? (t.features as any).feature2Title : 'Suivi client', desc: 'feature2Desc' in t.features ? (t.features as any).feature2Desc : t.features.feature2 },
-              { icon: Users, title: 'feature3Title' in t.features ? (t.features as any).feature3Title : 'Notifications', desc: 'feature3Desc' in t.features ? (t.features as any).feature3Desc : t.features.feature3 },
-              { icon: TrendingUp, title: 'feature4Title' in t.features ? (t.features as any).feature4Title : 'Collaboration', desc: 'feature4Desc' in t.features ? (t.features as any).feature4Desc : t.features.feature4 },
-              { icon: CheckCircle2, title: 'feature5Title' in t.features ? (t.features as any).feature5Title : 'Analytics', desc: 'feature5Desc' in t.features ? (t.features as any).feature5Desc : '' },
-              { icon: BarChart3, title: 'feature6Title' in t.features ? (t.features as any).feature6Title : 'Documents', desc: 'feature6Desc' in t.features ? (t.features as any).feature6Desc : '' },
+              { icon: Clock, title: t.features.feature1Title, desc: t.features.feature1Desc },
+              { icon: Shield, title: t.features.feature2Title, desc: t.features.feature2Desc },
+              { icon: Users, title: t.features.feature3Title, desc: t.features.feature3Desc },
+              { icon: TrendingUp, title: t.features.feature4Title, desc: t.features.feature4Desc },
+              { icon: CheckCircle2, title: t.features.feature5Title, desc: t.features.feature5Desc },
+              { icon: BarChart3, title: t.features.feature6Title, desc: t.features.feature6Desc },
             ].map((feature, index) => (
               <div key={index} className="bg-card p-6 rounded-2xl border border-border hover:border-primary/50 transition-colors">
                 <div className="h-12 w-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
@@ -465,27 +457,31 @@ export default function Landing() {
             <h2 className="text-4xl md:text-5xl font-bold mb-4">
               {t.pricing.title} <span className="font-medium">{t.pricing.titleAccent}</span>
             </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              {'subtitle' in t.pricing ? (t.pricing as any).subtitle : ''}
-            </p>
           </div>
-
           <div className="flex justify-center">
             <SinglePricingCard
-              title={'planTitle' in t.pricing ? (t.pricing as any).planTitle : 'Aura Pro'}
-              price="99€"
-              period={'period' in t.pricing ? (t.pricing as any).period : '/mois'}
-              features={[
-                'feature1' in t.pricing ? (t.pricing as any).feature1 : 'Projets illimités',
-                'feature2' in t.pricing ? (t.pricing as any).feature2 : 'Clients illimités',
-                'feature3' in t.pricing ? (t.pricing as any).feature3 : 'Notifications IA',
-                'feature4' in t.pricing ? (t.pricing as any).feature4 : 'Analytics avancés',
-                'feature5' in t.pricing ? (t.pricing as any).feature5 : 'Support prioritaire',
-                'feature6' in t.pricing ? (t.pricing as any).feature6 : 'Stockage illimité',
-              ]}
-              buttonText={'buttonText' in t.pricing ? (t.pricing as any).buttonText : 'Commencer'}
-              onButtonClick={() => setDialogOpen(true)}
               badge={t.pricing.badge}
+              title={t.pricing.cardTitle}
+              subtitle={t.pricing.cardSubtitle}
+              price={`${t.pricing.pricePrefix} 99€${t.pricing.priceSuffix}`}
+              priceNote={t.pricing.priceNote}
+              benefits={[
+                { icon: 'check', text: t.pricing.benefit1 },
+                { icon: 'shield', text: t.pricing.benefit2 },
+                { icon: 'heart', text: t.pricing.benefit3 },
+              ]}
+              features={[
+                { text: t.features.feature1Title },
+                { text: t.features.feature2Title },
+                { text: t.features.feature3Title },
+                { text: t.features.feature4Title },
+                { text: t.features.feature5Title },
+                { text: t.features.feature6Title },
+              ]}
+              primaryButton={{
+                text: t.pricing.ctaButton,
+                onClick: () => setDialogOpen(true),
+              }}
             />
           </div>
         </div>
@@ -495,14 +491,14 @@ export default function Landing() {
       <section className="py-20 px-6">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            {t.cta.title}
+            {t.earlyAdopters.title} <span className="font-medium">{t.earlyAdopters.titleAccent}</span>
           </h2>
           <p className="text-xl text-muted-foreground mb-8">
-            {t.cta.subtitle}
+            {t.earlyAdopters.description}
           </p>
           <ShimmerButton onClick={() => setDialogOpen(true)} className="px-8 py-4 text-lg font-semibold rounded-xl">
             <span className="flex items-center gap-2">
-              {t.cta.button}
+              {t.earlyAdopters.cta}
               <ArrowRight className="h-5 w-5" />
             </span>
           </ShimmerButton>
