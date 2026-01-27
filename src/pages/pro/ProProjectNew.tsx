@@ -92,8 +92,8 @@ export default function ProProjectNew() {
       // Create project using API
       const result = await createProject({
         ...formData,
-        ownerId: userId,
-        imageUrl,
+        owner_id: userId,
+        image_url: imageUrl,
       });
 
       if (result.error) {

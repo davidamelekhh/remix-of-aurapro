@@ -63,6 +63,7 @@ export function PaymentDialog({
         description: formData.description || null,
         amount: parseFloat(formData.amount),
         due_date: formData.due_date,
+        payment_date: null,
         payment_percentage: formData.payment_percentage ? parseInt(formData.payment_percentage) : null,
         unit_id: formData.unit_id || null,
         client_id: formData.client_id || null,
