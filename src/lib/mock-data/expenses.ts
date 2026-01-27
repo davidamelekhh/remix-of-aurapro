@@ -1,0 +1,81 @@
+import type { ProjectExpense } from './types';
+
+// ============================================
+// MOCK EXPENSES DATA
+// Replace these with API calls to your backend
+// ============================================
+
+export const mockExpenses: ProjectExpense[] = [
+  {
+    id: 'expense-1',
+    project_id: 'project-1',
+    created_by: 'mock-user-id',
+    title: 'Achat terrain',
+    description: 'Acquisition du terrain pour le projet',
+    amount: 8500000,
+    category: 'Terrain',
+    expense_date: '2024-01-25',
+    created_at: '2024-01-25T00:00:00Z',
+    updated_at: '2024-01-25T00:00:00Z',
+  },
+  {
+    id: 'expense-2',
+    project_id: 'project-1',
+    created_by: 'mock-user-id',
+    title: 'Honoraires architecte',
+    description: 'Conception et plans',
+    amount: 450000,
+    category: 'Honoraires',
+    expense_date: '2024-02-10',
+    created_at: '2024-02-10T00:00:00Z',
+    updated_at: '2024-02-10T00:00:00Z',
+  },
+  {
+    id: 'expense-3',
+    project_id: 'project-1',
+    created_by: 'mock-user-id',
+    title: 'Béton fondations',
+    description: 'Commande de béton pour les fondations',
+    amount: 320000,
+    category: 'Matériaux',
+    expense_date: '2024-03-22',
+    created_at: '2024-03-22T00:00:00Z',
+    updated_at: '2024-03-22T00:00:00Z',
+  },
+  {
+    id: 'expense-4',
+    project_id: 'project-1',
+    created_by: 'mock-user-id',
+    title: 'Main d\'œuvre mars',
+    description: 'Salaires équipe de chantier',
+    amount: 180000,
+    category: 'Main d\'œuvre',
+    expense_date: '2024-03-31',
+    created_at: '2024-03-31T00:00:00Z',
+    updated_at: '2024-03-31T00:00:00Z',
+  },
+  {
+    id: 'expense-5',
+    project_id: 'project-1',
+    created_by: 'mock-user-id',
+    title: 'Acier structure',
+    description: 'Armatures et poutrelles métalliques',
+    amount: 520000,
+    category: 'Matériaux',
+    expense_date: '2024-04-15',
+    created_at: '2024-04-15T00:00:00Z',
+    updated_at: '2024-04-15T00:00:00Z',
+  },
+  {
+    id: 'expense-6',
+    project_id: 'project-1',
+    created_by: 'mock-user-id',
+    title: 'Permis de construire',
+    description: 'Frais administratifs et taxes',
+    amount: 85000,
+    category: 'Administratif',
+    expense_date: '2024-02-28',
+    created_at: '2024-02-28T00:00:00Z',
+    updated_at: '2024-02-28T00:00:00Z',
+  },
+];
