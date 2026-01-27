@@ -7,8 +7,8 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { ProNavigation } from '@/components/layout/ProNavigation';
-import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { getProjects } from '@/lib/api';
 
 type Project = {
   id: string;
@@ -34,17 +34,10 @@ export default function ProProjects() {
 
   const fetchProjects = async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
-      const { data, error } = await supabase
-        .from('projects')
-        .select('*')
-        .eq('owner_id', user.id)
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setProjects(data || []);
+      // TODO: Replace with actual authenticated user ID from your backend
+      const mockUserId = 'mock-user-id';
+      const data = await getProjects(mockUserId);
+      setProjects(data);
     } catch (error: any) {
       toast({
         title: 'Erreur',

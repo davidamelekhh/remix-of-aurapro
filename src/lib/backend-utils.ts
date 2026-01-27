@@ -1,9 +1,7 @@
 /**
- * Backend utility functions for Aura Pro
- * Centralized validation, error handling, and business logic
+ * Utility functions for the frontend
+ * Pure functions that don't depend on any backend
  */
-
-import { supabase } from '@/integrations/supabase/client';
 
 /**
  * Validate email format
@@ -19,88 +17,6 @@ export function validateEmail(email: string): boolean {
 export function validatePhone(phone: string): boolean {
   const phoneRegex = /^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/;
   return phoneRegex.test(phone.replace(/\s/g, ''));
-}
-
-/**
- * Check if user has specific role
- */
-export async function checkUserRole(userId: string, expectedRole: 'pro' | 'client'): Promise<boolean> {
-  try {
-    const { data, error } = await supabase
-      .from('user_roles')
-      .select('role')
-      .eq('user_id', userId)
-      .single();
-
-    if (error || !data) return false;
-    return data.role === expectedRole;
-  } catch {
-    return false;
-  }
-}
-
-/**
- * Get current user's client ID (for client users)
- */
-export async function getCurrentUserClientId(): Promise<string | null> {
-  try {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return null;
-
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('email')
-      .eq('id', user.id)
-      .single();
-
-    if (!profile?.email) return null;
-
-    const { data: client } = await supabase
-      .from('clients')
-      .select('id')
-      .ilike('email', profile.email)
-      .maybeSingle();
-
-    return client?.id || null;
-  } catch {
-    return null;
-  }
-}
-
-/**
- * Validate project ownership
- */
-export async function validateProjectOwnership(projectId: string, userId: string): Promise<boolean> {
-  try {
-    const { data, error } = await supabase
-      .from('projects')
-      .select('owner_id')
-      .eq('id', projectId)
-      .eq('owner_id', userId)
-      .maybeSingle();
-
-    return !!data && !error;
-  } catch {
-    return false;
-  }
-}
-
-/**
- * Validate client assignment to project
- */
-export async function validateClientProjectAccess(clientId: string, projectId: string): Promise<boolean> {
-  try {
-    const { data } = await supabase
-      .from('project_clients')
-      .select('client_id')
-      .eq('client_id', clientId)
-      .eq('project_id', projectId)
-      .maybeSingle();
-
-    return !!data;
-  } catch {
-    return false;
-  }
 }
 
 /**

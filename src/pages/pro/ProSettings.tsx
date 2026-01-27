@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { ProNavigation } from '@/components/layout/ProNavigation';
-import { Settings, User, Building, Mail, Phone, Lock, Save, CreditCard, Crown } from 'lucide-react';
+import { User, Building, Mail, Phone, Lock, Save, CreditCard, Crown } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
+import { getUserProfile, updateUserProfile, updatePassword } from '@/lib/api';
 
 export default function ProSettings() {
   const navigate = useNavigate();
@@ -35,26 +35,18 @@ export default function ProSettings() {
 
   const fetchProfile = async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        navigate('/auth/promoteur');
-        return;
+      // TODO: Replace with actual authenticated user ID from your backend
+      const mockUserId = 'mock-user-id';
+      const profile = await getUserProfile(mockUserId);
+
+      if (profile) {
+        setProfileForm({
+          full_name: profile.full_name || '',
+          email: profile.email || '',
+          company_name: profile.company_name || '',
+          phone: profile.phone || '',
+        });
       }
-
-      const { data: profile, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', user.id)
-        .single();
-
-      if (error) throw error;
-
-      setProfileForm({
-        full_name: profile.full_name || '',
-        email: profile.email || user.email || '',
-        company_name: profile.company_name || '',
-        phone: profile.phone || '',
-      });
     } catch (error: any) {
       toast({
         title: 'Erreur',
@@ -71,34 +63,16 @@ export default function ProSettings() {
     setSaving(true);
 
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('Non authentifié');
+      // TODO: Replace with actual authenticated user ID from your backend
+      const mockUserId = 'mock-user-id';
 
-      // Update profile
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .update({
-          full_name: profileForm.full_name,
-          company_name: profileForm.company_name,
-          phone: profileForm.phone,
-        })
-        .eq('id', user.id);
+      const { error } = await updateUserProfile(mockUserId, {
+        full_name: profileForm.full_name,
+        company_name: profileForm.company_name,
+        phone: profileForm.phone,
+      });
 
-      if (profileError) throw profileError;
-
-      // Update email if changed
-      if (profileForm.email !== user.email) {
-        const { error: emailError } = await supabase.auth.updateUser({
-          email: profileForm.email,
-        });
-
-        if (emailError) throw emailError;
-
-        toast({
-          title: 'Email mis à jour',
-          description: 'Un email de confirmation a été envoyé à votre nouvelle adresse',
-        });
-      }
+      if (error) throw new Error(error);
 
       toast({
         title: 'Profil mis à jour',
@@ -141,11 +115,9 @@ export default function ProSettings() {
     setChangingPassword(true);
 
     try {
-      const { error } = await supabase.auth.updateUser({
-        password: passwordForm.newPassword,
-      });
+      const { error } = await updatePassword(passwordForm.newPassword);
 
-      if (error) throw error;
+      if (error) throw new Error(error);
 
       toast({
         title: 'Mot de passe modifié',

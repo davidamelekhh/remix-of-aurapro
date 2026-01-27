@@ -5,9 +5,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { supabase } from '@/integrations/supabase/client';
 import { Plus, UserCog, Mail, Phone, Building2, Trash2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { getStakeholders, createStakeholder, deleteStakeholder } from '@/lib/api';
 
 interface Stakeholder {
   id: string;
@@ -38,17 +38,10 @@ export default function ProStakeholders() {
 
   const fetchStakeholders = async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
-      const { data, error } = await supabase
-        .from('stakeholders')
-        .select('*')
-        .eq('owner_id', user.id)
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setStakeholders(data || []);
+      // TODO: Replace with actual authenticated user ID from your backend
+      const mockUserId = 'mock-user-id';
+      const data = await getStakeholders(mockUserId);
+      setStakeholders(data);
     } catch (error) {
       console.error('Error fetching stakeholders:', error);
       toast({
@@ -65,21 +58,19 @@ export default function ProStakeholders() {
     e.preventDefault();
     
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      // TODO: Replace with actual authenticated user ID from your backend
+      const mockUserId = 'mock-user-id';
 
-      const { error } = await supabase
-        .from('stakeholders')
-        .insert([{
-          owner_id: user.id,
-          name: formData.name,
-          role: formData.role,
-          company: formData.company || null,
-          phone: formData.phone || null,
-          email: formData.email || null
-        }]);
+      const { stakeholder, error } = await createStakeholder({
+        ownerId: mockUserId,
+        name: formData.name,
+        role: formData.role,
+        company: formData.company || undefined,
+        phone: formData.phone || undefined,
+        email: formData.email || undefined
+      });
 
-      if (error) throw error;
+      if (error) throw new Error(error);
 
       toast({
         title: 'Succès',
@@ -103,12 +94,9 @@ export default function ProStakeholders() {
     if (!confirm('Êtes-vous sûr de vouloir supprimer cet intervenant ?')) return;
 
     try {
-      const { error } = await supabase
-        .from('stakeholders')
-        .delete()
-        .eq('id', id);
+      const { error } = await deleteStakeholder(id);
 
-      if (error) throw error;
+      if (error) throw new Error(error);
 
       toast({
         title: 'Succès',

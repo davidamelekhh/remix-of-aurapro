@@ -1,42 +1,22 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { User, ArrowLeft } from 'lucide-react';
-import { useUserRole } from '@/hooks/useUserRole';
 import { Link } from 'react-router-dom';
+import { signIn } from '@/lib/api';
 
 export default function ClientAuth() {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { role, loading: roleLoading } = useUserRole();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
-
-  // Redirect or logout based on role
-  useEffect(() => {
-    if (!roleLoading && role) {
-      if (role === 'client') {
-        navigate('/client/dashboard');
-      } else if (role === 'pro') {
-        // Disconnect pro if trying to access client space
-        supabase.auth.signOut().then(() => {
-          toast({
-            title: 'Déconnexion requise',
-            description: 'Vous étiez connecté comme promoteur. Connectez-vous avec un compte client.',
-            variant: 'destructive',
-          });
-        });
-      }
-    }
-  }, [role, roleLoading, navigate, toast]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -63,55 +43,14 @@ export default function ClientAuth() {
     setLoading(true);
 
     try {
-      const { data: authData, error } = await supabase.auth.signInWithPassword({
+      // TODO: Implement actual authentication with your backend
+      const { user, error } = await signIn({
         email: formData.email.trim().toLowerCase(),
         password: formData.password,
       });
 
       if (error) {
-        if (error.message.includes('Invalid login')) {
-          throw new Error('Email ou mot de passe incorrect');
-        }
-        throw error;
-      }
-      
-      if (!authData.user) throw new Error('Erreur de connexion');
-
-      // Verify client role
-      const { data: roleData, error: roleError } = await supabase
-        .from('user_roles')
-        .select('role')
-        .eq('user_id', authData.user.id)
-        .maybeSingle();
-
-      if (roleError || !roleData || roleData.role !== 'client') {
-        await supabase.auth.signOut();
-        throw new Error('Accès refusé. Cet espace est réservé aux clients.');
-      }
-
-      // Verify client record exists and is active
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('email')
-        .eq('id', authData.user.id)
-        .maybeSingle();
-
-      if (profile?.email) {
-        const { data: client } = await supabase
-          .from('clients')
-          .select('id, status')
-          .ilike('email', profile.email)
-          .maybeSingle();
-
-        if (!client) {
-          await supabase.auth.signOut();
-          throw new Error('Compte client introuvable. Contactez votre promoteur.');
-        }
-
-        if (client.status !== 'Actif') {
-          await supabase.auth.signOut();
-          throw new Error('Votre compte est inactif. Contactez votre promoteur.');
-        }
+        throw new Error(error);
       }
 
       toast({
