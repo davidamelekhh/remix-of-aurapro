@@ -1,37 +1,56 @@
 import { useState, useEffect } from 'react';
-import { User, Session } from '@supabase/supabase-js';
-import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
+import { getCurrentUser, signOut as apiSignOut } from '@/lib/api/auth';
+import type { AuthUser } from '@/lib/api/auth';
+
+// ============================================
+// AUTH HOOK
+// TODO: Replace mock implementation with your backend
+// This hook provides authentication state and methods
+// ============================================
 
 export function useAuth() {
-  const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
+  const [session, setSession] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Set up auth state listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
+    // TODO: Set up auth state listener with your backend
+    // For example, with Firebase: onAuthStateChanged
+    // With Supabase: onAuthStateChange
+    // With Auth0: useAuth0 hook
+    
+    const checkAuth = async () => {
+      try {
+        const currentUser = await getCurrentUser();
+        setUser(currentUser);
+        // TODO: Get session from your auth provider
+        setSession(currentUser ? { user: currentUser } : null);
+      } catch (error) {
+        console.error('Auth check failed:', error);
+        setUser(null);
+        setSession(null);
+      } finally {
         setLoading(false);
       }
-    );
+    };
 
-    // Check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
+    checkAuth();
 
-    return () => subscription.unsubscribe();
+    // TODO: Return cleanup function for auth listener
+    // return () => unsubscribe();
   }, []);
 
   const signOut = async () => {
-    await supabase.auth.signOut();
-    navigate('/auth');
+    try {
+      await apiSignOut();
+      setUser(null);
+      setSession(null);
+      navigate('/auth');
+    } catch (error) {
+      console.error('Sign out failed:', error);
+    }
   };
 
   return { user, session, loading, signOut };

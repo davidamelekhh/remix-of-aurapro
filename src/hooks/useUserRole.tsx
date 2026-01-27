@@ -1,5 +1,11 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { getUserRole, getCurrentUser } from '@/lib/api/auth';
+
+// ============================================
+// USER ROLE HOOK
+// TODO: Replace mock implementation with your backend
+// This hook provides the current user's role (pro/client)
+// ============================================
 
 export function useUserRole() {
   const [role, setRole] = useState<'pro' | 'client' | null>(null);
@@ -8,25 +14,17 @@ export function useUserRole() {
   useEffect(() => {
     const fetchUserRole = async () => {
       try {
-        const { data: { user } } = await supabase.auth.getUser();
+        // TODO: Replace with your authentication check
+        const user = await getCurrentUser();
         if (!user) {
           setRole(null);
           setLoading(false);
           return;
         }
 
-        const { data, error } = await supabase
-          .from('user_roles')
-          .select('role')
-          .eq('user_id', user.id)
-          .maybeSingle();
-
-        if (error) {
-          console.error('Error fetching user role:', error);
-          setRole(null);
-        } else {
-          setRole(data?.role || null);
-        }
+        // TODO: Fetch role from your backend
+        const userRole = await getUserRole(user.id);
+        setRole(userRole);
       } catch (error) {
         console.error('Error fetching user role:', error);
         setRole(null);
