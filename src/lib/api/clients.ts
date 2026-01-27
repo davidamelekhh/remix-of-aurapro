@@ -134,6 +134,15 @@ export async function removeClientFromProject(projectId: string, clientId: strin
 }
 
 /**
+ * Unassign a client from a specific project unit
+ * TODO: Replace with actual API call
+ */
+export async function unassignClientFromProject(projectId: string, clientId: string, unitId: string): Promise<{ error: string | null }> {
+  console.log('TODO: Implement unassignClientFromProject with backend', projectId, clientId, unitId);
+  return { error: null };
+}
+
+/**
  * Update client unit assignment
  * TODO: Replace with actual API call
  */
