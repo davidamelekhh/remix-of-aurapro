@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { UserCog } from 'lucide-react';
+import { getStakeholders, getMilestoneStakeholders, assignStakeholderToMilestone, removeStakeholderFromMilestone } from '@/lib/api';
 
 interface Stakeholder {
   id: string;
@@ -35,17 +35,10 @@ export function StakeholderAssignDialog({ milestoneId, open, onOpenChange, onAss
 
   const fetchStakeholders = async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
-      const { data, error } = await supabase
-        .from('stakeholders')
-        .select('id, name, role, company')
-        .eq('owner_id', user.id)
-        .order('name');
-
-      if (error) throw error;
-      setStakeholders(data || []);
+      // TODO: Get actual user ID from your auth system
+      const userId = 'mock-user-id';
+      const data = await getStakeholders(userId);
+      setStakeholders(data);
     } catch (error) {
       console.error('Error fetching stakeholders:', error);
     }
@@ -53,13 +46,8 @@ export function StakeholderAssignDialog({ milestoneId, open, onOpenChange, onAss
 
   const fetchAssignments = async () => {
     try {
-      const { data, error } = await supabase
-        .from('stakeholder_assignments')
-        .select('stakeholder_id')
-        .eq('milestone_id', milestoneId);
-
-      if (error) throw error;
-      setSelectedStakeholders(new Set(data?.map(a => a.stakeholder_id) || []));
+      const data = await getMilestoneStakeholders(milestoneId);
+      setSelectedStakeholders(new Set(data.map(a => a.stakeholder_id)));
     } catch (error) {
       console.error('Error fetching assignments:', error);
     }
@@ -79,38 +67,27 @@ export function StakeholderAssignDialog({ milestoneId, open, onOpenChange, onAss
     setLoading(true);
     try {
       // Get current assignments
-      const { data: currentAssignments } = await supabase
-        .from('stakeholder_assignments')
-        .select('stakeholder_id')
-        .eq('milestone_id', milestoneId);
-
-      const currentIds = new Set(currentAssignments?.map(a => a.stakeholder_id) || []);
+      const currentAssignments = await getMilestoneStakeholders(milestoneId);
+      const currentIds = new Set(currentAssignments.map(a => a.stakeholder_id));
 
       // Find assignments to add and remove
       const toAdd = Array.from(selectedStakeholders).filter(id => !currentIds.has(id));
       const toRemove = Array.from(currentIds).filter(id => !selectedStakeholders.has(id));
 
       // Add new assignments
-      if (toAdd.length > 0) {
-        const { error: addError } = await supabase
-          .from('stakeholder_assignments')
-          .insert(toAdd.map(stakeholder_id => ({
-            stakeholder_id,
-            milestone_id: milestoneId
-          })));
-
-        if (addError) throw addError;
+      for (const stakeholderId of toAdd) {
+        const result = await assignStakeholderToMilestone(milestoneId, stakeholderId);
+        if (result.error) {
+          throw new Error(result.error);
+        }
       }
 
       // Remove unselected assignments
-      if (toRemove.length > 0) {
-        const { error: removeError } = await supabase
-          .from('stakeholder_assignments')
-          .delete()
-          .eq('milestone_id', milestoneId)
-          .in('stakeholder_id', toRemove);
-
-        if (removeError) throw removeError;
+      for (const stakeholderId of toRemove) {
+        const result = await removeStakeholderFromMilestone(milestoneId, stakeholderId);
+        if (result.error) {
+          throw new Error(result.error);
+        }
       }
 
       toast({

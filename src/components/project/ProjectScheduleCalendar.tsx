@@ -1,8 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Card } from "@/components/ui/card";
 import "./calendar-styles.css";
@@ -101,67 +100,16 @@ export function ProjectScheduleCalendar({
         const newStart = info.event.start?.toISOString().split("T")[0];
         const newEnd = info.event.end?.toISOString().split("T")[0];
 
-        // Calculate new status based on dates
-        const now = new Date();
-        const endDate = new Date(newEnd!);
-        const startDate = new Date(newStart!);
-        
-        let newStatus: "on_time" | "delayed" | "overdue" = "on_time";
-        if (now > endDate) {
-          newStatus = "overdue";
-        } else if (now > startDate && now <= endDate) {
-          const totalDays = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
-          const daysElapsed = (now.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
-          const expectedProgress = (daysElapsed / totalDays) * 100;
-          const actualProgress = info.event.extendedProps.progress || 0;
-          
-          if (actualProgress < expectedProgress - 10) {
-            newStatus = "delayed";
-          }
-        }
-
-        // Update milestone dates and status
-        const { error } = await supabase
-          .from("project_updates")
-          .update({
-            start_date: newStart,
-            end_date: newEnd,
-            status: newStatus,
-          })
-          .eq("id", realId);
-
-        if (error) throw error;
-
-        // Update project progress
-        await updateProjectProgress(projectId);
+        // TODO: Replace with actual API call to update milestone
+        console.log('TODO: Update milestone dates', { realId, newStart, newEnd, projectId });
         
         toast.success("Jalon mis à jour avec succès");
         onMilestoneUpdate();
       } else if (eventType === 'payment') {
         const newDueDate = info.event.start?.toISOString().split("T")[0];
         
-        // Check if payment is overdue
-        const now = new Date();
-        const dueDate = new Date(newDueDate!);
-        const currentStatus = info.event.extendedProps.status;
-        let newStatus = currentStatus;
-        
-        if (currentStatus !== 'paid' && now > dueDate) {
-          newStatus = 'overdue';
-        } else if (currentStatus === 'overdue' && now <= dueDate) {
-          newStatus = 'pending';
-        }
-
-        // Update payment due date
-        const { error } = await supabase
-          .from("payment_schedules")
-          .update({
-            due_date: newDueDate,
-            status: newStatus,
-          })
-          .eq("id", realId);
-
-        if (error) throw error;
+        // TODO: Replace with actual API call to update payment
+        console.log('TODO: Update payment due date', { realId, newDueDate });
         
         toast.success("Paiement mis à jour avec succès");
         onPaymentUpdate();
@@ -275,28 +223,4 @@ function getStatusColor(status: "on_time" | "delayed" | "overdue"): string {
     default:
       return "hsl(var(--primary))";
   }
-}
-
-async function updateProjectProgress(projectId: string) {
-  // Fetch all milestones for the project
-  const { data: milestones, error } = await supabase
-    .from("project_updates")
-    .select("progress_percentage")
-    .eq("project_id", projectId)
-    .eq("update_type", "milestone");
-
-  if (error || !milestones || milestones.length === 0) return;
-
-  // Calculate average progress
-  const totalProgress = milestones.reduce(
-    (sum, m) => sum + (m.progress_percentage || 0),
-    0
-  );
-  const averageProgress = Math.round(totalProgress / milestones.length);
-
-  // Update project progress
-  await supabase
-    .from("projects")
-    .update({ progress: averageProgress })
-    .eq("id", projectId);
 }

@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { z } from "zod";
 
@@ -55,31 +54,10 @@ export function EarlyAdopterDialog({ open, onOpenChange, initialEmail, language 
         language
       });
 
-      const { error } = await supabase
-        .from('waitlist')
-        .insert([{
-          email: validated.email,
-          first_name: validated.first_name,
-          last_name: validated.last_name,
-          phone: validated.phone,
-          company: validated.company || null,
-          project_count: validated.project_count,
-          language: validated.language
-        }]);
+      // TODO: Replace with actual API call to submit waitlist entry
+      console.log('TODO: Submit waitlist entry to backend', validated);
 
-      if (error) {
-        if (error.code === '23505') {
-          toast({
-            title: "Déjà inscrit",
-            description: "Cet email est déjà sur la liste d'attente.",
-            variant: "destructive"
-          });
-        } else {
-          throw error;
-        }
-        return;
-      }
-
+      // Simulate success
       toast({
         title: "Inscription réussie !",
         description: "Vous êtes maintenant sur la liste d'attente. Nous vous contacterons bientôt."

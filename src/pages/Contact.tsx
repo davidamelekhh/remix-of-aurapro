@@ -2,7 +2,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
 import { ArrowLeft, Mail, Phone } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -47,19 +46,10 @@ export default function Contact() {
       // Validate form data
       const validatedData = contactSchema.parse(formData);
 
-      // Insert into Supabase
-      const { error } = await supabase
-        .from('contact_submissions')
-        .insert([{
-          name: validatedData.name,
-          email: validatedData.email,
-          phone: validatedData.phone || null,
-          subject: validatedData.subject,
-          message: validatedData.message
-        }]);
+      // TODO: Replace with actual API call to submit contact form
+      console.log('TODO: Submit contact form to backend', validatedData);
 
-      if (error) throw error;
-
+      // Simulate success for now
       toast({
         title: "Message envoyé !",
         description: "Nous vous répondrons dans les plus brefs délais.",
