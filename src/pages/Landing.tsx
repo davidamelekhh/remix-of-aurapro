@@ -29,10 +29,10 @@ export default function Landing() {
   const [selectedLanguage, setSelectedLanguage] = useState<Language>('fr');
   const [languageMenuOpen, setLanguageMenuOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const languages = {
-    fr: { flag: '🇫🇷', name: 'Français' },
-    en: { flag: '🇬🇧', name: 'English' },
-    ar: { flag: '🇲🇦', name: 'العربية' }
+  const languages: Record<Language, { flag: string; name: string; short: string }> = {
+    fr: { flag: '🇫🇷', name: 'Français', short: 'FR' },
+    en: { flag: '🇬🇧', name: 'English', short: 'EN' },
+    ar: { flag: '🇲🇦', name: 'العربية', short: 'AR' }
   };
 
   const waitlistSchema = z.object({
