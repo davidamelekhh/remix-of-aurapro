@@ -29,10 +29,10 @@ export default function Landing() {
   const [selectedLanguage, setSelectedLanguage] = useState<Language>('fr');
   const [languageMenuOpen, setLanguageMenuOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const languages = {
-    fr: { flag: '🇫🇷', name: 'Français' },
-    en: { flag: '🇬🇧', name: 'English' },
-    ar: { flag: '🇲🇦', name: 'العربية' }
+  const languages: Record<Language, { flag: string; name: string; short: string }> = {
+    fr: { flag: '🇫🇷', name: 'Français', short: 'FR' },
+    en: { flag: '🇬🇧', name: 'English', short: 'EN' },
+    ar: { flag: '🇲🇦', name: 'العربية', short: 'AR' }
   };
 
   const waitlistSchema = z.object({
@@ -77,20 +77,31 @@ export default function Landing() {
               <Instagram className="h-4 w-4" />
             </a>
           </div>
-          <div className="relative">
-            <button type="button" onClick={() => setLanguageMenuOpen(!languageMenuOpen)} className="h-9 w-9 rounded-lg border border-white/20 bg-white/5 hover:bg-white/10 transition-all flex items-center justify-center text-base">
-              {languages[selectedLanguage].flag}
-            </button>
-            {languageMenuOpen && (
-              <div className="absolute top-full right-0 mt-2 bg-card border border-border rounded-xl shadow-lg overflow-hidden z-50 min-w-[160px]">
-                {Object.entries(languages).map(([code, lang]) => (
-                  <button key={code} type="button" onClick={() => { setSelectedLanguage(code as Language); setLanguageMenuOpen(false); }} className="w-full px-4 py-3 text-left hover:bg-secondary transition-colors flex items-center gap-3 bg-card">
-                    <span className="text-xl">{lang.flag}</span>
-                    <span className="text-sm font-medium">{lang.name}</span>
-                  </button>
-                ))}
-              </div>
-            )}
+          <div
+            role="radiogroup"
+            aria-label="Langue"
+            className="inline-flex items-center rounded-full border border-white/15 bg-white/5 backdrop-blur-md p-0.5"
+          >
+            {(Object.entries(languages) as [Language, typeof languages[Language]][]).map(([code, lang]) => {
+              const active = selectedLanguage === code;
+              return (
+                <button
+                  key={code}
+                  type="button"
+                  role="radio"
+                  aria-checked={active}
+                  onClick={() => setSelectedLanguage(code)}
+                  title={lang.name}
+                  className={`relative h-8 px-3 rounded-full text-[11px] font-semibold tracking-[0.15em] uppercase transition-colors ${
+                    active
+                      ? 'bg-white text-black'
+                      : 'text-white/60 hover:text-white'
+                  }`}
+                >
+                  {lang.short}
+                </button>
+              );
+            })}
           </div>
         </div>
       </nav>
