@@ -1,4 +1,4 @@
-import { ArrowRight, CheckCircle2, Shield, Clock, TrendingUp, Instagram } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Shield, Clock, TrendingUp, Instagram, Calendar, Compass, Layers, Sparkles } from 'lucide-react';
 import { ShimmerButton } from '@/components/ui/shimmer-button';
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
@@ -150,6 +150,47 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* Mission / Vision — Why · How · What */}
+      <section className="py-32 px-6 bg-foreground text-background">
+        <div className="max-w-6xl mx-auto">
+          <div className="max-w-2xl mb-20">
+            <span className="text-xs uppercase tracking-[0.3em] text-background/50 font-medium">Notre raison d'être</span>
+            <h2 className="mt-4 text-4xl md:text-5xl font-semibold tracking-tight leading-tight">
+              Redonner du sens <span className="text-background/50 font-light">à la promotion immobilière.</span>
+            </h2>
+          </div>
+          <div className="grid md:grid-cols-3 gap-12">
+            {[
+              {
+                icon: Compass,
+                label: 'La conviction',
+                title: 'Construire mérite mieux que du chaos.',
+                desc: 'Nous croyons que la transparence et la clarté ne sont pas des options — elles sont la base d\'une relation saine entre promoteurs et clients.',
+              },
+              {
+                icon: Layers,
+                label: 'La méthode',
+                title: 'Un seul espace, une seule vérité.',
+                desc: 'En centralisant projets, paiements et communications, nous remplaçons l\'éparpillement par une expérience fluide et maîtrisée de bout en bout.',
+              },
+              {
+                icon: Sparkles,
+                label: 'La promesse',
+                title: 'La plateforme qui élève le métier.',
+                desc: 'Aura PRO est l\'outil quotidien des promoteurs ambitieux : pilotage en temps réel, clients rassurés, équipes alignées.',
+              },
+            ].map((item, i) => (
+              <div key={i} className="space-y-5">
+                <item.icon className="h-6 w-6 text-background/80" strokeWidth={1.5} />
+                <span className="block text-xs uppercase tracking-[0.25em] text-background/50 font-medium">{item.label}</span>
+                <h3 className="text-2xl font-semibold leading-tight">{item.title}</h3>
+                <p className="text-sm text-background/60 leading-relaxed font-light">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Features Section - tight, no fluff */}
       <section id="features" className="py-32 px-6 bg-background">
         <div className="max-w-6xl mx-auto">
@@ -175,6 +216,20 @@ export default function Landing() {
                 <p className="text-sm text-muted-foreground leading-relaxed">{feature.desc}</p>
               </div>
             ))}
+          </div>
+
+          {/* Product screenshot placeholder */}
+          <div className="mt-24">
+            <div className="relative mx-auto max-w-5xl rounded-3xl border border-border bg-gradient-to-b from-secondary/40 to-background overflow-hidden shadow-2xl">
+              <div className="aspect-[16/10] flex items-center justify-center">
+                <div className="text-center space-y-3 px-6">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-border bg-background/60 backdrop-blur text-xs uppercase tracking-[0.25em] text-muted-foreground">
+                    Aperçu produit
+                  </div>
+                  <p className="text-sm text-muted-foreground font-light">Visuel de la plateforme à venir.</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -252,20 +307,68 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-10 px-6 border-t border-border bg-background">
+      {/* Insights / Articles */}
+      <section className="py-32 px-6 bg-background border-t border-border">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex items-end justify-between mb-16 flex-wrap gap-6">
+            <div className="max-w-2xl">
+              <span className="text-xs uppercase tracking-[0.3em] text-muted-foreground font-medium">Perspectives</span>
+              <h2 className="mt-4 text-4xl md:text-5xl font-semibold tracking-tight leading-tight">
+                Lectures choisies <span className="text-muted-foreground font-light">pour les promoteurs.</span>
+              </h2>
+            </div>
+            <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-2">
+              Tous les articles <ArrowRight className="h-4 w-4" />
+            </a>
+          </div>
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              { tag: 'Méthode', title: 'Pourquoi la transparence devient un avantage concurrentiel', read: '6 min de lecture' },
+              { tag: 'Opérations', title: 'Réduire de 60% le temps administratif d\'un projet immobilier', read: '8 min de lecture' },
+              { tag: 'Vision', title: 'Le promoteur de demain : moins de friction, plus de confiance', read: '5 min de lecture' },
+            ].map((a, i) => (
+              <a key={i} href="#" className="group block rounded-2xl border border-border overflow-hidden bg-background hover:border-foreground/30 transition-colors">
+                <div className="aspect-[16/10] bg-gradient-to-br from-secondary to-secondary/40" />
+                <div className="p-6 space-y-3">
+                  <span className="text-xs uppercase tracking-[0.25em] text-muted-foreground font-medium">{a.tag}</span>
+                  <h3 className="text-lg font-semibold leading-snug group-hover:text-foreground transition-colors">{a.title}</h3>
+                  <p className="text-xs text-muted-foreground">{a.read}</p>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Footer - dark */}
+      <footer className="py-12 px-6 bg-foreground text-background">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex items-center gap-2 text-sm">
             <span className="font-semibold">Aura PRO</span>
-            <span className="text-muted-foreground">© 2024</span>
+            <span className="text-background/50">© 2024</span>
           </div>
-          <div className="flex items-center gap-6 text-sm text-muted-foreground">
-            <a href="/contact" className="hover:text-foreground transition-colors">Contact</a>
-            <a href="#" className="hover:text-foreground transition-colors">Mentions légales</a>
-            <a href="#" className="hover:text-foreground transition-colors">Confidentialité</a>
+          <div className="flex items-center gap-6 text-sm text-background/60">
+            <a href="/contact" className="hover:text-background transition-colors">Contact</a>
+            <a href="#" className="hover:text-background transition-colors">Mentions légales</a>
+            <a href="#" className="hover:text-background transition-colors">Confidentialité</a>
+            <a href="https://www.instagram.com/aura.pro.ai?igsh=MXF1ZHRncDB1eWthZQ%3D%3D&utm_source=qr" target="_blank" rel="noopener noreferrer" className="hover:text-background transition-colors">
+              <Instagram className="h-4 w-4" />
+            </a>
           </div>
         </div>
       </footer>
+
+      {/* Floating "Book a demo" bubble */}
+      <a
+        href="/contact"
+        className="fixed bottom-6 right-6 z-50 group inline-flex items-center gap-2 pl-4 pr-5 py-3 rounded-full bg-foreground text-background shadow-2xl hover:scale-[1.03] transition-transform"
+        aria-label="Réserver une démo"
+      >
+        <span className="h-8 w-8 rounded-full bg-background/15 flex items-center justify-center">
+          <Calendar className="h-4 w-4" />
+        </span>
+        <span className="text-sm font-semibold">Réserver une démo</span>
+      </a>
     </div>
   );
 }
