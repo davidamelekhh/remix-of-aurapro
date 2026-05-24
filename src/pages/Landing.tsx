@@ -104,15 +104,15 @@ export default function Landing() {
           backgroundPosition: 'center',
         }}
       >
-        {/* Darkening overlay for readability on the right side */}
-        <div className="absolute inset-0 bg-gradient-to-l from-black/80 via-black/50 to-black/20" />
+        {/* Darkening overlay for readability on the left side */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-black/20" />
 
-        <div className="relative z-10 max-w-7xl mx-auto w-full flex justify-end">
+        <div className="relative z-10 max-w-7xl mx-auto w-full flex justify-start">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="w-full md:max-w-xl lg:max-w-2xl text-right space-y-6"
+            className="w-full md:max-w-xl lg:max-w-2xl text-left space-y-6"
           >
             <span className="inline-block text-xs uppercase tracking-[0.3em] text-white/60 font-medium">
               Real Estate Operating System
@@ -122,11 +122,11 @@ export default function Landing() {
               <br />
               <span className="text-white/60 font-light">{t.hero.titleAccent}</span>
             </h1>
-            <p className="text-base sm:text-lg text-white/70 font-light leading-relaxed max-w-xl ml-auto">
+            <p className="text-base sm:text-lg text-white/70 font-light leading-relaxed max-w-xl">
               {t.hero.subtitle} {t.hero.subtitleContinued}
             </p>
 
-            <form onSubmit={handleWaitlistSubmit} className="pt-4 flex flex-col sm:flex-row gap-3 justify-end">
+            <form onSubmit={handleWaitlistSubmit} className="pt-4 flex flex-col sm:flex-row gap-3 justify-start">
               <Input
                 type="email"
                 placeholder={t.hero.emailPlaceholder}
