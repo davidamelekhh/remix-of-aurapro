@@ -150,6 +150,47 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* Mission / Vision — Why · How · What */}
+      <section className="py-32 px-6 bg-foreground text-background">
+        <div className="max-w-6xl mx-auto">
+          <div className="max-w-2xl mb-20">
+            <span className="text-xs uppercase tracking-[0.3em] text-background/50 font-medium">Notre raison d'être</span>
+            <h2 className="mt-4 text-4xl md:text-5xl font-semibold tracking-tight leading-tight">
+              Redonner du sens <span className="text-background/50 font-light">à la promotion immobilière.</span>
+            </h2>
+          </div>
+          <div className="grid md:grid-cols-3 gap-12">
+            {[
+              {
+                icon: Compass,
+                label: 'La conviction',
+                title: 'Construire mérite mieux que du chaos.',
+                desc: 'Nous croyons que la transparence et la clarté ne sont pas des options — elles sont la base d\'une relation saine entre promoteurs et clients.',
+              },
+              {
+                icon: Layers,
+                label: 'La méthode',
+                title: 'Un seul espace, une seule vérité.',
+                desc: 'En centralisant projets, paiements et communications, nous remplaçons l\'éparpillement par une expérience fluide et maîtrisée de bout en bout.',
+              },
+              {
+                icon: Sparkles,
+                label: 'La promesse',
+                title: 'La plateforme qui élève le métier.',
+                desc: 'Aura PRO est l\'outil quotidien des promoteurs ambitieux : pilotage en temps réel, clients rassurés, équipes alignées.',
+              },
+            ].map((item, i) => (
+              <div key={i} className="space-y-5">
+                <item.icon className="h-6 w-6 text-background/80" strokeWidth={1.5} />
+                <span className="block text-xs uppercase tracking-[0.25em] text-background/50 font-medium">{item.label}</span>
+                <h3 className="text-2xl font-semibold leading-tight">{item.title}</h3>
+                <p className="text-sm text-background/60 leading-relaxed font-light">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Features Section - tight, no fluff */}
       <section id="features" className="py-32 px-6 bg-background">
         <div className="max-w-6xl mx-auto">
@@ -175,6 +216,20 @@ export default function Landing() {
                 <p className="text-sm text-muted-foreground leading-relaxed">{feature.desc}</p>
               </div>
             ))}
+          </div>
+
+          {/* Product screenshot placeholder */}
+          <div className="mt-24">
+            <div className="relative mx-auto max-w-5xl rounded-3xl border border-border bg-gradient-to-b from-secondary/40 to-background overflow-hidden shadow-2xl">
+              <div className="aspect-[16/10] flex items-center justify-center">
+                <div className="text-center space-y-3 px-6">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-border bg-background/60 backdrop-blur text-xs uppercase tracking-[0.25em] text-muted-foreground">
+                    Aperçu produit
+                  </div>
+                  <p className="text-sm text-muted-foreground font-light">Visuel de la plateforme à venir.</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
