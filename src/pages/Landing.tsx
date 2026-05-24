@@ -1,4 +1,4 @@
-import { ArrowRight, CheckCircle2, Shield, Clock, TrendingUp, Instagram } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Shield, Clock, TrendingUp, Instagram, Calendar, Compass, Layers, Sparkles } from 'lucide-react';
 import { ShimmerButton } from '@/components/ui/shimmer-button';
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
